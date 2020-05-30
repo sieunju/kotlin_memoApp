@@ -1,7 +1,8 @@
-package com.hmju.memo
+package com.hmju.memo.ui.home
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.hmju.memo.R
 
 class MainActivity : AppCompatActivity() {
 
