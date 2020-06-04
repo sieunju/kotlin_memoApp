@@ -1,10 +1,13 @@
 package com.hmju.memo.utils
 
 import com.hmju.memo.define.NetInfo
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.ConnectionPool
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 /**
@@ -52,6 +55,15 @@ fun headerInterceptor(loginKey: String) : Interceptor {
             .build()
         chain.proceed(request)
     }
+}
+
+fun createRetrofit(httpClient: OkHttpClient) : Retrofit {
+    return Retrofit.Builder()
+        .baseUrl(NetInfo.RELEASE_BASE_URL)
+        .client(httpClient)
+        .addConverterFactory(GsonConverterFactory.create())
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
+        .build()
 }
 
 

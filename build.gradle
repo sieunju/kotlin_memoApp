@@ -22,7 +22,11 @@ buildscript {
         multiDexVersion = '2.0.1'
 
         // Retrofit
-        retrofitVersion = '2.5.0'
+//        retrofitVersion = '2.5.0'
+        retrofitVersion = '2.6.4'
+
+        // Retrofit Coroutines
+        retrofitCoroutineAdapterVersion = '0.9.2'
 
         // OkHttp
         okhttpVersion = '3.9.1'
