@@ -1,9 +1,14 @@
 package com.hmju.memo.utils
 
+import com.hmju.memo.define.NetInfo
 import com.hmju.memo.preferences.CommonPreferences
+import okhttp3.ConnectionPool
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import retrofit2.Retrofit
+import java.sql.Time
+import java.util.concurrent.TimeUnit
 
 /**
  * Description: Retrofit Utils Class
@@ -15,11 +20,14 @@ inline fun <reified T> createOkHttpClient(interceptor: Interceptor): OkHttpClien
     val retrofitLogger = RetrofitLogger()
     retrofitLogger.setLevel(RetrofitLogger.Level.BODY)
     return OkHttpClient.Builder()
+        .retryOnConnectionFailure(true)
+        .connectTimeout(5, TimeUnit.SECONDS)
+        .readTimeout(5,TimeUnit.SECONDS)
+        .writeTimeout(5,TimeUnit.SECONDS)
+        .connectionPool(ConnectionPool(5, 1, TimeUnit.SECONDS))
+        .addInterceptor(interceptor)
         .build()
 }
-
-val REQUEST_ACCEPT: String = "accept"
-val VALUE_ACCEPT: String = "application/json"
 
 /**
  * 비로그인 상태 HeaderInterceptor Class
@@ -29,7 +37,20 @@ fun headerInterceptor() : Interceptor {
         val origin: Request = chain.request()
 
         val request: Request = origin.newBuilder()
-            .header(REQUEST_ACCEPT, VALUE_ACCEPT)
+            .header("accept", "application/json")
+            .method(origin.method(),origin.body())
+            .build()
+        chain.proceed(request)
+    }
+}
+
+fun headerInterceptor(loginKey: String) : Interceptor {
+    return Interceptor { chain ->
+        val origin: Request = chain.request()
+
+        val request: Request = origin.newBuilder()
+            .header("accept", "application/json")
+            .header(NetInfo.KEY_LOGIN,loginKey)
             .method(origin.method(),origin.body())
             .build()
         chain.proceed(request)

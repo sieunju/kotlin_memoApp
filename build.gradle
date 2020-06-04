@@ -36,6 +36,9 @@ buildscript {
 
         // Room
         roomVersion = '2.2.5'
+
+        // Coroutines
+        coroutinesVersion = '1.3.0'
     }
     repositories {
         google()

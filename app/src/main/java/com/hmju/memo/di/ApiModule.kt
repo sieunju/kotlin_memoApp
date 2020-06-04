@@ -1,5 +1,8 @@
 package com.hmju.memo.di
 
+import com.hmju.memo.utils.createOkHttpClient
+import com.hmju.memo.utils.headerInterceptor
+import okhttp3.OkHttpClient
 import org.koin.dsl.module
 
 /**
@@ -10,6 +13,6 @@ import org.koin.dsl.module
 
 val apiModule = module{
     single{
-        
+        createOkHttpClient<OkHttpClient>(headerInterceptor())
     }
 }

@@ -12,9 +12,4 @@ class CommonPreferences(private val prefs: SharedPreferences) {
     companion object{
         val PREF_LOGIN_KEY = "login_key"
     }
-
-    fun setString(value: String, defaultValue: String){
-        val editor = prefs.edit()
-        editor.putString()
-    }
 }
