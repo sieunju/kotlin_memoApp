@@ -48,3 +48,4 @@ build
 *.ipr
 *~
 *.swp
+NetInfo.kt

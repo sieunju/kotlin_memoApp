@@ -1,13 +1,10 @@
 package com.hmju.memo.utils
 
 import com.hmju.memo.define.NetInfo
-import com.hmju.memo.preferences.CommonPreferences
 import okhttp3.ConnectionPool
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import retrofit2.Retrofit
-import java.sql.Time
 import java.util.concurrent.TimeUnit
 
 /**
