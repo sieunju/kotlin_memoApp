@@ -1,6 +1,9 @@
 package com.hmju.memo.di
 
+import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.utils.createOkHttpClient
+import com.hmju.memo.utils.createRetrofit
+import com.hmju.memo.utils.forbiddenInterceptor
 import com.hmju.memo.utils.headerInterceptor
 import okhttp3.OkHttpClient
 import org.koin.dsl.module
@@ -12,7 +15,19 @@ import org.koin.dsl.module
  */
 
 val apiModule = module{
+
+    // init 헤더
     single{
-        createOkHttpClient<OkHttpClient>(headerInterceptor())
+        headerInterceptor(get())
+    }
+
+    // client
+    single{
+        createOkHttpClient(get())
+    }
+
+    // Retrofit2
+    single<ApiService> {
+        createRetrofit(get())
     }
 }

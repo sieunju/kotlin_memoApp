@@ -1,4 +1,4 @@
-package com.hmju.memo.preferences
+package com.hmju.memo.repository.preferences
 
 import android.content.SharedPreferences
 
@@ -7,7 +7,7 @@ import android.content.SharedPreferences
  *
  * Created by juhongmin on 2020/05/30
  */
-class AccountPrefImpl(
+class AccountPref(
     private val pref: SharedPreferences)
     : BasePref(pref){
 

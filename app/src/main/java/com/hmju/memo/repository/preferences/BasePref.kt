@@ -1,4 +1,4 @@
-package com.hmju.memo.preferences
+package com.hmju.memo.repository.preferences
 
 import android.content.SharedPreferences
 

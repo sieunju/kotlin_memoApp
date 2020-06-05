@@ -2,7 +2,7 @@ package com.hmju.memo.di
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.hmju.memo.preferences.CommonPreferences
+import com.hmju.memo.repository.preferences.AccountPref
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -19,6 +19,6 @@ val prefModule = module {
     }
 
     single{
-        CommonPreferences(get())
+        AccountPref(get())
     }
 }
