@@ -2,6 +2,7 @@ package com.hmju.memo.ui.login
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.hmju.custombehavior.TranslationBehavior
 import com.hmju.memo.R
 import com.hmju.memo.BR
 import com.hmju.memo.base.BaseActivity
@@ -18,5 +19,8 @@ class LoginActivity : BaseActivity<ActivityLoginBinding,LoginViewModel> () {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        with(viewModel){
+
+        }
     }
 }

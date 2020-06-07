@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.multidex.MultiDexApplication
 import com.hmju.memo.di.apiModule
 import com.hmju.memo.di.viewModule
+import com.hmju.memo.di.prefModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -24,6 +25,7 @@ class MainApplication : MultiDexApplication(){
             androidContext(this@MainApplication)
             modules(
                 apiModule +
+                        prefModule +
                         viewModule
             )
         }

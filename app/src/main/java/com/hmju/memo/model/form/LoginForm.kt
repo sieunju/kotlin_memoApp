@@ -9,6 +9,6 @@ import com.google.gson.annotations.SerializedName
  */
 
 data class LoginForm(
-    @SerializedName("user_id") val id :String,
-    @SerializedName("user_pw") val pw : String
+    @SerializedName("user_id") val id :String? = "",
+    @SerializedName("user_pw") val pw : String? = ""
 )

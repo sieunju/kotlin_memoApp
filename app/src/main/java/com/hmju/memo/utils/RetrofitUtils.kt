@@ -48,6 +48,7 @@ fun headerInterceptor(pref: AccountPref) : Interceptor {
         val request: Request = origin.newBuilder()
             .header("accept", "application/json")
             .header("Content-Type","application/json")
+            .header(NetInfo.KEY_TYPE,"APP")
             .header(NetInfo.KEY_LOGIN,pref.getLoginKey())
             .method(origin.method(),origin.body())
             .build()
@@ -80,8 +81,8 @@ inline fun <reified T> createRetrofit(client: OkHttpClient) : T{
     val retrofit = Retrofit.Builder()
         .baseUrl(NetInfo.BASE_URL)
         .client(client)
-        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .addConverterFactory(GsonConverterFactory.create())
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
     return retrofit.create(T::class.java)
 }

@@ -30,6 +30,5 @@ abstract class BaseActivity<T : ViewDataBinding, VM : BaseViewModel>
         binding = DataBindingUtil.setContentView(this,layoutId)
         binding.lifecycleOwner = this
         binding.setVariable(bindingVariable,viewModel)
-        binding.executePendingBindings()
     }
 }

@@ -15,7 +15,7 @@ class ApiRemoteDataSource (
 
 ) : ApiService {
 
-    override suspend fun signIn(body: LoginForm): Deferred<LoginResponse> {
+    override suspend fun signIn(body: LoginForm): Deferred<JsonObject> {
         return apiService.signIn(body)
     }
 }

@@ -3,7 +3,7 @@
 buildscript {
     ext {
         kotlinVersion = '1.3.72'
-        glideVersion = '3.7.0'
+        androidPluginVersion = '4.0.0'
 
         // Common
         appCompatVersion = '1.1.0'
@@ -23,7 +23,6 @@ buildscript {
         multiDexVersion = '2.0.1'
 
         // Retrofit
-//        retrofitVersion = '2.5.0'
         retrofitVersion = '2.6.4'
 
         // Retrofit Coroutines
@@ -44,11 +43,11 @@ buildscript {
     repositories {
         google()
         jcenter()
+
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.0'
+        classpath "com.android.tools.build:gradle:${androidPluginVersion}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath 'com.google.gms:google-services:4.3.3'
     }
 }
 
@@ -56,7 +55,8 @@ allprojects {
     repositories {
         google()
         jcenter()
-        maven { url "https://jitpack.io" }
+
+        maven{url 'https://dl.bintray.com/sieunju/maven'}
     }
 }
 

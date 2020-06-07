@@ -29,13 +29,17 @@ android {
         }
     }
 
-    buildFeatures {
-        dataBinding = true
-    }
-
     packagingOptions {
         pickFirst("META-INF/kotlinx-coroutines-core.kotlin_module")
     }
+
+    dataBinding {
+        enabled = true
+    }
+
+//        buildFeatures {
+//        dataBinding = true
+//    }
 }
 
 dependencies {
@@ -47,6 +51,11 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:$rootProject.recyclerViewVersion"
     implementation "androidx.cardview:cardview:$rootProject.cardViewVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.viewModelVersion"
+    kapt "com.android.databinding:compiler:$rootProject.androidPluginVersion"
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     // glide
     implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"
@@ -84,5 +93,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$rootProject.coroutinesVersion"
+
+    // Custom Behavior LIb
+    implementation "com.hmju.custombehavior:custom-behavior:1.0.0@aar"
 
 }
