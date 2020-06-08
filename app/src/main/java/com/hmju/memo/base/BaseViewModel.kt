@@ -13,15 +13,15 @@ open class BaseViewModel : ViewModel() {
     /**
      * CoroutineScope 내부 Exception 처리 Handler
      */
-    protected val coroutineExceptionHanlder = CoroutineExceptionHandler { coroutineContext, throwable ->
+    protected val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
         throwable.printStackTrace()
     }
 
     /**
      * Dispatchers 선언 (Normal Dispatchers + CoroutineExceptionHandler)
      */
-    protected val ioDispatchers = Dispatchers.IO + coroutineExceptionHanlder
-    protected val uiDispatchers = Dispatchers.Main + coroutineExceptionHanlder
+    protected val ioDispatchers = Dispatchers.IO + coroutineExceptionHandler
+    protected val uiDispatchers = Dispatchers.Main + coroutineExceptionHandler
 
 
     fun launch(job: () -> CoroutineScope){

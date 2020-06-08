@@ -2,6 +2,7 @@ package com.hmju.memo.viewModels
 
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.extensions.SingleLiveEvent
 import com.hmju.memo.model.form.LoginForm
@@ -43,25 +44,17 @@ class LoginViewModel(
 
     fun startLogin(){
         JLogger.d("Id ${strId.value} Pw ${strPw.value}")
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch(ioDispatchers) {
             val response = apiService.signIn(
                 LoginForm(
                     id = strId.value,
                     pw = strPw.value
                 )
             )
-            withContext(Dispatchers.IO){
-                try{
-                    JLogger.d("Response $response")
-                    response.let {
-
-                    }
-                }catch (e : HttpException){
-                    JLogger.e("HttpException ${e.message()}")
-                } catch (e: Throwable){
-                    JLogger.e("Throwable ${e.message}")
-                } catch (e: SocketTimeoutException){
-                    JLogger.e("TimeOut ${e.message}")
+            withContext(ioDispatchers){
+                JLogger.d("Response $response")
+                response.loginKey?.let {loginKey ->
+                    actPref.setLoginKey(loginKey)
                 }
             }
         }

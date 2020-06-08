@@ -11,5 +11,5 @@ import com.hmju.memo.base.BaseResponse
 data class LoginResponse(
     @SerializedName("resCode") val code: Int,
     @SerializedName("resMsg") val msg: String,
-    @SerializedName("loginKey") val loginKey: String
+    @SerializedName("loginKey") val loginKey: String?
 )

@@ -14,7 +14,7 @@ import org.koin.core.context.startKoin
  *
  * Created by juhongmin on 2020/05/30
  */
-class MainApplication : MultiDexApplication(){
+class MainApplication : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
@@ -24,9 +24,9 @@ class MainApplication : MultiDexApplication(){
             // Factory -> 매번 인스턴스 생성.
             androidContext(this@MainApplication)
             modules(
-                apiModule +
-                        prefModule +
-                        viewModule
+                prefModule +
+                        viewModule +
+                        apiModule
             )
         }
     }

@@ -1,5 +1,6 @@
 package com.hmju.memo.di
 
+import com.hmju.memo.repository.network.ApiRemoteDataSource
 import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.utils.createOkHttpClient
 import com.hmju.memo.utils.createRetrofit
@@ -14,20 +15,23 @@ import org.koin.dsl.module
  * Created by juhongmin on 2020/05/30
  */
 
-val apiModule = module{
+val apiModule = module {
 
     // init 헤더
-    single{
+    single {
         headerInterceptor(get())
     }
 
     // client
-    single{
+    single {
         createOkHttpClient(get())
     }
 
     // Retrofit2
     single<ApiService> {
-        createRetrofit(get())
+        ApiRemoteDataSource(
+            createRetrofit(get()),
+            get()
+        )
     }
 }
