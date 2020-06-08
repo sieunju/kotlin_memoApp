@@ -17,8 +17,8 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="200dp"
             android:layout_marginLeft="@dimen/margin_size_20"
+            android:layout_marginTop="200dp"
             android:layout_marginRight="@dimen/margin_size_20"
             android:orientation="vertical"
             app:layout_constraintTop_toTopOf="parent">
@@ -35,10 +35,10 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
-                    android:maxLines="1"
+                    android:layout_height="wrap_content"
                     android:maxLength="10"
-                    android:text="@={viewModel.strId}"
-                    android:layout_height="wrap_content" />
+                    android:maxLines="1"
+                    android:text="@={viewModel.strId}" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -46,38 +46,46 @@
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:hint="@string/require_pw"
                 android:layout_height="wrap_content"
+                android:hint="@string/require_pw"
                 app:passwordToggleEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textPassword"
                     android:maxLines="1"
-                    android:text="@={viewModel.strPw}"
-                    android:inputType="textPassword" />
+                    android:text="@={viewModel.strPw}" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- 자동 로그인 여부 -->
             <com.google.android.material.checkbox.MaterialCheckBox
                 android:layout_width="wrap_content"
-                android:text="@string/auto_login"
-                app:buttonTint="@color/colorPrimary"
+                android:layout_height="wrap_content"
                 android:checked="@{viewModel.isAuto}"
+                android:text="@string/auto_login"
                 android:textColor="@color/colorBlack"
-                android:layout_height="wrap_content"/>
+                app:buttonTint="@color/colorPrimary" />
 
             <!-- 로그인 버튼 -->
             <com.google.android.material.button.MaterialButton
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{()->viewModel.startLogin()}"
                 android:paddingTop="@dimen/padding_size_13"
                 android:paddingBottom="@dimen/padding_size_13"
-                android:onClick="@{()->viewModel.startLogin()}"
                 android:text="@string/str_login"
                 android:textColor="@color/colorWhite"
-                android:textStyle="bold"
-                android:layout_height="wrap_content"/>
+                android:textStyle="bold" />
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{()-> viewModel.test()}"
+                android:text="테스트"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

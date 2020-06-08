@@ -3,10 +3,12 @@ package com.hmju.memo.repository.network
 import com.google.gson.JsonObject
 import com.hmju.memo.model.form.LoginForm
 import com.hmju.memo.model.login.LoginResponse
+import com.hmju.memo.model.memo.MemoResponse
 import kotlinx.coroutines.Deferred
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 /**
  * Description:
@@ -26,5 +28,14 @@ interface ApiService {
     suspend fun signIn(
         @Body body: LoginForm
     ): LoginResponse
+
+    /**
+     * 메모장 데이터 가져오는 API
+     * @Query pageNo : 1부터 시작
+     */
+    @GET("/api/memoList")
+    suspend fun fetchMemoList(
+        @Query("pageNo") pageNo : Int
+    ): MemoResponse
 
 }

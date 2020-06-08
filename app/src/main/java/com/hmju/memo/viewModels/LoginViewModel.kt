@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hmju.memo.base.BaseViewModel
+import com.hmju.memo.di.apiModule
 import com.hmju.memo.extensions.SingleLiveEvent
 import com.hmju.memo.model.form.LoginForm
 import com.hmju.memo.model.login.LoginResponse
@@ -14,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.core.context.loadKoinModules
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 
@@ -38,10 +40,6 @@ class LoginViewModel(
     val strId = MutableLiveData<String>()
     val strPw = MutableLiveData<String>()
 
-    fun start (){
-
-    }
-
     fun startLogin(){
         JLogger.d("Id ${strId.value} Pw ${strPw.value}")
         viewModelScope.launch(ioDispatchers) {
@@ -55,7 +53,19 @@ class LoginViewModel(
                 JLogger.d("Response $response")
                 response.loginKey?.let {loginKey ->
                     actPref.setLoginKey(loginKey)
+
+                    // API 헤더값 재 세팅.
+                    loadKoinModules(apiModule)
                 }
+            }
+        }
+    }
+
+    fun test(){
+        viewModelScope.launch(ioDispatchers){
+            val response = apiService.fetchMemoList(1)
+            withContext(ioDispatchers){
+                JLogger.d("Response $response")
             }
         }
     }

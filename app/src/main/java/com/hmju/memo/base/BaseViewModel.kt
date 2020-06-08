@@ -2,6 +2,7 @@ package com.hmju.memo.base
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.*
+import kotlin.coroutines.coroutineContext
 
 /**
  * Description: BaseViewModel Class
@@ -24,11 +25,12 @@ open class BaseViewModel : ViewModel() {
     protected val uiDispatchers = Dispatchers.Main + coroutineExceptionHandler
 
 
-    fun launch(job: () -> CoroutineScope){
+    /*fun launch(job: () -> CoroutineScope){
         CoroutineScope(Dispatchers.IO).launch {
             job
         }
-    }
+    }*/
+
 
     override fun onCleared() {
         super.onCleared()
