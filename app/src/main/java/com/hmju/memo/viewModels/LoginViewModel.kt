@@ -7,12 +7,14 @@ import com.hmju.memo.extensions.SingleLiveEvent
 import com.hmju.memo.model.form.LoginForm
 import com.hmju.memo.model.login.LoginResponse
 import com.hmju.memo.repository.network.ApiService
+import com.hmju.memo.repository.preferences.AccountPref
 import com.hmju.memo.utils.JLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import java.net.SocketTimeoutException
 
 /**
  * Description: Login ViewModel Class
@@ -20,7 +22,8 @@ import retrofit2.HttpException
  * Created by juhongmin on 2020/06/04
  */
 class LoginViewModel(
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    private val actPref : AccountPref
 ) : BaseViewModel () {
 
     private val _isAuto = MutableLiveData<Boolean>().apply {
@@ -50,10 +53,15 @@ class LoginViewModel(
             withContext(Dispatchers.IO){
                 try{
                     JLogger.d("Response $response")
+                    response.let {
+
+                    }
                 }catch (e : HttpException){
                     JLogger.e("HttpException ${e.message()}")
                 } catch (e: Throwable){
                     JLogger.e("Throwable ${e.message}")
+                } catch (e: SocketTimeoutException){
+                    JLogger.e("TimeOut ${e.message}")
                 }
             }
         }

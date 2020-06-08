@@ -95,6 +95,6 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$rootProject.coroutinesVersion"
 
     // Custom Behavior LIb
-    implementation "com.hmju.custombehavior:custom-behavior:1.0.0@aar"
+    implementation "com.hmju.custombehavior:custom-behavior:1.0.0"
 
 }

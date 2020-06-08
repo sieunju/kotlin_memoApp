@@ -25,6 +25,6 @@ interface ApiService {
     @POST("/api/signin")
     suspend fun signIn(
         @Body body: LoginForm
-    ): Deferred<JsonObject>
+    ): LoginResponse
 
 }
