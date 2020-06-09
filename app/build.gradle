@@ -70,6 +70,7 @@ dependencies {
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$rootProject.retrofitVersion"
 
     // Retrofit Coroutines
     implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$rootProject.retrofitCoroutineAdapterVersion"
@@ -96,5 +97,12 @@ dependencies {
 
     // Custom Behavior LIb
     implementation "com.hmju.custombehavior:custom-behavior:1.0.0"
+
+    // Reactive X
+    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxJavaVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxAndroidVersion"
+
+    // RxPermission
+    implementation "com.github.tbruyelle:rxpermissions:$rootProject.rxPermissionVersion"
 
 }

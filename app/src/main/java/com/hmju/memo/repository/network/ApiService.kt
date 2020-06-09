@@ -4,6 +4,7 @@ import com.google.gson.JsonObject
 import com.hmju.memo.model.form.LoginForm
 import com.hmju.memo.model.login.LoginResponse
 import com.hmju.memo.model.memo.MemoResponse
+import io.reactivex.Single
 import kotlinx.coroutines.Deferred
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -25,17 +26,17 @@ interface ApiService {
      * }
      */
     @POST("/api/signin")
-    suspend fun signIn(
+    fun signIn(
         @Body body: LoginForm
-    ): LoginResponse
+    ): Single<LoginResponse>
 
     /**
      * 메모장 데이터 가져오는 API
      * @Query pageNo : 1부터 시작
      */
     @GET("/api/memoList")
-    suspend fun fetchMemoList(
+    fun fetchMemoList(
         @Query("pageNo") pageNo : Int
-    ): MemoResponse
+    ): Single<MemoResponse>
 
 }

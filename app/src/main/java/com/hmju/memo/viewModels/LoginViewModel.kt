@@ -11,6 +11,8 @@ import com.hmju.memo.model.login.LoginResponse
 import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.repository.preferences.AccountPref
 import com.hmju.memo.utils.JLogger
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,47 +28,55 @@ import java.net.SocketTimeoutException
  */
 class LoginViewModel(
     private val apiService: ApiService,
-    private val actPref : AccountPref
-) : BaseViewModel () {
+    private val actPref: AccountPref
+) : BaseViewModel() {
 
     private val _isAuto = MutableLiveData<Boolean>().apply {
         value = true
     }
     val isAuto: MutableLiveData<Boolean>
-    get() = _isAuto
+        get() = _isAuto
 
     val data = MutableLiveData<LoginResponse>()
 
     val strId = MutableLiveData<String>()
     val strPw = MutableLiveData<String>()
 
-    fun startLogin(){
+    fun startLogin() {
         JLogger.d("Id ${strId.value} Pw ${strPw.value}")
-        viewModelScope.launch(ioDispatchers) {
-            val response = apiService.signIn(
+        launch {
+            apiService.signIn(
                 LoginForm(
                     id = strId.value,
                     pw = strPw.value
                 )
-            )
-            withContext(ioDispatchers){
-                JLogger.d("Response $response")
-                response.loginKey?.let {loginKey ->
-                    actPref.setLoginKey(loginKey)
+            ).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ response ->
+                    JLogger.d("Response $response")
+                    response?.loginKey?.let {
+                        actPref.setLoginKey(it)
+                        // API 재 세팅.
+//                        loadKoinModules(apiModule)
+                        test()
+                    }
 
-                    // API 헤더값 재 세팅.
-                    loadKoinModules(apiModule)
-                }
-            }
+                }, {
+                    JLogger.d("Error ${it.message}")
+                })
         }
     }
 
-    fun test(){
-        viewModelScope.launch(ioDispatchers){
-            val response = apiService.fetchMemoList(1)
-            withContext(ioDispatchers){
-                JLogger.d("Response $response")
-            }
+    fun test() {
+        launch {
+            apiService.fetchMemoList(1)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ response ->
+                    JLogger.d("Response $response")
+                }, {
+                    JLogger.d("Error ${it.message}")
+                })
         }
     }
 }

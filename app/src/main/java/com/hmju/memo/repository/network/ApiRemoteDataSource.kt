@@ -6,6 +6,7 @@ import com.hmju.memo.model.login.LoginResponse
 import com.hmju.memo.model.memo.MemoResponse
 import com.hmju.memo.repository.preferences.AccountPref
 import com.hmju.memo.utils.JLogger
+import io.reactivex.Single
 import kotlinx.coroutines.Deferred
 
 /**
@@ -18,11 +19,11 @@ class ApiRemoteDataSource (
     private val actPref: AccountPref
 ) : ApiService {
 
-    override suspend fun signIn(body: LoginForm): LoginResponse {
+    override fun signIn(body: LoginForm): Single<LoginResponse> {
         return apiService.signIn(body)
     }
 
-    override suspend fun fetchMemoList(pageNo: Int): MemoResponse {
+    override fun fetchMemoList(pageNo: Int): Single<MemoResponse> {
         return apiService.fetchMemoList(pageNo)
     }
 }

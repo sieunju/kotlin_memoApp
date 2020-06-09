@@ -39,6 +39,11 @@ buildscript {
 
         // Coroutines
         coroutinesVersion = '1.3.0'
+
+        // Reactive X
+        rxJavaVersion = '2.1.3'
+        rxAndroidVersion = '2.1.1'
+        rxPermissionVersion = '0.10.2'
     }
     repositories {
         google()
@@ -56,7 +61,8 @@ allprojects {
         google()
         jcenter()
 
-        maven{url 'https://dl.bintray.com/sieunju/maven'}
+        maven { url 'https://dl.bintray.com/sieunju/maven' }
+        maven { url 'https://jitpack.io' }
     }
 }
 
