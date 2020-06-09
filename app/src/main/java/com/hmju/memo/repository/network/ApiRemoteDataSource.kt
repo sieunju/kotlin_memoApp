@@ -6,6 +6,7 @@ import com.hmju.memo.model.login.LoginResponse
 import com.hmju.memo.model.memo.MemoResponse
 import com.hmju.memo.repository.preferences.AccountPref
 import com.hmju.memo.utils.JLogger
+import io.reactivex.Maybe
 import io.reactivex.Single
 import kotlinx.coroutines.Deferred
 
@@ -19,11 +20,13 @@ class ApiRemoteDataSource (
     private val actPref: AccountPref
 ) : ApiService {
 
-    override fun signIn(body: LoginForm): Single<LoginResponse> {
+    override fun signIn(body: LoginForm): Maybe<LoginResponse> {
+//        body.id = "eee"
+//        body.pw = "qqq"
         return apiService.signIn(body)
     }
 
-    override fun fetchMemoList(pageNo: Int): Single<MemoResponse> {
-        return apiService.fetchMemoList(pageNo)
+    override fun fetchMemoList(pageNo: Int): Maybe<MemoResponse> {
+        return apiService.fetchMemoList(10)
     }
 }

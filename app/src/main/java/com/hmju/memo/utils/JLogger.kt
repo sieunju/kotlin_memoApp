@@ -19,7 +19,7 @@ class JLogger {
 //            sb.append("::")
             sb.append(ste.methodName)
             sb.append("]")
-            Log.d("$TAG:$sb", msg)
+            Log.d("$TAG:$sb", "Thread\t${Thread.currentThread().name}\tMsg\t$msg")
         }
 
         fun e(msg: String) {

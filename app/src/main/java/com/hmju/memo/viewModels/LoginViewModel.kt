@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hmju.memo.base.BaseViewModel
+import com.hmju.memo.convenience.single
 import com.hmju.memo.di.apiModule
 import com.hmju.memo.extensions.SingleLiveEvent
 import com.hmju.memo.model.form.LoginForm
@@ -12,6 +13,7 @@ import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.repository.preferences.AccountPref
 import com.hmju.memo.utils.JLogger
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -50,20 +52,17 @@ class LoginViewModel(
                     id = strId.value,
                     pw = strPw.value
                 )
-            ).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ response ->
-                    JLogger.d("Response $response")
-                    response?.loginKey?.let {
-                        actPref.setLoginKey(it)
-                        // API 재 세팅.
-//                        loadKoinModules(apiModule)
-                        test()
-                    }
+            )
+                .single()
+                .subscribe(Consumer {  })
+//                .subscribe({
+//                    JLogger.d("onSuccess\t$it")
+//                }, {
+//                    JLogger.d("onError\t${it.message}")
+//                }, {
+//                    JLogger.d("onComplete")
+//                })
 
-                }, {
-                    JLogger.d("Error ${it.message}")
-                })
         }
     }
 
