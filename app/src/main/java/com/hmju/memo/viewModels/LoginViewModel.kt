@@ -1,12 +1,8 @@
 package com.hmju.memo.viewModels
 
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.convenience.single
-import com.hmju.memo.di.apiModule
-import com.hmju.memo.extensions.SingleLiveEvent
 import com.hmju.memo.model.form.LoginForm
 import com.hmju.memo.model.login.LoginResponse
 import com.hmju.memo.repository.network.ApiService
@@ -15,13 +11,6 @@ import com.hmju.memo.utils.JLogger
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.koin.core.context.loadKoinModules
-import retrofit2.HttpException
-import java.net.SocketTimeoutException
 
 /**
  * Description: Login ViewModel Class

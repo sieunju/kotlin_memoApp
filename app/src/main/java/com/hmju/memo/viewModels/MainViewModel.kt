@@ -1,23 +1,20 @@
 package com.hmju.memo.viewModels
 
 import androidx.lifecycle.MutableLiveData
-import com.google.gson.annotations.SerializedName
 import com.hmju.memo.base.BaseViewModel
+import com.hmju.memo.convenience.ListMutableLiveData
 import com.hmju.memo.convenience.multi
-import com.hmju.memo.convenience.single
-import com.hmju.memo.extensions.SingleLiveEvent
-import com.hmju.memo.model.form.LoginForm
-import com.hmju.memo.model.login.LoginResponse
+import com.hmju.memo.convenience.SingleLiveEvent
+import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.model.memo.MemoResponse
 import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.repository.network.TestApiService
 import com.hmju.memo.utils.JLogger
 import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.schedulers.Schedulers.io
 import java.util.concurrent.TimeUnit
+import java.util.function.BiFunction
 import kotlin.random.Random
 
 /**
@@ -38,6 +35,8 @@ class MainViewModel(
         value = ""
     }
 
+    val tmpList = ListMutableLiveData<MemoItem>()
+
     fun moveLogin() {
         startLogin.call()
     }
@@ -45,50 +44,35 @@ class MainViewModel(
     fun test() {
 
         launch {
-            Flowable.merge(
+            Flowable.zip(
                 listOf(
-                    testApiService.firstPage().multi(),
-                    testApiService.firstPage().multi().delay(2, TimeUnit.SECONDS),
-                    testApiService.firstPage().multi().delay(3, TimeUnit.SECONDS),
-                    testApiService.twoPage().multi(),
-                    testApiService.twoPage().multi(),
-                    testApiService.twoPage().multi()
+                    apiService.fetchMultiMemoList(1).multi(),
+                    apiService.fetchMultiMemoList(2).multi(),
+                    BiFunction { t, u ->  }
                 )
             )
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    JLogger.d("onSuccess $it")
-                }, {
-
-                }, {
-
-                })
         }
 
-
 //        launch {
-//            Observable.just("가", "나", "다", "라")
-//                .doOnNext { JLogger.d("onOnNext : $it") }
-//                .subscribeOn(Schedulers.newThread())
-////                .observeOn(Schedulers.newThread())
-//                .subscribe {
-//                    JLogger.d("subscribe $it")
-//                    startText.postValue(startText.value + it)
-//                }
-//        }
-
-//        launch {
-//            apiService.fetchMemoList(1)
-//                .single()
-//                .subscribe({ response->
-//                    JLogger.d("onSuccess\t$response")
-//                },{
-//                    JLogger.d("onError\t${it.message}")
-//                },{
-//                    JLogger.d("onComplete")
-//                })
+//            Flowable.merge(
+//                listOf(
+//                    testApiService.firstPage().multi(),
+//                    testApiService.firstPage().multi().delay(2, TimeUnit.SECONDS),
+//                    testApiService.firstPage().multi().delay(3, TimeUnit.SECONDS),
+//                    testApiService.twoPage().multi(),
+//                    testApiService.twoPage().multi(),
+//                    testApiService.twoPage().multi()
+//                )
+//            )
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({
+//                    JLogger.d("onSuccess $it")
+//                }, {
 //
+//                }, {
+//
+//                })
 //        }
 
     }
