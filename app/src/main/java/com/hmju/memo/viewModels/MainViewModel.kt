@@ -43,15 +43,15 @@ class MainViewModel(
 
     fun test() {
 
-        launch {
-            Flowable.zip(
-                listOf(
-                    apiService.fetchMultiMemoList(1).multi(),
-                    apiService.fetchMultiMemoList(2).multi(),
-                    BiFunction { t, u ->  }
-                )
-            )
-        }
+//        launch {
+//            Flowable.zip(
+//                listOf(
+//                    apiService.fetchMultiMemoList(1).multi(),
+//                    apiService.fetchMultiMemoList(2).multi(),
+//                    BiFunction { t, u ->  }
+//                )
+//            )
+//        }
 
 //        launch {
 //            Flowable.merge(

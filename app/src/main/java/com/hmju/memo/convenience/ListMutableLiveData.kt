@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData
  *
  * Created by juhongmin on 2020/06/10
  */
-class ListMutableLiveData<T : Any> : MutableLiveData<ArrayList<T>>(){
+class ListMutableLiveData<T> : MutableLiveData<ArrayList<T>>(){
     init {
         // new ArrayList
         value = arrayListOf()
