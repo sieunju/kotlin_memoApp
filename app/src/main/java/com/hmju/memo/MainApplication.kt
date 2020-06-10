@@ -1,11 +1,9 @@
 package com.hmju.memo
 
-import android.app.Application
-import android.content.Context
 import androidx.multidex.MultiDexApplication
 import com.hmju.memo.di.apiModule
-import com.hmju.memo.di.viewModule
 import com.hmju.memo.di.prefModule
+import com.hmju.memo.di.viewModule
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
 import org.koin.android.ext.koin.androidContext
@@ -40,7 +38,7 @@ class MainApplication : MultiDexApplication() {
     /**
      * reactivex.exceptions.UndeliverableException 처리 함수.
      */
-    private fun initRxJava(){
+    private fun initRxJava() {
         // reactivex.exceptions.UndeliverableException
         // 참고 링크 https://thdev.tech/android/2019/03/04/RxJava2-Error-handling/
         RxJavaPlugins.setErrorHandler { e ->
@@ -58,12 +56,18 @@ class MainApplication : MultiDexApplication() {
             }
             if (error is NullPointerException || error is IllegalArgumentException) {
                 // that's likely a bug in the application
-                Thread.currentThread().uncaughtExceptionHandler?.uncaughtException(Thread.currentThread(), error)
+                Thread.currentThread().uncaughtExceptionHandler?.uncaughtException(
+                    Thread.currentThread(),
+                    error
+                )
                 return@setErrorHandler
             }
             if (error is IllegalStateException) {
                 // that's a bug in RxJava or in a custom operator
-                Thread.currentThread().uncaughtExceptionHandler?.uncaughtException(Thread.currentThread(), error)
+                Thread.currentThread().uncaughtExceptionHandler?.uncaughtException(
+                    Thread.currentThread(),
+                    error
+                )
                 return@setErrorHandler
             }
         }

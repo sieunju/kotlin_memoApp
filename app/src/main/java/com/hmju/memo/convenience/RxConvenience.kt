@@ -1,11 +1,13 @@
 package com.hmju.memo.convenience
 
+import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.Schedulers.io
+import java.util.concurrent.TimeUnit
 
 /**
  * Description : Reactive X 편의성을 위한 정의한곳
@@ -26,4 +28,12 @@ import io.reactivex.schedulers.Schedulers.io
 // AndroidSchedulers.mainThread() - 안드로이드의 UI 스레드에서 동작합니다.
 // HandlerScheduler.from(handler) - 특정 핸들러 handler에 의존하여 동작합니다.
 
-fun <T> Maybe<T>.single() = subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+// 단일로 요청하는 경우.
+fun <T> Maybe<T>.single() = subscribeOn(io()).observeOn(AndroidSchedulers.mainThread())
+
+// 여러개의 API 를 한꺼번에 보내는 경우
+fun <T> Flowable<T>.multi() = subscribeOn(io())
+
+// 여러개의 API를 한꺼번에 보내는 경우 Delay 타입.
+fun <T> Flowable<T>.multiDelay(_delay: Int) = subscribeOn(io()).delay(_delay.toLong(),TimeUnit.SECONDS)
+

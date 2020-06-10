@@ -2,6 +2,7 @@ package com.hmju.memo.di
 
 import com.hmju.memo.repository.network.ApiRemoteDataSource
 import com.hmju.memo.repository.network.ApiService
+import com.hmju.memo.repository.network.TestApiService
 import com.hmju.memo.utils.createOkHttpClient
 import com.hmju.memo.utils.createRetrofit
 import com.hmju.memo.utils.forbiddenInterceptor
@@ -33,5 +34,9 @@ val apiModule = module {
             createRetrofit(get()),
             get()
         )
+    }
+
+    single<TestApiService> {
+        createRetrofit(get())
     }
 }
