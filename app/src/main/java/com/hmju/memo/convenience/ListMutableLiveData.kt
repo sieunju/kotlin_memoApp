@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 
 
 /**
- * Description :
+ * Description : List 형식의 LiveData.
  *
  * Created by juhongmin on 2020/06/10
  */
@@ -27,5 +27,17 @@ class ListMutableLiveData<T> : MutableLiveData<ArrayList<T>>(){
 
     fun addAll(itemList: List<T>){
         value.addAll(itemList)
+    }
+
+    fun remove(item: T){
+        value.remove(item)
+    }
+
+    fun remove(pos: Int){
+        value.removeAt(pos)
+    }
+
+    fun clear(){
+        value.clear()
     }
 }

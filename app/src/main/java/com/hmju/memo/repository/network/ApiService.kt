@@ -4,6 +4,7 @@ import com.google.gson.JsonObject
 import com.hmju.memo.base.BaseResponse
 import com.hmju.memo.model.form.LoginForm
 import com.hmju.memo.model.login.LoginResponse
+import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.model.memo.MemoResponse
 import io.reactivex.Flowable
 import io.reactivex.Maybe
@@ -60,7 +61,5 @@ interface ApiService {
     fun fetchMultiMemoList(
         @Query("pageNo") pageNo : Int
     ): Flowable<MemoResponse>
-
-
 
 }

@@ -3,6 +3,7 @@ package com.hmju.memo.ui.home
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.Observer
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.hmju.memo.R
 import com.hmju.memo.BR
 
@@ -27,6 +28,14 @@ class MainActivity : BaseActivity<ActivityMainBinding,MainViewModel> (){
 
             startLogin.observe(this@MainActivity, Observer {
                 startAct<LoginActivity>()
+            })
+
+            startAlert.observe(this@MainActivity, Observer {
+                MaterialAlertDialogBuilder(this@MainActivity)
+                    .setMessage("안녕하세요. 테스트 입니다.")
+                    .setNegativeButton("거절",null)
+                    .setPositiveButton("확인",null)
+                    .show()
             })
         }
     }

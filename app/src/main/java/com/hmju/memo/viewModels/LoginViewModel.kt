@@ -43,7 +43,16 @@ class LoginViewModel(
                 )
             )
                 .single()
-                .subscribe(Consumer {  })
+                .doOnSubscribe { JLogger.d("doOnSubscribe") }
+                .subscribe({
+                    it.loginKey?.let{loginKey->
+                        actPref.setLoginKey(loginKey)
+                    }
+                },{
+
+                },{
+
+                })
 //                .subscribe({
 //                    JLogger.d("onSuccess\t$it")
 //                }, {
