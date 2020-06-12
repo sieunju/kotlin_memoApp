@@ -1,7 +1,9 @@
 package com.hmju.memo.ui.login
 
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import com.hmju.custombehavior.TranslationBehavior
 import com.hmju.memo.R
 import com.hmju.memo.BR
@@ -20,7 +22,14 @@ class LoginActivity : BaseActivity<ActivityLoginBinding,LoginViewModel> () {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         with(viewModel){
-
+            startFinish.observe(this@LoginActivity, Observer {isLogin->
+                if(isLogin){
+                    setResult(Activity.RESULT_OK)
+                } else {
+                    setResult(Activity.RESULT_CANCELED)
+                }
+                finish()
+            })
         }
     }
 }

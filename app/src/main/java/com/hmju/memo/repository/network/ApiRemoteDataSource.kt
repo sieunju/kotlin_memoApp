@@ -30,7 +30,7 @@ class ApiRemoteDataSource (
     }
 
     override fun fetchMemoList(pageNo: Int): Maybe<MemoResponse> {
-        return apiService.fetchMemoList(10)
+        return apiService.fetchMemoList(pageNo)
     }
 
     override fun fetchMemoList(pageNo: Int, filterTag: Int): Maybe<MemoResponse> {

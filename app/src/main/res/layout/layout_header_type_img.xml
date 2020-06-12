@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.hmju.memo.viewModels.HeaderViewModel" />
+    </data>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_200"
+        android:fitsSystemWindows="true">
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+</layout>

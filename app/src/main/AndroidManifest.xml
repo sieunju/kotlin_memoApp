@@ -14,9 +14,7 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".ui.home.MainActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/LoginTheme"
-            >
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,7 +24,6 @@
 
         <activity android:name=".ui.login.LoginActivity"
             android:windowSoftInputMode="adjustResize"
-            android:theme="@style/LoginTheme"
             android:launchMode="singleTop"
             />
     </application>

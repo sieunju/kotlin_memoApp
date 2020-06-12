@@ -16,55 +16,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <com.hmju.memo.base.HeaderView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent"
+            app:header_type="img_search">
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:onClick="@{()->viewModel.moveLogin()}"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/text_size_20"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:userNameitem="@{@string/id_error_info}" />
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                app:memoItems="@{viewModel.dataList}"
+                app:viewModel="@{viewModel}" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorAccent"
-                android:gravity="center_horizontal"
-                android:onClick="@{()-> viewModel.test()}"
-                android:paddingTop="@dimen/padding_size_13"
-                android:paddingBottom="@dimen/padding_size_13"
-                android:text="테스트"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/text_size_20"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="@{viewModel.startText}"
-                android:textColor="@color/colorBlack"
-                android:textSize="20dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:text="알럿창 테스트"
-                android:textColor="@color/colorBlack"
-                android:textSize="20dp"
-                android:onClick="@{()->viewModel.moveAlert()}"
-                android:layout_height="wrap_content"/>
-
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
+        </com.hmju.memo.base.HeaderView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

@@ -13,5 +13,21 @@ data class MemoItem(
     @SerializedName("TAG") val tag: Int,
     @SerializedName("MEMO_ID") val manageNo: Int,
     @SerializedName("TITLE") val title: String? = "",
-    @SerializedName("CONTENTS") val contents: String? = ""
+    @SerializedName("CONTENTS") val contents: String? = "",
+    @SerializedName("IMAGES") val images: ArrayList<String>? = null
+)
+
+data class MemoNormaItem(
+    val title: String? = "",
+    val contents: String? = "",
+    val tag: Int,
+    val id: Int
+)
+
+data class MemoImgItem(
+    val title: String? = "",
+    val contents: String? = "",
+    val images: ArrayList<String>,
+    val tag: Int,
+    val id: Int
 )

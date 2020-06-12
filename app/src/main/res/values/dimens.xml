@@ -105,8 +105,10 @@
     <dimen name="text_size_14">14dp</dimen>
     <dimen name="text_size_20">20dp</dimen>
 
+    <dimen name="margin_size_5">5dp</dimen>
     <dimen name="margin_size_20">20dp</dimen>
 
+    <dimen name="padding_size_10">10dp</dimen>
     <dimen name="padding_size_13">13dp</dimen>
 
 </resources>

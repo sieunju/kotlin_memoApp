@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <!-- [s] HeaderView Attrs -->
+    <declare-styleable name="HeaderView">
+        <attr name="header_type" format="enum">
+            <enum name="none" value="0"/>
+            <enum name="title" value="1"/>
+            <enum name="img" value="2"/>
+            <enum name="img_search" value="3"/>
+        </attr>
+    </declare-styleable>
+    <!-- [e] HeaderView Attrs -->
+
+
+</resources>

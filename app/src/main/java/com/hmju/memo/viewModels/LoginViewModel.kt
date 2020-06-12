@@ -2,6 +2,7 @@ package com.hmju.memo.viewModels
 
 import androidx.lifecycle.MutableLiveData
 import com.hmju.memo.base.BaseViewModel
+import com.hmju.memo.convenience.SingleLiveEvent
 import com.hmju.memo.convenience.single
 import com.hmju.memo.model.form.LoginForm
 import com.hmju.memo.model.login.LoginResponse
@@ -33,6 +34,10 @@ class LoginViewModel(
     val strId = MutableLiveData<String>()
     val strPw = MutableLiveData<String>()
 
+    val startFinish = SingleLiveEvent<Boolean>().apply {
+        value = false
+    }
+
     fun startLogin() {
         JLogger.d("Id ${strId.value} Pw ${strPw.value}")
         launch {
@@ -47,6 +52,7 @@ class LoginViewModel(
                 .subscribe({
                     it.loginKey?.let{loginKey->
                         actPref.setLoginKey(loginKey)
+                        startFinish.value = true
                     }
                 },{
 

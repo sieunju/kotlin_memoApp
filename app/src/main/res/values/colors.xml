@@ -12,5 +12,13 @@
     <color name="colorBlack">#000000</color>
     <color name="colorCoolGrey">#dddddd</color>
 
+    <color name="color_tag1">#FF3B30</color>
+    <color name="color_tag2">#FF9500</color>
+    <color name="color_tag3">#FFCC00</color>
+    <color name="color_tag4">#34C759</color>
+    <color name="color_tag5">#007AFF</color>
+    <color name="color_tag6">#AF52DE</color>
+    <color name="color_tag7">#8E8E93</color>
+
 
 </resources>
