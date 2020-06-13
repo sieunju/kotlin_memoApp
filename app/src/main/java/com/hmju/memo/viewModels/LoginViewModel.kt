@@ -34,17 +34,15 @@ class LoginViewModel(
     val strId = MutableLiveData<String>()
     val strPw = MutableLiveData<String>()
 
-    val startFinish = SingleLiveEvent<Boolean>().apply {
-        value = false
-    }
+    val startFinish = SingleLiveEvent<Boolean>()
 
     fun startLogin() {
         JLogger.d("Id ${strId.value} Pw ${strPw.value}")
         launch {
             apiService.signIn(
                 LoginForm(
-                    id = strId.value,
-                    pw = strPw.value
+                    id = strId.value!!.trim(),
+                    pw = strPw.value!!.trim()
                 )
             )
                 .single()
@@ -52,6 +50,7 @@ class LoginViewModel(
                 .subscribe({
                     it.loginKey?.let{loginKey->
                         actPref.setLoginKey(loginKey)
+                        JLogger.d("TEST:: 로그인 성공")
                         startFinish.value = true
                     }
                 },{
@@ -71,15 +70,16 @@ class LoginViewModel(
     }
 
     fun test() {
-        launch {
-            apiService.fetchMemoList(1)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ response ->
-                    JLogger.d("Response $response")
-                }, {
-                    JLogger.d("Error ${it.message}")
-                })
-        }
+        JLogger.d("TEST::::")
+//        launch {
+//            apiService.fetchMemoList(1)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({ response ->
+//                    JLogger.d("Response $response")
+//                }, {
+//                    JLogger.d("Error ${it.message}")
+//                })
+//        }
     }
 }

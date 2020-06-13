@@ -82,7 +82,7 @@
             <com.google.android.material.button.MaterialButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="@{()-> viewModel.test()}"
+                app:turtleClick="@{()-> viewModel.test()}"
                 android:text="테스트"
                 android:textColor="@color/colorWhite"
                 android:textStyle="bold" />

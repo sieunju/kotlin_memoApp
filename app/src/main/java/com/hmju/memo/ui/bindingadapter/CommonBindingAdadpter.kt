@@ -2,8 +2,11 @@ package com.hmju.memo.ui.bindingadapter
 
 import android.os.Build
 import android.text.Html
+import android.view.View
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.BindingAdapter
+import com.google.android.material.card.MaterialCardView
 import com.hmju.memo.utils.JLogger
 
 /**
@@ -16,10 +19,10 @@ import com.hmju.memo.utils.JLogger
 fun bindingText(
     textView: AppCompatTextView,
     text: String?
-){
-    text?.let{
+) {
+    text?.let {
         textView.text = text
-    } ?: run{
+    } ?: run {
         JLogger.d("왜 널이요???")
     }
 }
@@ -28,14 +31,57 @@ fun bindingText(
 fun bindingHtmlText(
     textView: AppCompatTextView,
     text: String?
-){
-    text?.let{
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.N){
+) {
+    text?.let {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             textView.text = Html.fromHtml(it)
         } else {
-            textView.text = Html.fromHtml(it,Html.FROM_HTML_MODE_LEGACY)
+            textView.text = Html.fromHtml(it, Html.FROM_HTML_MODE_LEGACY)
         }
-    } ?: run{
+    } ?: run {
         JLogger.d("왜 널이요?")
     }
+}
+
+class OnSingleClickListener(private val onSingleCLick: (View) -> Unit) : View.OnClickListener {
+    companion object {
+        const val CLICK_INTERVAL = 500
+    }
+
+    private var lastClickedTime: Long = 0L
+
+    override fun onClick(v: View?) {
+        v?.let {
+            if(isSafe()){
+                onSingleCLick(it)
+            }
+            lastClickedTime = System.currentTimeMillis()
+        }
+    }
+
+    private fun isSafe() = System.currentTimeMillis() - lastClickedTime > CLICK_INTERVAL
+}
+
+fun View.setOnSingleClickListener(onSingleCLick: (View) -> Unit){
+    val singleClickListener = OnSingleClickListener{
+        onSingleCLick(it)
+    }
+    setOnClickListener(singleClickListener)
+}
+
+
+/**
+ * 뷰 중복 클릭 방지 리스너.
+ */
+@BindingAdapter("turtleClick")
+fun setTurtleClick(
+    view: View,
+    listener: View.OnClickListener
+) {
+    view.setOnClickListener(OnSingleClickListener {
+        listener.onClick(it)
+    })
+
+//    view.setOnSingleClickListener { listener.onClick(view) }
+
 }

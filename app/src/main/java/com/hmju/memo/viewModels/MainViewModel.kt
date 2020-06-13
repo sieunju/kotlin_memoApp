@@ -52,6 +52,10 @@ class MainViewModel(
         }
     }
 
+    fun test(){
+        JLogger.d("TEST!!!!")
+    }
+
 
     fun moveLogin() {
         startLogin.call()

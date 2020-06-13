@@ -32,7 +32,6 @@ class MainActivity : BaseActivity<ActivityMainBinding,MainViewModel> (){
         with(viewModel){
 
             startLogin.observe(this@MainActivity, Observer {
-                JLogger.d("TEST::고고?")
                 startActResult<LoginActivity>(RequestCode.LOGIN){}
             })
 

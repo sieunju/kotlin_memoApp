@@ -29,4 +29,12 @@
         <item name="colorControlHighlight">@color/colorPrimaryDark</item>
     </style>
 
+    <!-- 메모 콘텐츠 기본 스타일 -->
+    <style name="MemoRootStyle">
+        <item name="android:layout_margin">@dimen/margin_size_10</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="cardCornerRadius">@dimen/size_6</item>
+        <item name="cardElevation">@dimen/size_6</item>
+    </style>
+
 </resources>

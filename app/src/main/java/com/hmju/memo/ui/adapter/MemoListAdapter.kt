@@ -5,8 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hmju.memo.R
+import com.hmju.memo.base.BaseAdapter
 import com.hmju.memo.base.BaseViewHolder
 import com.hmju.memo.convenience.ListMutableLiveData
+import com.hmju.memo.databinding.ItemMemoImgBinding
 import com.hmju.memo.databinding.ItemMemoNormalBinding
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.viewModels.MainViewModel
@@ -20,17 +22,17 @@ import com.hmju.memo.viewModels.MainViewModel
 class MemoListAdapter(
     private val viewModel: MainViewModel,
     private val dataList: ListMutableLiveData<MemoItem>
-) : RecyclerView.Adapter<BaseViewHolder<*>>() {
+) : BaseAdapter() {
+
+    override fun onDataChanged() {
+
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         return MemoNormalViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_memo_normal, parent, false),
             viewModel
         )
-    }
-
-    override fun getItemCount(): Int {
-        return dataList.size()
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder<*>, pos: Int) {
@@ -45,6 +47,13 @@ class MemoListAdapter(
         BaseViewHolder<ItemMemoNormalBinding>(view) {
         init {
             binding.viewModel = viewModel
+            binding.listener = memoClick
         }
     }
+
+//    class MemoImgViewHolder(view: View, viewModel: MainViewModel) :
+//        BaseViewHolder<ItemMemoImgBinding>(view) {
+//        init {
+//        }
+//    }
 }

@@ -33,13 +33,14 @@ android {
         pickFirst("META-INF/kotlinx-coroutines-core.kotlin_module")
     }
 
-    dataBinding {
-        enabled = true
-    }
-
-//        buildFeatures {
-//        dataBinding = true
+//    dataBinding {
+//        enabled = true
 //    }
+
+    // Gradle 4.0.0 대응
+    buildFeatures {
+        dataBinding = true
+    }
 }
 
 dependencies {
