@@ -4,8 +4,8 @@ import android.view.View
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hmju.memo.R
+import com.hmju.memo.base.BaseAdapter
 import com.hmju.memo.convenience.ListMutableLiveData
-import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.ui.adapter.MemoListAdapter
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.MainViewModel
@@ -16,19 +16,19 @@ import com.hmju.memo.viewModels.MainViewModel
  * Created by hmju on 2020-06-12
  */
 
-@BindingAdapter(value=["viewModel","memoItems"])
+@BindingAdapter(value = ["viewModel", "memoItems"])
 fun setMemoListAdapter(
     view: RecyclerView,
     viewModel: MainViewModel,
-    dataList: ListMutableLiveData<MemoItem>
+    dataList: ListMutableLiveData<BaseAdapter.Companion.ItemStruct<*>>
 ) {
-    view.adapter?.run{
-        if(this is MemoListAdapter){
+    view.adapter?.run {
+        if (this is MemoListAdapter) {
             JLogger.d("TEST:: 갱신 갱신")
-            notifyDataSetChanged()
+            this.onDataChanged()
         }
-    } ?: run{
-        MemoListAdapter(viewModel,dataList).apply {
+    } ?: run {
+        MemoListAdapter(viewModel, dataList).apply {
             view.adapter = this
             JLogger.d("TEST:: 추가")
         }
