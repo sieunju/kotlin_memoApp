@@ -56,7 +56,7 @@ fun headerInterceptor(pref: AccountPref) : Interceptor {
         val request: Request = origin.newBuilder()
             .header("accept", "application/json")
             .header("Content-Type","application/json")
-            .header(NetInfo.KEY_TYPE,"APP")
+            .header(NetInfo.KEY_TYPE,NetInfo.VALUE_TYPE)
             .header(NetInfo.KEY_LOGIN,pref.getLoginKey())
             .method(origin.method(),origin.body())
             .build()

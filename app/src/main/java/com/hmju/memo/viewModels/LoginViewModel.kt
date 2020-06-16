@@ -48,38 +48,15 @@ class LoginViewModel(
                 .single()
                 .doOnSubscribe { JLogger.d("doOnSubscribe") }
                 .subscribe({
-                    it.loginKey?.let{loginKey->
-                        actPref.setLoginKey(loginKey)
+                    it.loginKey?.let { loginKey ->
+//                        actPref.setLoginKey(loginKey)
                         JLogger.d("TEST:: 로그인 성공")
                         startFinish.value = true
                     }
-                },{
-
-                },{
-
+                }, {
+                    startFinish.value = false
                 })
-//                .subscribe({
-//                    JLogger.d("onSuccess\t$it")
-//                }, {
-//                    JLogger.d("onError\t${it.message}")
-//                }, {
-//                    JLogger.d("onComplete")
-//                })
 
         }
-    }
-
-    fun test() {
-        JLogger.d("TEST::::")
-//        launch {
-//            apiService.fetchMemoList(1)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe({ response ->
-//                    JLogger.d("Response $response")
-//                }, {
-//                    JLogger.d("Error ${it.message}")
-//                })
-//        }
     }
 }

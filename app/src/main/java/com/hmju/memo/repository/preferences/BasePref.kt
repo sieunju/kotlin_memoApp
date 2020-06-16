@@ -43,7 +43,7 @@ abstract class BasePref(
         pref.getString(key,defaultValue)?.let{
             return it
         } ?: run {
-            return ""
+            return defaultValue
         }
     }
 
@@ -57,5 +57,9 @@ abstract class BasePref(
 
     override fun getValue(key: String, defaultValue: Long): Long {
         return pref.getLong(key,defaultValue)
+    }
+
+    override fun getValue(key: String): String? {
+        return pref.getString(key,null)
     }
 }
