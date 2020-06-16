@@ -2,24 +2,23 @@ package com.hmju.memo.ui.home
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.Observer
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.hmju.memo.R
 import com.hmju.memo.BR
-
+import com.hmju.memo.R
 import com.hmju.memo.base.BaseActivity
 import com.hmju.memo.databinding.ActivityMainBinding
 import com.hmju.memo.define.RequestCode
-import com.hmju.memo.dialog.ConfirmDialog
 import com.hmju.memo.ui.login.LoginActivity
-import com.hmju.memo.utils.JLogger
-import com.hmju.memo.utils.startAct
 import com.hmju.memo.utils.startActResult
 import com.hmju.memo.viewModels.MainViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 
+/**
+ * Description : 메인 페이지
+ *
+ * Created by hmju on 2020-05-10
+ */
 class MainActivity : BaseActivity<ActivityMainBinding,MainViewModel> (){
 
     override val layoutId = R.layout.activity_main
