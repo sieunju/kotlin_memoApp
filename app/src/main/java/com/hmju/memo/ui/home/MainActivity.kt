@@ -12,6 +12,7 @@ import com.hmju.memo.BR
 import com.hmju.memo.base.BaseActivity
 import com.hmju.memo.databinding.ActivityMainBinding
 import com.hmju.memo.define.RequestCode
+import com.hmju.memo.dialog.ConfirmDialog
 import com.hmju.memo.ui.login.LoginActivity
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.startAct
@@ -36,11 +37,6 @@ class MainActivity : BaseActivity<ActivityMainBinding,MainViewModel> (){
             })
 
             startAlert.observe(this@MainActivity, Observer {
-                MaterialAlertDialogBuilder(this@MainActivity)
-                    .setMessage("안녕하세요. 테스트 입니다.")
-                    .setNegativeButton("거절",null)
-                    .setPositiveButton("확인",null)
-                    .show()
             })
 
             start()

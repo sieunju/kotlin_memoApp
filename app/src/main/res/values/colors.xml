@@ -12,6 +12,7 @@
     <color name="colorBlack">#000000</color>
     <color name="colorCoolGrey">#dddddd</color>
 
+    <color name="color_transparent">#00000000</color>
     <color name="color_tag1">#FF3B30</color>
     <color name="color_tag2">#FF9500</color>
     <color name="color_tag3">#FFCC00</color>

@@ -15,7 +15,7 @@
 
         <variable
             name="item"
-            type="com.hmju.memo.model.memo.MemoItem" />
+            type="com.hmju.memo.model.memo.MemoNormaItem" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

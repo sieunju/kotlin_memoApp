@@ -1,25 +1,19 @@
 package com.hmju.memo.viewModels
 
-import androidx.lifecycle.MutableLiveData
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.hmju.memo.base.BaseAdapter.Companion.ItemStruct
+import com.hmju.memo.base.BaseAdapter.Companion.TYPE_MEMO_IMG
+import com.hmju.memo.base.BaseAdapter.Companion.TYPE_MEMO_NORMAL
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.convenience.ListMutableLiveData
-import com.hmju.memo.convenience.multi
 import com.hmju.memo.convenience.SingleLiveEvent
 import com.hmju.memo.convenience.single
+import com.hmju.memo.model.memo.MemoImgItem
 import com.hmju.memo.model.memo.MemoItem
-import com.hmju.memo.model.memo.MemoResponse
+import com.hmju.memo.model.memo.MemoNormaItem
 import com.hmju.memo.repository.network.ApiService
-import com.hmju.memo.repository.network.TestApiService
 import com.hmju.memo.repository.preferences.AccountPref
 import com.hmju.memo.utils.JLogger
-import io.reactivex.*
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import org.jetbrains.annotations.TestOnly
-import java.util.concurrent.TimeUnit
-import java.util.function.BiFunction
-import kotlin.random.Random
+import io.reactivex.Observable
 
 /**
  * Description: MainViewModel Class
@@ -34,7 +28,8 @@ class MainViewModel(
     val startLogin = SingleLiveEvent<Unit>()
     val startAlert = SingleLiveEvent<Unit>()
 
-    val dataList = ListMutableLiveData<MemoItem>()
+    //    val dataList = ListMutableLiveData<MemoItem>()
+    val dataList = ListMutableLiveData<ItemStruct<*>>()
 
     fun start() {
         if (actPref.getLoginKey().isNotEmpty()) {
@@ -42,7 +37,7 @@ class MainViewModel(
                 apiService.fetchMemoList(1)
                     .single()
                     .subscribe({
-                        dataList.addAll(it.dataList)
+                        dataConverter(it.dataList)
                     }, {
 
                     })
@@ -52,7 +47,84 @@ class MainViewModel(
         }
     }
 
-    fun test(){
+    fun dataConverter(responseList: ArrayList<MemoItem>) {
+        launch {
+            Observable.fromIterable(responseList)
+                .subscribe(
+                    {
+                        when (it.tag) {
+                            in 1..3 -> {
+                                dataList.add(
+                                    ItemStruct(
+                                        MemoImgItem(
+                                            title = "${it.title}_첫번째",
+                                            contents = it.contents,
+                                            images = it.images,
+                                            tag = it.tag,
+                                            id = it.manageNo
+                                        ), TYPE_MEMO_IMG
+                                    )
+                                )
+                            }
+                            4 -> {
+                                dataList.add(
+                                    ItemStruct(
+                                        MemoImgItem(
+                                            title = "${it.title}_두번쨰",
+                                            contents = it.contents,
+                                            images = it.images,
+                                            tag = it.tag,
+                                            id = it.manageNo
+                                        ), TYPE_MEMO_IMG
+                                    )
+                                )
+                            }
+                            5 -> {
+                                dataList.add(
+                                    ItemStruct(
+                                        MemoNormaItem(
+                                            title = "${it.title}_세번쨰",
+                                            contents = it.contents,
+                                            tag = it.tag,
+                                            id = it.manageNo
+                                        ), TYPE_MEMO_NORMAL
+                                    )
+                                )
+                            }
+                            6 -> {
+                                dataList.add(
+                                    ItemStruct(
+                                        MemoImgItem(
+                                            title = "${it.title}_네번쨰",
+                                            contents = it.contents,
+                                            images = it.images,
+                                            tag = it.tag,
+                                            id = it.manageNo
+                                        ), TYPE_MEMO_IMG
+                                    )
+                                )
+                            }
+                            in 7..8 -> {
+                                dataList.add(
+                                    ItemStruct(
+                                        MemoNormaItem(
+                                            title = "${it.title}_다섯번째",
+                                            contents = it.contents,
+                                            tag = it.tag,
+                                            id = it.manageNo
+                                        ), TYPE_MEMO_NORMAL
+                                    )
+                                )
+                            }
+                        }
+                    }, {
+
+                    }
+                )
+        }
+    }
+
+    fun test() {
         JLogger.d("TEST!!!!")
     }
 

@@ -27,7 +27,13 @@ data class MemoNormaItem(
 data class MemoImgItem(
     val title: String? = "",
     val contents: String? = "",
-    val images: ArrayList<String>,
+    val images: ArrayList<String>? = null,
     val tag: Int,
     val id: Int
-)
+) {
+    fun getThumbImg() : String?{
+        return images?.getOrNull(0)
+    }
+
+    fun getTestImgUrl() = "public/resource/logo.png"
+}

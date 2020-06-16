@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">memo</string>
-    
+
     <string name="require_id">아이디 입력</string>
     <string name="require_pw">비밀번호 입력</string>
     <string name="id_error_info">특수문자는 사용할 수 없습니다.</string>
@@ -8,10 +8,8 @@
     <string name="str_login">로그인</string>
 
     <string name="large_text">
-        MIT License\n\n
-
-        Copyright (c) 2019 Sieun Ju\n\n
-
+        MIT License
+        Copyright (c) 2019 Sieun Ju
         Permission is hereby granted, free of charge, to any person obtaining a copy
         of this software and associated documentation files (the "Software"), to deal
         in the Software without restriction, including without limitation the rights
@@ -31,4 +29,6 @@
         OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
         SOFTWARE.
     </string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>
