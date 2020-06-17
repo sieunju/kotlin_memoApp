@@ -6,49 +6,40 @@
     android:orientation="vertical"
     android:padding="@dimen/widget_margin">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/widget_margin"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/img_logo"
-            android:layout_width="@dimen/size_40"
-            android:layout_height="@dimen/size_40"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop" />
-
-        <TextView
-            android:id="@+id/tv_logo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/margin_size_5"
-            android:textColor="@color/color_tag1"
-            android:textSize="@dimen/text_size_20"
-            tools:text="브랜드 이름" />
-
-    </LinearLayout>
-
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_size_5"
-        android:textColor="@color/color_tag1"
-        android:textSize="@dimen/text_size_20"
-        tools:text="테스트 타이틀" />
+        android:layout_gravity="center_horizontal"
+        android:text="위경도 테스트"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/text_size_14" />
 
     <TextView
-        android:id="@+id/tv_contents"
+        android:id="@+id/tv_latitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/text_size_14"
+        tools:text="위도 38.....!" />
+
+    <TextView
+        android:id="@+id/tv_longitude"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_size_5"
-        android:ellipsize="end"
-        android:maxLines="3"
-        android:textColor="@color/colorBlack"
-        android:textSize="@dimen/text_size_20"
-        tools:text="@string/large_text" />
+        android:textColor="@color/colorPrimaryLight"
+        android:textSize="@dimen/text_size_14"
+        tools:text="경도 38.....!" />
+
+    <TextView
+        android:id="@+id/tv_accuracy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_size_5"
+        android:textColor="@color/colorSecondary"
+        android:textSize="@dimen/text_size_14"
+        tools:text="정확도!!" />
+
 
 </LinearLayout>

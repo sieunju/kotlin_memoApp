@@ -1,11 +1,9 @@
 package com.hmju.memo.base
 
 import android.app.Activity
-import android.appwidget.AppWidgetManager
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
@@ -18,11 +16,8 @@ import com.hmju.memo.model.memo.MemoImgItem
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.model.memo.MemoNormaItem
 import com.hmju.memo.ui.login.LoginActivity
-import com.hmju.memo.ui.widgt.updateAppWidget
-import com.hmju.memo.ui.widgt.updateWidget
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.startAct
-import com.hmju.memo.utils.startActResult
 
 /**
  * Description: BaseViewHolder
@@ -63,13 +58,13 @@ abstract class BaseViewHolder<out T : ViewDataBinding>(
                         resource: Bitmap,
                         transition: Transition<in Bitmap>?
                     ) {
-                        updateWidget(
-                            context = itemView.context,
-                            logo = "올리브영",
-                            logoImg = resource,
-                            title = item.title,
-                            contents = item.contents
-                        )
+//                        updateWidget(
+//                            context = itemView.context,
+//                            logo = "올리브영",
+//                            logoImg = resource,
+//                            title = item.title,
+//                            contents = item.contents
+//                        )
                     }
                 })
 

@@ -37,7 +37,6 @@ class GlideModule : AppGlideModule() {
     }
 
     override fun applyOptions(context: Context, builder: GlideBuilder) {
-        JLogger.d("Glide 캐시 메모리 세팅")
         val disCacheSizeByte = 1024 * 1024 * 100
         builder.setDiskCache(InternalCacheDiskCacheFactory(context, disCacheSizeByte.toLong()))
         super.applyOptions(context, builder)

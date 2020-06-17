@@ -24,13 +24,11 @@ fun setMemoListAdapter(
 ) {
     view.adapter?.run {
         if (this is MemoListAdapter) {
-            JLogger.d("TEST:: 갱신 갱신")
             this.onDataChanged()
         }
     } ?: run {
         MemoListAdapter(viewModel, dataList).apply {
             view.adapter = this
-            JLogger.d("TEST:: 추가")
         }
     }
 

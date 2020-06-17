@@ -41,6 +41,27 @@ android {
     buildFeatures {
         dataBinding = true
     }
+
+    flavorDimensions "config"
+
+    productFlavors  {
+
+        dev {
+            dimension "config"
+            applicationIdSuffix  ".dev"
+            versionCode 1
+            versionName "0.0.1"
+            manifestPlaceholders = [appLabel: "DevApp"]
+        }
+
+        study {
+            dimension "config"
+            applicationIdSuffix  ".study"
+            versionCode 1
+            versionName "0.0.1"
+            manifestPlaceholders = [appLabel: "StudyApp"]
+        }
+    }
 }
 
 dependencies {

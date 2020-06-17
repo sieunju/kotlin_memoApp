@@ -2,6 +2,7 @@ package com.hmju.memo
 
 import androidx.multidex.MultiDexApplication
 import com.hmju.memo.di.apiModule
+import com.hmju.memo.di.locationModule
 import com.hmju.memo.di.prefModule
 import com.hmju.memo.di.viewModule
 import io.reactivex.exceptions.UndeliverableException
@@ -22,13 +23,14 @@ class MainApplication : MultiDexApplication() {
         super.onCreate()
 
         startKoin {
-            // Bean -> 싱글톤
+            // Single -> 싱글톤
             // Factory -> 매번 인스턴스 생성.
             androidContext(this@MainApplication)
             modules(
                 prefModule +
                         viewModule +
-                        apiModule
+                        apiModule +
+                        locationModule
             )
         }
 

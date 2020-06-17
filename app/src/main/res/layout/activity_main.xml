@@ -21,6 +21,16 @@
             android:layout_height="match_parent"
             app:header_type="img_search">
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_200"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:text="권한 테스트!"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/text_size_14"
+                app:turtleClick="@{()->viewModel.moveTest()}" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

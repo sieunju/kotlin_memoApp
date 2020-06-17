@@ -27,6 +27,7 @@ class MainViewModel(
 
     val startLogin = SingleLiveEvent<Unit>()
     val startAlert = SingleLiveEvent<Unit>()
+    val startTest = SingleLiveEvent<Unit>()
 
     //    val dataList = ListMutableLiveData<MemoItem>()
     val dataList = ListMutableLiveData<ItemStruct<*>>()
@@ -135,6 +136,10 @@ class MainViewModel(
 
     fun moveAlert() {
         startAlert.call()
+    }
+
+    fun moveTest(){
+        startTest.call()
     }
 
     // 테스트 코드
