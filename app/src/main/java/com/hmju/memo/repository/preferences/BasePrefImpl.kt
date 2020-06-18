@@ -7,8 +7,9 @@ package com.hmju.memo.repository.preferences
  */
 interface BasePrefImpl {
     fun <T> setValue(key: String, value: T)
-    fun getValue(key: String, defaultValue: String) : String
-    fun getValue(key: String,defaultValue: Int) : Int
-    fun getValue(key: String,defaultValue: Boolean) : Boolean
-    fun getValue(key: String, defaultValue: Long) : Long
+    fun getValue(key: String, defaultValue: String): String
+    fun getValue(key: String, defaultValue: Int): Int
+    fun getValue(key: String, defaultValue: Boolean): Boolean
+    fun getValue(key: String, defaultValue: Long): Long
+    fun getValue(key: String, defaultValue: Float): Float
 }

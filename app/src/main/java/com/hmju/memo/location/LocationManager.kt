@@ -36,10 +36,14 @@ class LocationManager(private val applicationContext: Context) : LifecycleObserv
             (it as LifecycleOwner).lifecycle.removeObserver(this)
             (it as LifecycleOwner).lifecycle.addObserver(this)
             // 권한 체크.
-            with(RxPermissions(it as FragmentActivity)){
+            with(RxPermissions(it as FragmentActivity)) {
                 // android Q 버전 Background Location 처리
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    request(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, ACCESS_BACKGROUND_LOCATION)
+                    request(
+                        ACCESS_FINE_LOCATION,
+                        ACCESS_COARSE_LOCATION,
+                        ACCESS_BACKGROUND_LOCATION
+                    )
                         .subscribe { isGranted ->
                             if (isGranted) {
                                 doLocation()
@@ -136,6 +140,40 @@ class LocationManager(private val applicationContext: Context) : LifecycleObserv
         JLogger.d("파괴파괴!!!")
 //        stopLocation()
     }
+
+    fun getLastLocation(): Location? =
+        (applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager).run {
+            if (ActivityCompat.checkSelfPermission(
+                    applicationContext,
+                    ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    applicationContext,
+                    ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                var bestLocation: Location? = null
+                getProviders(true).forEach loop@{ provider ->
+                    JLogger.d("위치 타입\t$provider")
+                    val tmpLocation = getLastKnownLocation(provider)
+                    if(tmpLocation == null){
+                        JLogger.d("위치가 널널\t$provider")
+                        return@loop
+                    }
+
+                    if (bestLocation == null || tmpLocation.accuracy < bestLocation!!.accuracy) {
+                        bestLocation = tmpLocation
+                    }
+                }
+
+                if (bestLocation != null) {
+                    JLogger.d("표시할 위치 타입\t${bestLocation!!.provider}")
+                }
+                bestLocation
+            } else {
+                null
+            }
+        }
 
 
     /**

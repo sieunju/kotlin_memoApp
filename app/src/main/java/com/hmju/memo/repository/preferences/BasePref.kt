@@ -7,32 +7,38 @@ import android.content.SharedPreferences
  *
  * Created by juhongmin on 2020/05/31
  */
-abstract class BasePref(
+open class BasePref(
     private val pref: SharedPreferences
 ) : BasePrefImpl {
     override fun <T> setValue(key: String, value: T) {
-        when(value){
+        when (value) {
             is String -> {
-                with(pref.edit()){
-                    putString(key,value)
+                with(pref.edit()) {
+                    putString(key, value)
                     apply()
                 }
             }
             is Long -> {
-                with(pref.edit()){
-                    putLong(key,value)
+                with(pref.edit()) {
+                    putLong(key, value)
                     apply()
                 }
             }
             is Int -> {
-                with(pref.edit()){
-                    putInt(key,value)
+                with(pref.edit()) {
+                    putInt(key, value)
                     apply()
                 }
             }
             is Boolean -> {
+                with(pref.edit()) {
+                    putBoolean(key, value)
+                    apply()
+                }
+            }
+            is Float -> {
                 with(pref.edit()){
-                    putBoolean(key,value)
+                    putFloat(key,value)
                     apply()
                 }
             }
@@ -40,7 +46,7 @@ abstract class BasePref(
     }
 
     override fun getValue(key: String, defaultValue: String): String {
-        pref.getString(key,defaultValue)?.let{
+        pref.getString(key, defaultValue)?.let {
             return it
         } ?: run {
             return ""
@@ -48,14 +54,18 @@ abstract class BasePref(
     }
 
     override fun getValue(key: String, defaultValue: Int): Int {
-        return pref.getInt(key,defaultValue)
+        return pref.getInt(key, defaultValue)
     }
 
     override fun getValue(key: String, defaultValue: Boolean): Boolean {
-        return pref.getBoolean(key,defaultValue)
+        return pref.getBoolean(key, defaultValue)
     }
 
     override fun getValue(key: String, defaultValue: Long): Long {
-        return pref.getLong(key,defaultValue)
+        return pref.getLong(key, defaultValue)
+    }
+
+    override fun getValue(key: String, defaultValue: Float): Float {
+        return pref.getFloat(key, defaultValue)
     }
 }

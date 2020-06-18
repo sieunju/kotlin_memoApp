@@ -1,6 +1,5 @@
 package com.hmju.memo.di
 
-import com.hmju.memo.viewModels.LoginViewModel
 import com.hmju.memo.viewModels.MainViewModel
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -14,5 +13,4 @@ import org.koin.dsl.module
 val viewModule = module {
 
     viewModel { MainViewModel(get(),get()) }
-    viewModel { LoginViewModel(get(),get()) }
 }

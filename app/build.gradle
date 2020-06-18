@@ -44,11 +44,11 @@ android {
 
     flavorDimensions "config"
 
-    productFlavors  {
+    productFlavors {
 
         dev {
             dimension "config"
-            applicationIdSuffix  ".dev"
+            applicationIdSuffix ".dev"
             versionCode 1
             versionName "0.0.1"
             manifestPlaceholders = [appLabel: "DevApp"]
@@ -56,7 +56,7 @@ android {
 
         study {
             dimension "config"
-            applicationIdSuffix  ".study"
+            applicationIdSuffix ".study"
             versionCode 1
             versionName "0.0.1"
             manifestPlaceholders = [appLabel: "StudyApp"]
@@ -74,6 +74,9 @@ dependencies {
     implementation "androidx.cardview:cardview:$rootProject.cardViewVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.viewModelVersion"
     kapt "com.android.databinding:compiler:$rootProject.androidPluginVersion"
+
+    // 위치 서비스
+    implementation "com.google.android.gms:play-services-location:$rootProject.locationVersion"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
@@ -118,8 +121,9 @@ dependencies {
 //    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutinesVersion"
 //    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$rootProject.coroutinesVersion"
 
-    // Custom Behavior LIb
-    implementation "com.hmju.custombehavior:custom-behavior:1.0.0"
+    // Custom Behavior Lib
+    implementation 'hmju.design:custom-behavior:1.0.0'
+//    implementation 'hmju.design:custom-progress:1.0.0'
 
     // Reactive X
     implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxJavaVersion"

@@ -3,6 +3,9 @@ package com.hmju.memo.di
 import android.content.Context
 import android.content.SharedPreferences
 import com.hmju.memo.repository.preferences.AccountPref
+import com.hmju.memo.repository.preferences.BasePref
+import com.hmju.memo.repository.preferences.BasePrefImpl
+import com.hmju.memo.repository.preferences.LocationPref
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -18,7 +21,15 @@ val prefModule = module {
         androidContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
     }
 
+    single<BasePrefImpl> {
+        BasePref(get())
+    }
+
     single{
         AccountPref(get())
+    }
+
+    single {
+        LocationPref(get())
     }
 }

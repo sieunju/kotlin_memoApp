@@ -21,23 +21,30 @@
             android:layout_height="match_parent"
             app:header_type="img_search">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/size_200"
-                android:gravity="center"
-                android:layout_gravity="center_horizontal"
-                android:text="권한 테스트!"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/text_size_14"
-                app:turtleClick="@{()->viewModel.moveTest()}" />
 
-            <androidx.recyclerview.widget.RecyclerView
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                app:memoItems="@{viewModel.dataList}"
-                app:viewModel="@{viewModel}" />
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:gravity="center_vertical"
+                        android:text="꾸에에에엑!"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/text_size_20"
+                        app:turtleClick="@{()->viewModel.movePermission()}" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.core.widget.NestedScrollView>
 
         </com.hmju.memo.base.HeaderView>
     </androidx.constraintlayout.widget.ConstraintLayout>

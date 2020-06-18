@@ -1,20 +1,14 @@
 package com.hmju.memo.ui.home
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import com.hmju.memo.BR
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseActivity
 import com.hmju.memo.databinding.ActivityMainBinding
-import com.hmju.memo.define.RequestCode
 import com.hmju.memo.dialog.ConfirmDialog
-import com.hmju.memo.location.LocationListener
-import com.hmju.memo.ui.login.LoginActivity
-import com.hmju.memo.utils.JLogger
 import com.hmju.memo.location.LocationManager
-import com.hmju.memo.utils.startActResult
+import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.MainViewModel
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -31,72 +25,14 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
         with(viewModel) {
 
-            startLogin.observe(this@MainActivity, Observer {
-                startActResult<LoginActivity>(RequestCode.LOGIN) {}
-            })
-
-            startAlert.observe(this@MainActivity, Observer {
-                ConfirmDialog(
-                    this@MainActivity,
-                    "안녕하세요 테스트입니다."
-                )
-            })
-
-            startTest.observe(this@MainActivity, Observer {
+            startPermission.observe(this@MainActivity, Observer {
                 checkPermission()
             })
 
-            start()
-        }
-    }
-
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            RequestCode.LOGIN -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    with(viewModel) {
-                        start()
-                    }
-                }
-            }
         }
     }
 
     private fun checkPermission() {
-//        with(RxPermissions(this)){
-//            requestEach(
-//                Manifest.permission.BLUETOOTH,
-//                Manifest.permission.BLUETOOTH_ADMIN,
-//                Manifest.permission.ACCESS_FINE_LOCATION,
-//                Manifest.permission.ACCESS_COARSE_LOCATION,
-//                Manifest.permission.READ_EXTERNAL_STORAGE,
-//                Manifest.permission.CAMERA
-//            ).subscribe{permission->
-//                if(permission.granted){
-//                    JLogger.d("권한 승인 ${permission.name}")
-//                } else {
-//                    JLogger.d("권한 취소 ${permission.name}")
-//                }
-//            }
-//        }
-//        with(RxPermissions(this)){
-//            request(
-//                Manifest.permission.BLUETOOTH,
-//                Manifest.permission.BLUETOOTH_ADMIN,
-//                Manifest.permission.ACCESS_FINE_LOCATION,
-//                Manifest.permission.ACCESS_COARSE_LOCATION,
-//                Manifest.permission.READ_EXTERNAL_STORAGE,
-//                Manifest.permission.CAMERA
-//            ).subscribe{ allGranted->
-//                if(allGranted){
-//                    JLogger.d("전부다 승인")
-//                } else {
-//                    JLogger.d("승인 ㄴㄴ")
-//                }
-//            }
-//        }
 
         val manager: LocationManager by inject()
         manager.start(this)
