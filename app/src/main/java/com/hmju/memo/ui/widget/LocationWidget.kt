@@ -154,7 +154,6 @@ class LocationWidget : AppWidgetProvider(), KoinComponent {
                 } catch (ex: Exception) {
                     JLogger.d("Error\t${ex.message}")
                 } finally {
-//                    AppWidgetAlarmManager(context!!.applicationContext).startAlarm()
                     JLogger.d("======================[e] ACTION_AUTO_UPDATE=======================")
                 }
 

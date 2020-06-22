@@ -1,5 +1,7 @@
 package com.hmju.memo.ui.home
 
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import com.hmju.memo.BR
@@ -8,6 +10,7 @@ import com.hmju.memo.base.BaseActivity
 import com.hmju.memo.databinding.ActivityMainBinding
 import com.hmju.memo.dialog.ConfirmDialog
 import com.hmju.memo.location.LocationManager
+import com.hmju.memo.notification.LocationNotification
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.MainViewModel
 import org.koin.android.ext.android.inject
@@ -22,11 +25,18 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         with(viewModel) {
 
             startPermission.observe(this@MainActivity, Observer {
                 checkPermission()
+            })
+
+            startNotification.observe(this@MainActivity, Observer {
+                if (it) {
+                    startLocationNotification()
+                } else {
+                    stopLocationNotification()
+                }
             })
 
         }
@@ -67,5 +77,23 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
             }
         })
 
+    }
+
+    private fun startLocationNotification() {
+        val intent = Intent(baseContext, LocationNotification::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            baseContext.startForegroundService(intent)
+        } else {
+            baseContext.startService(intent)
+        }
+    }
+
+    private fun stopLocationNotification() {
+        val intent = Intent(baseContext, LocationNotification::class.java)
+        if (baseContext.stopService(intent)) {
+            JLogger.d("stopLocationNotification")
+        } else {
+            JLogger.d("NONO")
+        }
     }
 }

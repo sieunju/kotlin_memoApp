@@ -9,7 +9,7 @@
 
     <string name="large_text">
         MIT License
-        Copyright (c) 2019 Sieun Ju
+        Copyright © 2019 Sieun Ju
         Permission is hereby granted, free of charge, to any person obtaining a copy
         of this software and associated documentation files (the "Software"), to deal
         in the Software without restriction, including without limitation the rights
@@ -31,4 +31,9 @@
     </string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+
+    <string name="notification_channel_group">알림</string>
+    <string name="notification_channel_name">위치 알림</string>
+    <string name="notification_channel_description">끄아아</string>
+
 </resources>

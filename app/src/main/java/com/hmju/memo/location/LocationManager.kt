@@ -116,7 +116,7 @@ class LocationManager(private val applicationContext: Context) : LifecycleObserv
         }
     }
 
-    private fun stopLocation() {
+    fun stopLocation() {
         with(applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager) {
             removeUpdates(networkListener)
             removeUpdates(gpsListener)
@@ -154,12 +154,7 @@ class LocationManager(private val applicationContext: Context) : LifecycleObserv
             ) {
                 var bestLocation: Location? = null
                 getProviders(true).forEach loop@{ provider ->
-                    JLogger.d("위치 타입\t$provider")
-                    val tmpLocation = getLastKnownLocation(provider)
-                    if(tmpLocation == null){
-                        JLogger.d("위치가 널널\t$provider")
-                        return@loop
-                    }
+                    val tmpLocation = getLastKnownLocation(provider) ?: return@loop
 
                     if (bestLocation == null || tmpLocation.accuracy < bestLocation!!.accuracy) {
                         bestLocation = tmpLocation
@@ -197,7 +192,7 @@ class LocationManager(private val applicationContext: Context) : LifecycleObserv
 
         override fun onProviderDisabled(provider: String?) {
             JLogger.d("onProviderDisabled Provider\t$provider")
-            stopLocation()
+//            stopLocation()
         }
     }
 
@@ -219,7 +214,7 @@ class LocationManager(private val applicationContext: Context) : LifecycleObserv
 
         override fun onProviderDisabled(provider: String?) {
             JLogger.d("onProviderDisabled Provider\t$provider")
-            stopLocation()
+//            stopLocation()
         }
     }
 

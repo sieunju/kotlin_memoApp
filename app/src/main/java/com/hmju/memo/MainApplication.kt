@@ -1,5 +1,9 @@
 package com.hmju.memo
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
 import androidx.multidex.MultiDexApplication
 import com.hmju.memo.di.apiModule
 import com.hmju.memo.di.locationModule
@@ -35,6 +39,7 @@ class MainApplication : MultiDexApplication() {
         }
 
         initRxJava()
+        createChannel()
     }
 
     /**
@@ -71,6 +76,22 @@ class MainApplication : MultiDexApplication() {
                     error
                 )
                 return@setErrorHandler
+            }
+        }
+    }
+
+    private fun createChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val id = getString(R.string.notification_channel_group)
+            val name = getString(R.string.notification_channel_name)
+            val description = getString(R.string.notification_channel_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(id, name, importance)
+            channel.description = description
+            channel.vibrationPattern = LongArray(1) {0}
+            channel.enableVibration(true)
+            (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).run {
+                createNotificationChannel(channel)
             }
         }
     }

@@ -26,9 +26,14 @@ class MainViewModel(
 ) : BaseViewModel() {
 
     val startPermission = SingleLiveEvent<Unit>()
+    val startNotification = SingleLiveEvent<Boolean>()
 
     fun movePermission(){
         startPermission.call()
+    }
+
+    fun eventLocationService(isShow : Boolean){
+        startNotification.value = isShow
     }
 }
 

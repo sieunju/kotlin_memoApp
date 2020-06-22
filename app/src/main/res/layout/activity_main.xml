@@ -43,6 +43,26 @@
                         android:textSize="@dimen/text_size_20"
                         app:turtleClick="@{()->viewModel.movePermission()}" />
 
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:gravity="center_vertical"
+                        android:text="사라지지 않는 메시지 보이기"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/text_size_20"
+                        app:turtleClick="@{()->viewModel.eventLocationService(true)}" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:gravity="center_vertical"
+                        android:text="자 내가 사라져볼께"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/text_size_20"
+                        app:turtleClick="@{()->viewModel.eventLocationService(false)}" />
+
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.core.widget.NestedScrollView>
 
