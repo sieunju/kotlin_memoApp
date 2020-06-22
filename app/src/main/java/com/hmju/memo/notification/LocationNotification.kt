@@ -15,7 +15,7 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 
 /**
- * Description :
+ * Description : 실시간 위치 Notification Class
  *
  * Created by hmju on 2020-06-22
  */
@@ -54,6 +54,7 @@ class LocationNotification : Service(), KoinComponent {
                 setContentIntent(pendingIntent)
             }
 
+        // 사라지지 않는 Notification 처리
         startForeground(1001, builder.build())
 
         locationManager.setListener(object : LocationManager.Listener {

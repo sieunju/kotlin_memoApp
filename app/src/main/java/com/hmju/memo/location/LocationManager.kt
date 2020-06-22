@@ -26,10 +26,16 @@ class LocationManager(private val applicationContext: Context) : LifecycleObserv
 
     private var mListener: Listener? = null
 
+    /**
+     * 해당 리스너를 사용하고 싶다면 Start 보다 먼저 세팅 해야 한다.
+     */
     fun setListener(listener: Listener) {
         mListener = listener
     }
 
+    /**
+     * Location Manager Start Fun
+     */
     fun start(context: Context?) {
         JLogger.d("LocationManager 주소값 ${this.toString()}")
         context?.let {
@@ -219,8 +225,8 @@ class LocationManager(private val applicationContext: Context) : LifecycleObserv
     }
 
     interface Listener {
-        fun onPermissionDenied()
-        fun onGpsAndNetworkError(isGpsError: Boolean)
-        fun onLocation(provider: String, accuracy: Float, latitude: Double, longitude: Double)
+        fun onPermissionDenied()    // 위치 권한 거부
+        fun onGpsAndNetworkError(isGpsError: Boolean) // GPS 또는 네트워크 에러 발생시 콜백
+        fun onLocation(provider: String, accuracy: Float, latitude: Double, longitude: Double) // 위치 정보값 콜백
     }
 }
