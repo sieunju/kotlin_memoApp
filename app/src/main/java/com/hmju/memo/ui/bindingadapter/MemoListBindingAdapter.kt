@@ -2,10 +2,12 @@ package com.hmju.memo.ui.bindingadapter
 
 import android.view.View
 import androidx.databinding.BindingAdapter
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.RecyclerView
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseAdapter
 import com.hmju.memo.convenience.ListMutableLiveData
+import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.ui.adapter.MemoListAdapter
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.MainViewModel
@@ -16,23 +18,25 @@ import com.hmju.memo.viewModels.MainViewModel
  * Created by hmju on 2020-06-12
  */
 
-@BindingAdapter(value = ["viewModel", "memoItems"])
+@BindingAdapter(value = ["viewModel", "memoList"])
 fun setMemoListAdapter(
     view: RecyclerView,
     viewModel: MainViewModel,
-    dataList: ListMutableLiveData<BaseAdapter.Companion.ItemStruct<*>>
+    memoList: PagedList<MemoItem>
 ) {
-    view.adapter?.run {
-        if (this is MemoListAdapter) {
-            JLogger.d("TEST:: 갱신 갱신")
-            this.onDataChanged()
-        }
-    } ?: run {
-        MemoListAdapter(viewModel, dataList).apply {
-            view.adapter = this
-            JLogger.d("TEST:: 추가")
-        }
-    }
+//    view.adapter?.let {adapter->
+//
+//        if (adapter is MemoListAdapter) {
+//            JLogger.d("TEST:: 갱신 갱신")
+//            adapter.submitList(memoList)
+//        }
+//    } ?: run {
+//        MemoListAdapter(viewModel).apply {
+//            view.adapter = this
+//            this.submitList(memoList)
+//            JLogger.d("TEST:: 추가")
+//        }
+//    }
 
 }
 

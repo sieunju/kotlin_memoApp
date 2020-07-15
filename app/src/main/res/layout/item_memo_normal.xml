@@ -15,13 +15,13 @@
 
         <variable
             name="item"
-            type="com.hmju.memo.model.memo.MemoNormaItem" />
+            type="com.hmju.memo.model.memo.MemoItem" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
+        style="@style/MemoRootStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/MemoRootStyle"
         app:turtleClick="@{()->listener.memoClick(item)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout

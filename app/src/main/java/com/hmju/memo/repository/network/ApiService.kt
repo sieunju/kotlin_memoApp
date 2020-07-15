@@ -10,6 +10,7 @@ import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import kotlinx.coroutines.Deferred
+import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -40,26 +41,34 @@ interface ApiService {
      * @Query filterTag : 필터 -> 테그
      * @Query keyWord   : 검색어
      */
-    @GET("/api/memoList")
+    @GET("/api/memo")
     fun fetchMemoList(
         @Query("pageNo") pageNo : Int
     ): Maybe<MemoResponse>
 
-    @GET("/api/memoList")
+    @GET("/api/memo")
     fun fetchMemoList(
         @Query("pageNo") pageNo : Int,
         @Query("filterTag") filterTag : Int
     ): Maybe<MemoResponse>
 
-    @GET("/api/memoList")
+    @GET("/api/memo")
     fun retrieveSearch(
         @Query("pageNo") pageNo : Int,
         @Query("keyWord") keyWord: String
     ): Maybe<MemoResponse>
 
-    @GET("/api/memoList")
+    @GET("/api/memo")
     fun fetchMultiMemoList(
         @Query("pageNo") pageNo : Int
     ): Flowable<MemoResponse>
+
+
+    @GET("/api/memo")
+    fun fetchMemoList(
+        @Query("pageNo") pageNo: Int,
+        @Query("filterTag") filterTag: Int?,
+        @Query("keyWord") keyWord: String?
+    ): Call<MemoResponse>
 
 }

@@ -128,4 +128,14 @@ dependencies {
     // RxPermission
     implementation "com.github.tbruyelle:rxpermissions:$rootProject.rxPermissionVersion"
 
+    // Paging Lib
+    implementation "androidx.paging:paging-runtime:$rootProject.pagingVersion"
+
+    // alternatively - without Android dependencies for testing
+    testImplementation "androidx.paging:paging-common:$rootProject.pagingVersion" // For Kotlin use paging-common-ktx
+
+    // optional - RxJava support
+    implementation "androidx.paging:paging-rxjava2:$rootProject.pagingVersion" // For Kotlin use paging-rxjava2-ktx
+
+
 }

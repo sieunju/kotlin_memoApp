@@ -60,15 +60,6 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- 자동 로그인 여부 -->
-            <!--            <com.google.android.material.checkbox.MaterialCheckBox-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:checked="@{viewModel.isAuto}"-->
-            <!--                android:text="@string/auto_login"-->
-            <!--                android:textColor="@color/colorBlack"-->
-            <!--                app:buttonTint="@color/colorPrimary" />-->
-
             <!-- 로그인 버튼 -->
             <com.google.android.material.button.MaterialButton
                 android:layout_width="match_parent"
@@ -78,6 +69,19 @@
                 android:paddingTop="@dimen/padding_size_13"
                 android:paddingBottom="@dimen/padding_size_13"
                 android:text="@string/str_login"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold" />
+
+            <!-- 비 로그인 버튼 -->
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:backgroundTint="@color/colorPrimaryNegative"
+                android:layout_marginTop="@dimen/margin_size_10"
+                android:onClick="@{()->viewModel.startNonLogin()}"
+                android:paddingTop="@dimen/padding_size_13"
+                android:paddingBottom="@dimen/padding_size_13"
+                android:text="@string/str_non_login"
                 android:textColor="@color/colorWhite"
                 android:textStyle="bold" />
 

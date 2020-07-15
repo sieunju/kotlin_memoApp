@@ -7,6 +7,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.hmju.memo.viewModels.MainViewModel" />
@@ -14,7 +16,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="@{viewModel.isPageStart ? View.VISIBLE : View.INVISIBLE}">
 
         <com.hmju.memo.base.HeaderView
             android:layout_width="match_parent"
@@ -26,7 +29,7 @@
                 android:layout_height="wrap_content"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                app:memoItems="@{viewModel.dataList}"
+                app:memoList="@{viewModel.pagedList}"
                 app:viewModel="@{viewModel}" />
 
         </com.hmju.memo.base.HeaderView>

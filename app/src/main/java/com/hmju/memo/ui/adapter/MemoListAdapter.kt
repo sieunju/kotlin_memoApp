@@ -1,66 +1,79 @@
 package com.hmju.memo.ui.adapter
 
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import com.hmju.memo.base.BasePagedAdapter
 import com.hmju.memo.R
-import com.hmju.memo.base.BaseAdapter
 import com.hmju.memo.base.BaseViewHolder
-import com.hmju.memo.convenience.ListMutableLiveData
+import com.hmju.memo.databinding.ItemHorizontalLoadingBinding
 import com.hmju.memo.databinding.ItemMemoImgBinding
 import com.hmju.memo.databinding.ItemMemoNormalBinding
-import com.hmju.memo.model.memo.MemoImgItem
 import com.hmju.memo.model.memo.MemoItem
-import com.hmju.memo.model.memo.MemoNormaItem
 import com.hmju.memo.viewModels.MainViewModel
 
+
 /**
- * Description : 메모 리스트 Adpater
- * 추후 BaseAdapter 를 상속 하도록 작업 예정
+ * Description : 메모 리스트 Adapter Class
  *
- * Created by hmju on 2020-06-12
+ * Created by juhongmin on 2020/06/21
  */
 class MemoListAdapter(
-    private val viewModel: MainViewModel,
-    private val dataList: ListMutableLiveData<Companion.ItemStruct<*>>
-) : BaseAdapter(dataList) {
-
-    override fun onDataChanged() {
-        super.setSummitList()
-    }
+    val viewModel: MainViewModel
+) : BasePagedAdapter<MemoItem, BaseViewHolder<*>>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         when (viewType) {
-            TYPE_MEMO_NORMAL -> {
+            R.layout.item_memo_normal -> {
                 return MemoNormalViewHolder(
                     parent = parent,
-                    layoutId = R.layout.item_memo_normal,
+                    layoutId = viewType,
                     viewModel = viewModel
                 )
             }
-            TYPE_MEMO_IMG -> {
+            R.layout.item_memo_img -> {
                 return MemoImgViewHolder(
                     parent = parent,
-                    layoutId = R.layout.item_memo_img,
+                    layoutId = viewType,
                     viewModel = viewModel
                 )
             }
-            else -> throw IllegalArgumentException("")
+            else -> {
+                return LoadingViewHolder(
+                    parent = parent,
+                    layoutId = viewType
+                )
+            }
         }
     }
 
-    @SuppressWarnings("unchecked")
     override fun onBindViewHolder(holder: BaseViewHolder<*>, pos: Int) {
-        when (holder) {
+        when(holder){
             is MemoNormalViewHolder -> {
-                holder.binding.item = mItems.get(pos).data as MemoNormaItem
+                holder.binding.item = getItem(pos)
             }
             is MemoImgViewHolder -> {
-                holder.binding.item = mItems.get(pos).data as MemoImgItem
+                holder.binding.item = getItem(pos)
             }
+        }
+    }
+
+    override fun getItemViewType(pos: Int): Int {
+        getItem(pos)?.let { item ->
+            return if (item.isNormal) {
+                R.layout.item_memo_normal
+            } else {
+                R.layout.item_memo_img
+            }
+        } ?: return R.layout.item_horizontal_loading
+    }
+
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<MemoItem>() {
+            override fun areItemsTheSame(oldItem: MemoItem, newItem: MemoItem) =
+                oldItem.manageNo == newItem.manageNo
+
+            override fun areContentsTheSame(oldItem: MemoItem, newItem: MemoItem) =
+                oldItem == newItem
         }
     }
 
@@ -79,4 +92,7 @@ class MemoListAdapter(
             binding.listener = memoClick
         }
     }
+
+    class LoadingViewHolder(parent: ViewGroup, layoutId: Int) :
+            BaseViewHolder<ItemHorizontalLoadingBinding>(parent,layoutId)
 }

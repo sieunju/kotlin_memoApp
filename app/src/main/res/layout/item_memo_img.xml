@@ -7,7 +7,7 @@
 
         <variable
             name="item"
-            type="com.hmju.memo.model.memo.MemoImgItem" />
+            type="com.hmju.memo.model.memo.MemoItem" />
 
         <variable
             name="listener"
@@ -35,7 +35,7 @@
                 android:layout_height="@dimen/size_200"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
-                app:bindingImgUrl="@{item.testImgUrl}"
+                app:bindingImgUrl="@{item.thumbImg()}"
                 tools:src="@drawable/ic_profile_default" />
 
             <!-- 타이틀 -->

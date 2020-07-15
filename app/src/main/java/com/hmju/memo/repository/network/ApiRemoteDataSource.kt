@@ -1,5 +1,6 @@
 package com.hmju.memo.repository.network
 
+import androidx.paging.PagedList
 import com.google.gson.JsonObject
 import com.hmju.memo.convenience.single
 import com.hmju.memo.model.form.LoginForm
@@ -12,6 +13,7 @@ import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import kotlinx.coroutines.Deferred
+import retrofit2.Call
 
 /**
  * Description:
@@ -24,12 +26,12 @@ class ApiRemoteDataSource (
 ) : ApiService {
 
     override fun signIn(body: LoginForm): Maybe<LoginResponse> {
-//        body.id = "eee"
-//        body.pw = "qqq"
         return apiService.signIn(body)
     }
 
     override fun fetchMemoList(pageNo: Int): Maybe<MemoResponse> {
+
+
         return apiService.fetchMemoList(pageNo)
     }
 
@@ -43,5 +45,9 @@ class ApiRemoteDataSource (
 
     override fun fetchMultiMemoList(pageNo: Int): Flowable<MemoResponse> {
         return apiService.fetchMultiMemoList(pageNo)
+    }
+
+    override fun fetchMemoList(pageNo: Int, filterTag: Int?, keyWord: String?): Call<MemoResponse> {
+        return apiService.fetchMemoList(pageNo, filterTag, keyWord)
     }
 }

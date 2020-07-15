@@ -23,12 +23,6 @@ class LoginViewModel(
     private val actPref: AccountPref
 ) : BaseViewModel() {
 
-    private val _isAuto = MutableLiveData<Boolean>().apply {
-        value = true
-    }
-    val isAuto: MutableLiveData<Boolean>
-        get() = _isAuto
-
     val data = MutableLiveData<LoginResponse>()
 
     val strId = MutableLiveData<String>()
@@ -36,6 +30,9 @@ class LoginViewModel(
 
     val startFinish = SingleLiveEvent<Boolean>()
 
+    /**
+     * 로그인 시작.
+     */
     fun startLogin() {
         JLogger.d("Id ${strId.value} Pw ${strPw.value}")
         launch {
@@ -49,7 +46,7 @@ class LoginViewModel(
                 .doOnSubscribe { JLogger.d("doOnSubscribe") }
                 .subscribe({
                     it.loginKey?.let { loginKey ->
-//                        actPref.setLoginKey(loginKey)
+                        actPref.setLoginKey(loginKey)
                         JLogger.d("TEST:: 로그인 성공")
                         startFinish.value = true
                     }
@@ -58,5 +55,13 @@ class LoginViewModel(
                 })
 
         }
+    }
+
+    /**
+     * 비 로그인 시작.
+     */
+    fun startNonLogin(){
+        JLogger.d("Non Login Start");
+        startFinish.value = false;
     }
 }

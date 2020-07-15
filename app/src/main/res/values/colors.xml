@@ -11,6 +11,10 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
     <color name="colorCoolGrey">#dddddd</color>
+    
+    <color name="colorPrimaryNegative">#e6892d</color>
+    <color name="colorPrimaryLightNegative">#9c5b00</color>
+    <color name="colorPrimaryDarkNegative">#ffb45f</color>
 
     <color name="color_transparent">#00000000</color>
     <color name="color_tag1">#FF3B30</color>

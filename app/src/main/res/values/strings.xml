@@ -6,8 +6,8 @@
     <string name="str_pw">비밀번호</string>
     <string name="require_pw">비밀번호 입력</string>
     <string name="id_error_info">특수문자는 사용할 수 없습니다.</string>
-    <string name="auto_login">자동 로그인</string>
     <string name="str_login">로그인</string>
+    <string name="str_non_login">비 로그인</string>
 
     <string name="large_text">
         MIT License
