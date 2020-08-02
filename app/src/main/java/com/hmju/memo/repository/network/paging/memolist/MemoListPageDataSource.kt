@@ -24,11 +24,9 @@ class MemoListPageDataSource(
         params: LoadInitialParams<Int>,
         callback: LoadInitialCallback<Int, MemoItem>
     ) {
-        JLogger.d("loadInitial ")
+        JLogger.d("loadInitial " + params.requestedLoadSize)
         apiService.fetchMemoList(
-            pageNo = memoParam.pageNo,
-            filterTag = memoParam.selectedTag,
-            keyWord = memoParam.keyWord
+            pageNo = memoParam.pageNo
         ).enqueue(object : Callback<MemoResponse> {
 
             override fun onResponse(call: Call<MemoResponse>, response: Response<MemoResponse>) {
@@ -50,9 +48,7 @@ class MemoListPageDataSource(
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, MemoItem>) {
         JLogger.d("loadAfter ")
         apiService.fetchMemoList(
-            pageNo = memoParam.pageNo,
-            filterTag = memoParam.selectedTag,
-            keyWord = memoParam.keyWord
+            pageNo = memoParam.pageNo
         ).enqueue(object : Callback<MemoResponse> {
 
             override fun onResponse(call: Call<MemoResponse>, response: Response<MemoResponse>) {
@@ -72,5 +68,6 @@ class MemoListPageDataSource(
     }
 
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, MemoItem>) {
+        JLogger.d("LoadBefore");
     }
 }

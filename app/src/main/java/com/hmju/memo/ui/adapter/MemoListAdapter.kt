@@ -9,6 +9,7 @@ import com.hmju.memo.databinding.ItemHorizontalLoadingBinding
 import com.hmju.memo.databinding.ItemMemoImgBinding
 import com.hmju.memo.databinding.ItemMemoNormalBinding
 import com.hmju.memo.model.memo.MemoItem
+import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.MainViewModel
 
 
@@ -59,7 +60,7 @@ class MemoListAdapter(
 
     override fun getItemViewType(pos: Int): Int {
         getItem(pos)?.let { item ->
-            return if (item.isNormal) {
+            return if (item.isNormal()) {
                 R.layout.item_memo_normal
             } else {
                 R.layout.item_memo_img

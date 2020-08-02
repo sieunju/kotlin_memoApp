@@ -1,6 +1,7 @@
 package com.hmju.memo.model.memo
 
 import com.google.gson.annotations.SerializedName
+import com.hmju.memo.utils.JLogger
 
 // Memo Data Response.
 data class MemoResponse(
@@ -16,20 +17,19 @@ data class MemoItem(
     @SerializedName("MEMO_ID") val manageNo: Int,
     @SerializedName("TITLE") val title: String? = "",
     @SerializedName("CONTENTS") val contents: String? = "",
-    @SerializedName("IMAGES") val images: ArrayList<String>? = null
+    @SerializedName("IMAGES") val images: String? = null
 ) {
 
-    var isNormal = false // true 기본 형, false 이미지 형
-
     init {
-        isNormal = images.isNullOrEmpty()
+        JLogger.d("TTTT??!@12")
+    }
+
+    fun isNormal() : Boolean {
+        return images.isNullOrEmpty()
     }
 
     fun thumbImg(): String? {
-        images?.let {
-            return it[0]
-        } ?: run {
-            return null
-        }
+        JLogger.d("Images String?? " + images);
+        return "";
     }
 }

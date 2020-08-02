@@ -18,25 +18,25 @@ import com.hmju.memo.viewModels.MainViewModel
  * Created by hmju on 2020-06-12
  */
 
-@BindingAdapter(value = ["viewModel", "memoList"])
+@BindingAdapter(value = ["viewModel", "memoData"])
 fun setMemoListAdapter(
     view: RecyclerView,
     viewModel: MainViewModel,
-    memoList: PagedList<MemoItem>
+    memoList: PagedList<MemoItem>?
 ) {
-//    view.adapter?.let {adapter->
-//
-//        if (adapter is MemoListAdapter) {
-//            JLogger.d("TEST:: 갱신 갱신")
-//            adapter.submitList(memoList)
-//        }
-//    } ?: run {
-//        MemoListAdapter(viewModel).apply {
-//            view.adapter = this
-//            this.submitList(memoList)
-//            JLogger.d("TEST:: 추가")
-//        }
-//    }
+    view.adapter?.let {adapter->
+
+        if (adapter is MemoListAdapter) {
+            JLogger.d("TEST:: 갱신 갱신")
+            adapter.submitList(memoList)
+        }
+    } ?: run {
+        MemoListAdapter(viewModel).apply {
+            view.adapter = this
+            this.submitList(memoList)
+            JLogger.d("TEST:: 추가")
+        }
+    }
 
 }
 

@@ -8,6 +8,6 @@ package com.hmju.memo.model.form
  */
 data class MemoListParam(
     var pageNo: Int,
-    var selectedTag: Int? = null,
-    var keyWord: String? = null
+    var selectTag: Int? = 0,
+    var keyword: String? = ""
 )

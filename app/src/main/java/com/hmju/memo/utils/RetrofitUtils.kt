@@ -15,34 +15,56 @@ import java.util.concurrent.TimeUnit
 fun forbiddenInterceptor() :Interceptor{
     return Interceptor {chain: Interceptor.Chain ->
         val response: Response
-        try{
-            response = chain.proceed(chain.request())
-            when(response.code()){
-                NetInfo.CODE_BAD_REQUEST -> {
-                    JLogger.e("서버 에러 발생 CODE_BAD_REQUEST")
-                }
-                NetInfo.CODE_FORBIDDEN -> {
-                    JLogger.e("서버 에러 발생 CODE_FORBIDDEN")
-                }
-                NetInfo.CODE_NOT_FOUND -> {
-                    JLogger.e("서버 에러 발생 CODE_NOT_FOUND")
-                }
-                NetInfo.CODE_ERROR -> {
-                    JLogger.e("서버 에러 발생 CODE_ERROR")
-                    throw Exception("서버가 닫혔습니다.")
-                }
-                NetInfo.CODE_BAD_GATE_WAY -> {
-                    JLogger.e("서버 에러 발생 CODE_BAD_GATE_WAY")
-                    throw Exception("서버가 닫혔습니다.")
-                }
-                else -> {}
-            }
-            response
-        } catch (e : Exception){
-            JLogger.d("forbiddenInterceptor Error ${e.message}")
-            throw Exception(e.message)
-        }
 
+        response = chain.proceed(chain.request())
+        when(response.code()){
+            NetInfo.CODE_BAD_REQUEST -> {
+                JLogger.e("서버 에러 발생 CODE_BAD_REQUEST")
+            }
+            NetInfo.CODE_FORBIDDEN -> {
+                JLogger.e("서버 에러 발생 CODE_FORBIDDEN")
+            }
+            NetInfo.CODE_NOT_FOUND -> {
+                JLogger.e("서버 에러 발생 CODE_NOT_FOUND")
+            }
+            NetInfo.CODE_ERROR -> {
+                JLogger.e("서버 에러 발생 CODE_ERROR")
+
+            }
+            NetInfo.CODE_BAD_GATE_WAY -> {
+                JLogger.e("서버 에러 발생 CODE_BAD_GATE_WAY")
+            }
+            else -> {}
+        }
+        response
+//        try{
+//            response = chain.proceed(chain.request())
+//            when(response.code()){
+//                NetInfo.CODE_BAD_REQUEST -> {
+//                    JLogger.e("서버 에러 발생 CODE_BAD_REQUEST")
+//                }
+//                NetInfo.CODE_FORBIDDEN -> {
+//                    JLogger.e("서버 에러 발생 CODE_FORBIDDEN")
+//                }
+//                NetInfo.CODE_NOT_FOUND -> {
+//                    JLogger.e("서버 에러 발생 CODE_NOT_FOUND")
+//                }
+//                NetInfo.CODE_ERROR -> {
+//                    JLogger.e("서버 에러 발생 CODE_ERROR")
+//                    throw Exception("서버가 닫혔습니다.")
+//                }
+//                NetInfo.CODE_BAD_GATE_WAY -> {
+//                    JLogger.e("서버 에러 발생 CODE_BAD_GATE_WAY")
+//                    throw Exception("서버가 닫혔습니다.")
+//                }
+//                else -> {}
+//            }
+//            response
+//        } catch (e : Exception){
+//            JLogger.d("forbiddenInterceptor Error ${e.message}")
+////            throw Exception(e.message)
+//            response
+//        }
     }
 }
 

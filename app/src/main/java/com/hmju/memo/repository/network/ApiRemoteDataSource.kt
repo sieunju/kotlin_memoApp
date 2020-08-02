@@ -29,7 +29,7 @@ class ApiRemoteDataSource (
         return apiService.signIn(body)
     }
 
-    override fun fetchMemoList(pageNo: Int): Maybe<MemoResponse> {
+    override fun fetchMemoList(pageNo: Int): Call<MemoResponse> {
 
 
         return apiService.fetchMemoList(pageNo)
@@ -41,13 +41,5 @@ class ApiRemoteDataSource (
 
     override fun retrieveSearch(pageNo: Int, keyWord: String): Maybe<MemoResponse> {
         return apiService.retrieveSearch(pageNo, keyWord)
-    }
-
-    override fun fetchMultiMemoList(pageNo: Int): Flowable<MemoResponse> {
-        return apiService.fetchMultiMemoList(pageNo)
-    }
-
-    override fun fetchMemoList(pageNo: Int, filterTag: Int?, keyWord: String?): Call<MemoResponse> {
-        return apiService.fetchMemoList(pageNo, filterTag, keyWord)
     }
 }

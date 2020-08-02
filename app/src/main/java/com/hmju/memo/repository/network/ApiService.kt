@@ -44,7 +44,7 @@ interface ApiService {
     @GET("/api/memo")
     fun fetchMemoList(
         @Query("pageNo") pageNo : Int
-    ): Maybe<MemoResponse>
+    ): Call<MemoResponse>
 
     @GET("/api/memo")
     fun fetchMemoList(
@@ -57,18 +57,5 @@ interface ApiService {
         @Query("pageNo") pageNo : Int,
         @Query("keyWord") keyWord: String
     ): Maybe<MemoResponse>
-
-    @GET("/api/memo")
-    fun fetchMultiMemoList(
-        @Query("pageNo") pageNo : Int
-    ): Flowable<MemoResponse>
-
-
-    @GET("/api/memo")
-    fun fetchMemoList(
-        @Query("pageNo") pageNo: Int,
-        @Query("filterTag") filterTag: Int?,
-        @Query("keyWord") keyWord: String?
-    ): Call<MemoResponse>
 
 }

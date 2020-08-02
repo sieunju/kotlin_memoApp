@@ -2,20 +2,16 @@ package com.hmju.memo.viewModels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.paging.DataSource
+import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import androidx.paging.RxPagedListBuilder
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.convenience.SingleLiveEvent
-import com.hmju.memo.convenience.single
 import com.hmju.memo.model.form.MemoListParam
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.repository.network.paging.memolist.MemoListDataSourceFactory
-import com.hmju.memo.repository.network.paging.memolist.MemoListPageDataSource
 import com.hmju.memo.repository.preferences.AccountPref
 import com.hmju.memo.utils.JLogger
-import java.util.concurrent.Executors
 
 /**
  * Description: MainViewModel Class
@@ -34,45 +30,36 @@ class MainViewModel(
     val startLogin = SingleLiveEvent<Unit>()
     val startAlert = SingleLiveEvent<Unit>()
 
-    val pagedList = MutableLiveData<PagedList<MemoItem>>()
-
-    val memoParam: MemoListParam by lazy {
+    private val memoParam: MemoListParam by lazy {
         MemoListParam(
-            pageNo = 1,
-            selectedTag = 1,
-            keyWord = ""
+            pageNo = 1
         )
     }
 
-    val pagedConfig: PagedList.Config by lazy {
+    private val config: PagedList.Config by lazy {
         PagedList.Config.Builder()
-            .setInitialLoadSizeHint(10)
             .setPageSize(20)
-            .setPrefetchDistance(5)
             .setEnablePlaceholders(true)
             .build()
     }
 
-    val executor = Executors.newFixedThreadPool(5)
-    var dataFactory: MemoListDataSourceFactory? = null
+    var pagedList: LiveData<PagedList<MemoItem>>? = null
 
     fun start() {
+        // 로그인 상태인경우 메모장 API 콜한다.
         if (actPref.getLoginKey().isNotEmpty()) {
-            dataFactory?.let {
-                JLogger.d("이미 만들어짐..리셋..")
-            } ?: run {
-                val builder = RxPagedListBuilder<Int,MemoItem>(object: DataSource.Factory<Int,MemoItem>(){
-                    override fun create(): DataSource<Int, MemoItem> {
-                        JLogger.d("여기까지 성공..")
-                        return MemoListPageDataSource(apiService,memoParam)
-                    }
-                },pagedConfig)
+            JLogger.d("Start Api")
 
-                builder.buildObservable()
-                    .subscribe {
-                        pagedList.value = it;
-                    }
+            pagedList?.let {
+
+            } ?: run {
+                JLogger.d("Builder Create")
+                pagedList = LivePagedListBuilder(
+                    MemoListDataSourceFactory(apiService, memoParam), config
+                ).build()
             }
+
+            _isPageStart.value = true
         } else {
             startLogin.call()
         }

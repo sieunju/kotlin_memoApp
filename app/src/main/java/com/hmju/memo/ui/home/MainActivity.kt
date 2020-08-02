@@ -30,7 +30,7 @@ class MainActivity : BaseActivity<ActivityMainBinding,MainViewModel> (){
         super.onCreate(savedInstanceState)
 
         with(viewModel){
-
+            
             startLogin.observe(this@MainActivity, Observer {
                 startActResult<LoginActivity>(RequestCode.LOGIN){}
             })

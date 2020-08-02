@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                app:memoList="@{viewModel.pagedList}"
+                app:memoData="@{viewModel.pagedList}"
                 app:viewModel="@{viewModel}" />
 
         </com.hmju.memo.base.HeaderView>

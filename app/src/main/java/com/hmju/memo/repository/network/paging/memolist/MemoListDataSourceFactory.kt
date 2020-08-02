@@ -1,11 +1,13 @@
 package com.hmju.memo.repository.network.paging.memolist
 
+import androidx.arch.core.util.Function
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.PagedList
 import com.hmju.memo.model.form.MemoListParam
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.repository.network.ApiService
+import com.hmju.memo.utils.JLogger
 
 
 /**
@@ -18,18 +20,10 @@ class MemoListDataSourceFactory(
     private val params: MemoListParam
 ) : DataSource.Factory<Int,MemoItem>() {
 
-    val pagedConfig: PagedList.Config by lazy {
-        PagedList.Config.Builder()
-            .setInitialLoadSizeHint(10)
-            .setPageSize(20)
-            .setPrefetchDistance(5)
-            .setEnablePlaceholders(true)
-            .build()
-    }
-
     val sourceLiveData = MutableLiveData<MemoListPageDataSource>()
 
     override fun create(): DataSource<Int, MemoItem> {
+        JLogger.d("onCreate!!")
         val source =
             MemoListPageDataSource(
                 apiService = apiService,
@@ -37,5 +31,10 @@ class MemoListDataSourceFactory(
             )
         sourceLiveData.postValue(source)
         return source
+    }
+
+    override fun <ToValue : Any?> map(function: Function<MemoItem, ToValue>): DataSource.Factory<Int, ToValue> {
+        JLogger.d("Map ${function}")
+        return super.map(function)
     }
 }

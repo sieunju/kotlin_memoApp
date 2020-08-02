@@ -4,8 +4,10 @@ import androidx.multidex.MultiDexApplication
 import com.hmju.memo.di.apiModule
 import com.hmju.memo.di.prefModule
 import com.hmju.memo.di.viewModule
+import com.hmju.memo.repository.preferences.AccountPref
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
+import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import java.io.IOException
@@ -31,6 +33,9 @@ class MainApplication : MultiDexApplication() {
                         apiModule
             )
         }
+
+        val pref : AccountPref by inject()
+        pref.setLoginKey("")
 
         initRxJava()
     }
