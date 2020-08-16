@@ -1,15 +1,9 @@
 package com.hmju.memo.repository.network
 
-import com.google.gson.JsonObject
-import com.hmju.memo.base.BaseResponse
 import com.hmju.memo.model.form.LoginForm
 import com.hmju.memo.model.login.LoginResponse
-import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.model.memo.MemoResponse
-import io.reactivex.Flowable
 import io.reactivex.Maybe
-import io.reactivex.Single
-import kotlinx.coroutines.Deferred
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
