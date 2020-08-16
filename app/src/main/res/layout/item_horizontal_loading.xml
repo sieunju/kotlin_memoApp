@@ -6,20 +6,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/padding_size_10"
-            android:paddingBottom="@dimen/padding_size_10"
-            android:text="로딩중.."
-            android:textColor="@color/colorBlack"
-            android:textSize="@dimen/text_size_14"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        
+        <androidx.constraintlayout.motion.widget.MotionLayout
+            android:layout_width="match_parent"
+            app:layoutDescription="@xml/horizontal_loading"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_height="@dimen/size_100">
+
+            <View
+                android:id="@+id/button"
+                android:layout_width="@dimen/size_50"
+                android:layout_height="@dimen/size_50"/>
+
+
+        </androidx.constraintlayout.motion.widget.MotionLayout>
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 </layout>

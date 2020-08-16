@@ -5,6 +5,7 @@ import com.hmju.memo.model.form.MemoListParam
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.model.memo.MemoResponse
 import com.hmju.memo.repository.network.ApiService
+import com.hmju.memo.repository.preferences.AccountPref
 import com.hmju.memo.utils.JLogger
 import retrofit2.Call
 import retrofit2.Callback
@@ -16,6 +17,7 @@ import retrofit2.Response
  * Created by juhongmin on 2020/06/21
  */
 class MemoListPageDataSource(
+    private val actPref: AccountPref,
     private val apiService: ApiService,
     private val memoParam: MemoListParam
 ) : PageKeyedDataSource<Int, MemoItem>() {
@@ -24,6 +26,10 @@ class MemoListPageDataSource(
         params: LoadInitialParams<Int>,
         callback: LoadInitialCallback<Int, MemoItem>
     ) {
+        // Login Key 유무 검사.
+        if(actPref.getLoginKey().isEmpty()) {
+            return
+        }
         JLogger.d("loadInitial " + params.requestedLoadSize)
         apiService.fetchMemoList(
             pageNo = memoParam.pageNo
@@ -33,6 +39,12 @@ class MemoListPageDataSource(
                 if (response.isSuccessful) {
                     response.body()?.let {
                         memoParam.pageNo++
+                        // 이미지 리스트 바인딩 처리.
+                        it.dataList.forEach {item->
+                            if(!item.isNormal()) {
+                                item.bindingImgList()
+                            }
+                        }
                         callback.onResult(it.dataList, null, memoParam.pageNo)
                     }
                 }
@@ -55,6 +67,12 @@ class MemoListPageDataSource(
                 if (response.isSuccessful) {
                     response.body()?.let {
                         memoParam.pageNo++
+                        // 이미지 리스트 바인딩 처리.
+                        it.dataList.forEach {item->
+                            if(!item.isNormal()) {
+                                item.bindingImgList()
+                            }
+                        }
                         callback.onResult(it.dataList,memoParam.pageNo)
                     }
                 }

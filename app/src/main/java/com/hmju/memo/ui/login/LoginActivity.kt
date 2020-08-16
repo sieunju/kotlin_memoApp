@@ -10,6 +10,7 @@ import com.hmju.memo.BR
 import com.hmju.memo.base.BaseActivity
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.databinding.ActivityLoginBinding
+import com.hmju.memo.dialog.ConfirmDialog
 import com.hmju.memo.viewModels.LoginViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -21,6 +22,8 @@ class LoginActivity : BaseActivity<ActivityLoginBinding,LoginViewModel> () {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        fullScreen()
         with(viewModel){
             startFinish.observe(this@LoginActivity, Observer {isLogin->
                 if(isLogin){
@@ -29,6 +32,10 @@ class LoginActivity : BaseActivity<ActivityLoginBinding,LoginViewModel> () {
                     setResult(Activity.RESULT_CANCELED)
                 }
                 finish()
+            })
+
+            startLoginFail.observe(this@LoginActivity, Observer {msg ->
+                ConfirmDialog(this@LoginActivity,msg).show()
             })
         }
     }

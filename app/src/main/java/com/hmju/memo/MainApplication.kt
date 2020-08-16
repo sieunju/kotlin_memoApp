@@ -34,8 +34,9 @@ class MainApplication : MultiDexApplication() {
             )
         }
 
-        val pref : AccountPref by inject()
-        pref.setLoginKey("")
+        // 테스트 코드 추가.
+//        val pref : AccountPref by inject()
+//        pref.setLoginKey("")
 
         initRxJava()
     }

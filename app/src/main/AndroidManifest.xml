@@ -20,6 +20,17 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.APP_BROWSER"/>
+
+                <data
+                    android:scheme="https"
+                    android:host="qtzz.synology.me"
+                    />
+            </intent-filter>
         </activity>
 
         <activity android:name=".ui.intro.IntroActivity"/>

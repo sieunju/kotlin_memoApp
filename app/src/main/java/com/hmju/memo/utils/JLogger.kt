@@ -22,6 +22,10 @@ class JLogger {
             Log.d("$TAG:$sb", "Thread\t${Thread.currentThread().name}\tMsg\t$msg")
         }
 
+        fun d(tag: String, msg : String) {
+            Log.d(tag,msg);
+        }
+
         fun e(msg: String) {
             val ste = Thread.currentThread().stackTrace[4]
             val sb = StringBuilder()

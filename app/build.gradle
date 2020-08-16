@@ -62,6 +62,15 @@ android {
             manifestPlaceholders = [appLabel: "StudyApp"]
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 }
 
 dependencies {
@@ -75,7 +84,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.viewModelVersion"
     kapt "com.android.databinding:compiler:$rootProject.androidPluginVersion"
 
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
@@ -118,7 +127,7 @@ dependencies {
 //    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutinesVersion"
 //    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$rootProject.coroutinesVersion"
 
-    // Custom Behavior LIb
+    // Custom Behavior Lib
     implementation "com.hmju.custombehavior:custom-behavior:1.0.0"
 
     // Reactive X
@@ -137,5 +146,7 @@ dependencies {
     // optional - RxJava support
     implementation "androidx.paging:paging-rxjava2:$rootProject.pagingVersion" // For Kotlin use paging-rxjava2-ktx
 
+    // MotionLayout
+//    implementation "com.android.support.constraint:constraint-layout:$rootProject.motionLayoutVersion"
 
 }

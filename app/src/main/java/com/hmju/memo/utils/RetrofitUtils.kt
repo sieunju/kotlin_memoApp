@@ -4,6 +4,7 @@ import com.hmju.memo.define.NetInfo
 import com.hmju.memo.repository.preferences.AccountPref
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.*
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -14,10 +15,9 @@ import java.util.concurrent.TimeUnit
  */
 fun forbiddenInterceptor() :Interceptor{
     return Interceptor {chain: Interceptor.Chain ->
-        val response: Response
 
-        response = chain.proceed(chain.request())
-        when(response.code()){
+        val response: Response = chain.proceed(chain.request())
+        when(response.code){
             NetInfo.CODE_BAD_REQUEST -> {
                 JLogger.e("서버 에러 발생 CODE_BAD_REQUEST")
             }
@@ -80,7 +80,7 @@ fun headerInterceptor(pref: AccountPref) : Interceptor {
             .header("Content-Type","application/json")
             .header(NetInfo.KEY_TYPE,NetInfo.VALUE_TYPE)
             .header(NetInfo.KEY_LOGIN,pref.getLoginKey())
-            .method(origin.method(),origin.body())
+            .method(origin.method,origin.body)
             .build()
         chain.proceed(request)
     }
@@ -92,6 +92,7 @@ fun headerInterceptor(pref: AccountPref) : Interceptor {
 fun createOkHttpClient(interceptor: Interceptor): OkHttpClient{
     val retrofitLogger = RetrofitLogger()
     retrofitLogger.setLevel(RetrofitLogger.Level.BODY)
+    HttpLoggingInterceptor.Logger
     return OkHttpClient.Builder()
         .retryOnConnectionFailure(true)
         .connectTimeout(5, TimeUnit.SECONDS)

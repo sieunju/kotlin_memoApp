@@ -29,6 +29,7 @@ class LoginViewModel(
     val strPw = MutableLiveData<String>()
 
     val startFinish = SingleLiveEvent<Boolean>()
+    val startLoginFail = SingleLiveEvent<String>()
 
     /**
      * 로그인 시작.
@@ -51,9 +52,9 @@ class LoginViewModel(
                         startFinish.value = true
                     }
                 }, {
-                    startFinish.value = false
+                    JLogger.d("로그인에 실패했습니다.")
+                    startLoginFail.value = "로그인 실패!"
                 })
-
         }
     }
 
@@ -61,7 +62,7 @@ class LoginViewModel(
      * 비 로그인 시작.
      */
     fun startNonLogin(){
-        JLogger.d("Non Login Start");
-        startFinish.value = false;
+        JLogger.d("Non Login Start")
+        startFinish.value = false
     }
 }

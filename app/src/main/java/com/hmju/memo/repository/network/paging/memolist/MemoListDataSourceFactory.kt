@@ -3,10 +3,10 @@ package com.hmju.memo.repository.network.paging.memolist
 import androidx.arch.core.util.Function
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
-import androidx.paging.PagedList
 import com.hmju.memo.model.form.MemoListParam
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.repository.network.ApiService
+import com.hmju.memo.repository.preferences.AccountPref
 import com.hmju.memo.utils.JLogger
 
 
@@ -16,16 +16,18 @@ import com.hmju.memo.utils.JLogger
  * Created by juhongmin on 2020/06/21
  */
 class MemoListDataSourceFactory(
+    private val actPref: AccountPref,
     private val apiService: ApiService,
     private val params: MemoListParam
-) : DataSource.Factory<Int,MemoItem>() {
+) : DataSource.Factory<Int, MemoItem>() {
 
-    val sourceLiveData = MutableLiveData<MemoListPageDataSource>()
+    private val sourceLiveData = MutableLiveData<MemoListPageDataSource>()
 
     override fun create(): DataSource<Int, MemoItem> {
         JLogger.d("onCreate!!")
         val source =
             MemoListPageDataSource(
+                actPref = actPref,
                 apiService = apiService,
                 memoParam = params
             )
@@ -33,8 +35,14 @@ class MemoListDataSourceFactory(
         return source
     }
 
-    override fun <ToValue : Any?> map(function: Function<MemoItem, ToValue>): DataSource.Factory<Int, ToValue> {
-        JLogger.d("Map ${function}")
-        return super.map(function)
+    fun refresh() {
+        JLogger.d("갱신 갱신!")
+        val item = sourceLiveData.value
+        item?.let {
+            JLogger.d("실제로 갱신 합니다.")
+            item.invalidate()
+        } ?: run {
+            JLogger.d("PageDataSource Null...")
+        }
     }
 }

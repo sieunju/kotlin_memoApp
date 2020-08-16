@@ -9,6 +9,7 @@ import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.module.AppGlideModule
+import com.bumptech.glide.request.RequestOptions
 import okhttp3.OkHttpClient
 import java.io.InputStream
 import java.util.concurrent.TimeUnit
@@ -37,7 +38,6 @@ class GlideModule : AppGlideModule() {
     }
 
     override fun applyOptions(context: Context, builder: GlideBuilder) {
-        JLogger.d("Glide 캐시 메모리 세팅")
         val disCacheSizeByte = 1024 * 1024 * 100
         builder.setDiskCache(InternalCacheDiskCacheFactory(context, disCacheSizeByte.toLong()))
         super.applyOptions(context, builder)

@@ -15,18 +15,22 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
         android:visibility="@{viewModel.isPageStart ? View.VISIBLE : View.INVISIBLE}">
 
         <com.hmju.memo.base.HeaderView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/color_transparent"
             app:header_type="img_search">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:scrollbars="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 app:memoData="@{viewModel.pagedList}"
