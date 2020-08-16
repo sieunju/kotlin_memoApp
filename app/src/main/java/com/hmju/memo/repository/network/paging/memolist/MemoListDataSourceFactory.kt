@@ -1,6 +1,5 @@
 package com.hmju.memo.repository.network.paging.memolist
 
-import androidx.arch.core.util.Function
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import com.hmju.memo.model.form.MemoListParam

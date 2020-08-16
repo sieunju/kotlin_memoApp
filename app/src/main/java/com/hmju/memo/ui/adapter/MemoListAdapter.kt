@@ -2,14 +2,13 @@ package com.hmju.memo.ui.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import com.hmju.memo.base.BasePagedAdapter
 import com.hmju.memo.R
+import com.hmju.memo.base.BasePagedAdapter
 import com.hmju.memo.base.BaseViewHolder
 import com.hmju.memo.databinding.ItemHorizontalLoadingBinding
 import com.hmju.memo.databinding.ItemMemoImgBinding
 import com.hmju.memo.databinding.ItemMemoNormalBinding
 import com.hmju.memo.model.memo.MemoItem
-import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.MainViewModel
 
 

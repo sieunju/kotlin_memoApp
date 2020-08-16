@@ -1,12 +1,7 @@
 package com.hmju.memo.model.memo
 
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.SerializedName
-import com.hmju.memo.utils.JLogger
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
 
 // Memo Data Response.
 data class MemoResponse(

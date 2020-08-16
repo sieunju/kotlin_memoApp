@@ -1,14 +1,11 @@
 package com.hmju.memo.ui.login
 
 import android.app.Activity
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.Observer
-import com.hmju.custombehavior.TranslationBehavior
-import com.hmju.memo.R
 import com.hmju.memo.BR
+import com.hmju.memo.R
 import com.hmju.memo.base.BaseActivity
-import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.databinding.ActivityLoginBinding
 import com.hmju.memo.dialog.ConfirmDialog
 import com.hmju.memo.viewModels.LoginViewModel

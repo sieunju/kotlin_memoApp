@@ -3,7 +3,6 @@ package com.hmju.memo.ui.home
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
@@ -13,12 +12,10 @@ import com.hmju.memo.base.BaseActivity
 import com.hmju.memo.databinding.ActivityMainBinding
 import com.hmju.memo.define.RequestCode
 import com.hmju.memo.ui.login.LoginActivity
-import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.startActResult
 import com.hmju.memo.viewModels.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
-import kotlin.system.exitProcess
 
 /**
  * Description : 메인 페이지
