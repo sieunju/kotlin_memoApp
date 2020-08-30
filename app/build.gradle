@@ -83,7 +83,6 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:$rootProject.recyclerViewVersion"
     implementation "androidx.cardview:cardview:$rootProject.cardViewVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.viewModelVersion"
-    implementation 'androidx.navigation:navigation-runtime:2.1.0'
     kapt "com.android.databinding:compiler:$rootProject.androidPluginVersion"
 
     testImplementation 'junit:junit:4.13'
@@ -155,4 +154,6 @@ dependencies {
     //Navigation Architecture Component
     implementation "androidx.navigation:navigation-fragment-ktx:$rootProject.navVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$rootProject.navVersion"
+    implementation "androidx.navigation:navigation-runtime:$rootProject.navVersion"
+
 }
