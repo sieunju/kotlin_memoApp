@@ -14,29 +14,82 @@
             type="com.hmju.memo.viewModels.MainViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_root"
+    <!--    <com.hmju.memo.base.HeaderView-->
+    <!--        android:id="@+id/v_header"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:fitsSystemWindows="true"-->
+    <!--        android:visibility="@{viewModel.isPageStart ? View.VISIBLE : View.INVISIBLE}"-->
+    <!--        app:header_type="img_search">-->
+
+    <!--        <androidx.recyclerview.widget.RecyclerView-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:scrollbars="vertical"-->
+    <!--            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+    <!--            app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+    <!--            app:memoData="@{viewModel.pagedList}"-->
+    <!--            app:viewModel="@{viewModel}" />-->
+
+    <!--    </com.hmju.memo.base.HeaderView>-->
+
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/clRoot"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        android:visibility="@{viewModel.isPageStart ? View.VISIBLE : View.INVISIBLE}">
+        app:layoutDescription="@xml/scene_memo">
 
-        <com.hmju.memo.base.HeaderView
+        <!-- Contents View -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvContents"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/color_transparent"
-            app:header_type="img_search">
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toTopOf="parent"
+            app:memoData="@{viewModel.pagedList}"
+            app:viewModel="@{viewModel}" />
 
-            <androidx.recyclerview.widget.RecyclerView
+        <!-- Header 영역 -->
+        <com.hmju.memo.widget.BlurView
+            android:id="@+id/clHeaderToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_100"
+            app:blurRadius="10dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:overlayColor="#19FFFFFF" />
+
+        <!-- 타이틀 뷰 -->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Title"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/text_size_20"
+            app:layout_constraintBottom_toBottomOf="@+id/headerToolBar"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/headerToolBar" />
+
+        <!-- 프로필 이미지 뷰 -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cvProfile"
+            android:layout_width="@dimen/size_50"
+            android:layout_height="@dimen/size_50"
+            app:cardCornerRadius="@dimen/size_25"
+            app:cardElevation="0dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="vertical"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                app:memoData="@{viewModel.pagedList}"
-                app:viewModel="@{viewModel}" />
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/temp1" />
 
-        </com.hmju.memo.base.HeaderView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
 
+        <include
+            android:id="@+id/bottomToolbar"
+            layout="@layout/layout_main_toolbar" />
+
+    </androidx.constraintlayout.motion.widget.MotionLayout>
 </layout>

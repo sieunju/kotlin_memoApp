@@ -25,9 +25,9 @@ class GlideModule : AppGlideModule() {
     override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
         super.registerComponents(context, glide, registry)
         val client = OkHttpClient.Builder()
-            .readTimeout(5, TimeUnit.SECONDS)
-            .writeTimeout(5,TimeUnit.SECONDS)
-            .connectTimeout(5,TimeUnit.SECONDS)
+            .readTimeout(10, TimeUnit.SECONDS)
+            .writeTimeout(10,TimeUnit.SECONDS)
+            .connectTimeout(10,TimeUnit.SECONDS)
             .build()
 
         glide.registry.replace(
@@ -38,7 +38,7 @@ class GlideModule : AppGlideModule() {
     }
 
     override fun applyOptions(context: Context, builder: GlideBuilder) {
-        val disCacheSizeByte = 1024 * 1024 * 100
+        val disCacheSizeByte = 1024 * 1024 * 100 // 100mb
         builder.setDiskCache(InternalCacheDiskCacheFactory(context, disCacheSizeByte.toLong()))
         super.applyOptions(context, builder)
     }

@@ -35,7 +35,7 @@
                 android:layout_height="@dimen/size_200"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
-                app:bindingImgUrl="@{item.thumbImg()}"
+                app:bindImg="@{item.thumbImg()}"
                 tools:src="@drawable/ic_profile_default" />
 
             <!-- 타이틀 -->

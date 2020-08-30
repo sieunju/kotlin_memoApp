@@ -1,6 +1,7 @@
 package com.hmju.memo.utils
 
 import android.util.Log
+import com.hmju.memo.BuildConfig
 
 /**
  * Description: Logger Utils Class.
@@ -12,41 +13,31 @@ class JLogger {
         val TAG = "JLogger"
 
         fun d(msg: String) {
-            val ste = Thread.currentThread().stackTrace[4]
-            val sb = StringBuilder()
-            sb.append("[")
-//            sb.append(ste.fileName.replace(".kt", ""))
-//            sb.append("::")
-            sb.append(ste.methodName)
-            sb.append("]")
-            Log.d("$TAG:$sb", "Thread\t${Thread.currentThread().name}\tMsg\t$msg")
+            if (BuildConfig.APP_DEBUG) {
+                val ste = Thread.currentThread().stackTrace[4]
+                val sb = StringBuilder()
+                sb.append("[")
+                sb.append(ste.methodName)
+                sb.append("]")
+                Log.i("$TAG:$sb", msg)
+            }
         }
 
-        fun d(tag: String, msg : String) {
-            Log.d(tag,msg);
+        fun d(tag: String, msg: String) {
+            if (BuildConfig.APP_DEBUG) {
+                Log.d(tag, msg)
+            }
         }
 
         fun e(msg: String) {
-            val ste = Thread.currentThread().stackTrace[4]
-            val sb = StringBuilder()
-            sb.append("[")
-            sb.append(ste.fileName.replace(".kt", ""))
-            sb.append("::")
-            sb.append(ste.methodName)
-            sb.append("]")
-            Log.e("$TAG:$sb", msg)
-        }
-
-        @JvmStatic
-        fun D(msg: String) {
-            val ste = Thread.currentThread().stackTrace[4]
-            val sb = StringBuilder()
-            sb.append("[")
-//            sb.append(ste.fileName.replace(".kt", ""))
-//            sb.append("::")
-            sb.append(ste.methodName)
-            sb.append("]")
-            Log.d("$TAG:$sb", msg)
+            if (BuildConfig.DEBUG) {
+                val ste = Thread.currentThread().stackTrace[4]
+                val sb = StringBuilder()
+                sb.append("[")
+                sb.append(ste.methodName)
+                sb.append("]")
+                Log.e("$TAG:$sb", msg)
+            }
         }
     }
 }

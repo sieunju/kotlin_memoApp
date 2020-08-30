@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/more"
+        android:icon="@drawable/ic_more_white"
+        android:title="@string/toolbar_more" />
+
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/ic_search_white"
+        android:title="@string/toolbar_search" />
+
+    <item
+        android:id="@+id/add"
+        android:icon="@drawable/ic_add_white"
+        android:title="@string/toolbar_add" />
+
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/ic_home_white"
+        android:title="@string/toolbar_home" />
+
+</menu>

@@ -10,7 +10,9 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ViewModel
 import com.hmju.memo.utils.JLogger
 
@@ -40,20 +42,26 @@ abstract class BaseActivity<T : ViewDataBinding, VM : BaseViewModel>
     }
 
     protected fun fullScreen() {
-        // 지원되는 버전 만 StatusBar 반투명하게.
-        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-            window.apply {
-                statusBarColor = Color.TRANSPARENT
+    }
 
-                addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-                addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-//                addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
-                    decorView.systemUiVisibility =
-                        View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                }
-            }
+    protected fun setWindowFlag(bits: Int, on : Boolean) {
+        val win = window ?: return
+        val winParams = win.attributes
+        if(on) {
+            winParams.flags = winParams.flags or bits
+        } else {
+            winParams.flags = winParams.flags and bits.inv()
         }
+        win.attributes = winParams
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        JLogger.d("onRestart")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        JLogger.d("onStop")
     }
 }

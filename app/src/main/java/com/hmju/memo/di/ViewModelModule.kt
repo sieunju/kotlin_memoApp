@@ -1,10 +1,7 @@
 package com.hmju.memo.di
 
 import com.hmju.memo.model.memo.MemoDetailInfo
-import com.hmju.memo.viewModels.LoginViewModel
-import com.hmju.memo.viewModels.MainViewModel
-import com.hmju.memo.viewModels.MemoAddViewModel
-import com.hmju.memo.viewModels.MemoDetailViewModel
+import com.hmju.memo.viewModels.*
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 

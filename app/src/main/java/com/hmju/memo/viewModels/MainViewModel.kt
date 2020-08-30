@@ -37,6 +37,7 @@ class MainViewModel(
     val startLogin = SingleLiveEvent<Unit>()
     val startAlert = SingleLiveEvent<Unit>()
     val finish = SingleLiveEvent<Boolean>()
+    val test = "IMG_1595897676051afk1j1b40cc.jpeg"
 
     private val backButtonSubject : Subject<Long> =
         BehaviorSubject.createDefault(0L).toSerialized()

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@+id/start"
+        motion:duration="2500">
+
+<!--        <OnSwipe-->
+<!--            motion:dragDirection="dragUp"-->
+<!--            motion:touchAnchorId="@+id/clHeaderToolbar"-->
+<!--            motion:touchAnchorSide="bottom" />-->
+
+        <OnSwipe motion:dragDirection="dragUp"
+            motion:touchAnchorId="@id/rvContents"
+            motion:touchAnchorSide="top"
+            />
+
+    </Transition>
+
+<!--    <Transition-->
+<!--        motion:constraintSetEnd="@+id/toolbarEnd"-->
+<!--        motion:constraintSetStart="@+id/toolbarStart"-->
+<!--        motion:duration="2500"-->
+<!--        motion:motionInterpolator="linear">-->
+
+<!--        <OnSwipe-->
+<!--            motion:dragDirection="dragUp"-->
+<!--            motion:touchAnchorId="@+id/bottomToolbar"-->
+<!--            motion:touchAnchorSide="bottom" />-->
+
+<!--    </Transition>-->
+
+    <!-- Start Point -->
+    <ConstraintSet android:id="@+id/start">
+
+        <!-- Header ToolBar 영역 -->
+        <Constraint
+            android:id="@+id/clHeaderToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_100"
+            motion:layout_constraintTop_toTopOf="parent">
+
+        </Constraint>
+
+        <!-- 타이틀 영역 -->
+        <Constraint
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/size_10"
+            android:layout_marginBottom="@dimen/size_10"
+            android:alpha="1.0"
+            motion:layout_constraintBottom_toBottomOf="@+id/clHeaderToolbar"
+            motion:layout_constraintLeft_toLeftOf="parent">
+
+        </Constraint>
+
+        <!-- 프로필 이미지  -->
+        <Constraint
+            android:id="@+id/cvProfile"
+            android:layout_width="@dimen/size_50"
+            android:layout_height="@dimen/size_50"
+            android:layout_marginRight="@dimen/size_10"
+            android:layout_marginBottom="@dimen/size_5"
+            motion:layout_constraintBottom_toBottomOf="@+id/clHeaderToolbar"
+            motion:layout_constraintRight_toRightOf="parent">
+
+            <CustomAttribute
+                motion:attributeName="cardCornerRadius"
+                motion:customDimension="@dimen/size_25" />
+
+            <CustomAttribute
+                motion:attributeName="cardElevation"
+                motion:customDimension="0dp" />
+
+        </Constraint>
+
+        <!-- Contents 영역 -->
+        <Constraint
+            android:id="@+id/rvContents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toBottomOf="@+id/clHeaderToolbar">
+
+        </Constraint>
+
+    </ConstraintSet>
+
+    <!-- End Point -->
+    <ConstraintSet android:id="@+id/end">
+
+        <!-- Header ToolBar 영역 -->
+        <Constraint
+            android:id="@+id/clHeaderToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_70"
+            motion:layout_constraintTop_toTopOf="parent">
+
+        </Constraint>
+
+        <!-- 타이틀 영역 -->
+        <Constraint
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/size_10"
+            android:layout_marginTop="@dimen/size_10"
+            android:alpha="0.0"
+            motion:layout_constraintBottom_toTopOf="@+id/clHeaderToolbar"
+            motion:layout_constraintLeft_toLeftOf="parent">
+
+        </Constraint>
+
+        <!-- 프로필 이미지  -->
+        <Constraint
+            android:id="@+id/cvProfile"
+            android:layout_width="@dimen/size_20"
+            android:layout_height="@dimen/size_20"
+            android:layout_marginRight="@dimen/size_20"
+            android:layout_marginBottom="@dimen/size_5"
+            motion:layout_constraintBottom_toBottomOf="@+id/clHeaderToolbar"
+            motion:layout_constraintRight_toRightOf="parent">
+
+            <CustomAttribute
+                motion:attributeName="cardCornerRadius"
+                motion:customDimension="@dimen/size_10" />
+
+            <CustomAttribute
+                motion:attributeName="cardElevation"
+                motion:customDimension="0dp" />
+
+        </Constraint>
+
+        <!-- Contents 영역 -->
+        <Constraint
+            android:id="@+id/rvContents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toTopOf="parent">
+
+        </Constraint>
+
+    </ConstraintSet>
+
+    <!-- [s] ToolBar Motion Setting -->
+    <ConstraintSet android:id="@+id/toolbarStart">
+
+        <Constraint
+            android:id="@+id/bottomToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_70"
+            android:alpha="1.0"
+            motion:layout_constraintBottom_toBottomOf="parent">
+
+        </Constraint>
+
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/toolbarEnd">
+
+        <Constraint
+            android:id="@+id/bottomToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_70"
+            android:alpha="0.0"
+            motion:layout_constraintTop_toTopOf="parent">
+
+        </Constraint>
+
+    </ConstraintSet>
+    <!-- [e] ToolBar Motion Setting -->
+
+</MotionScene>

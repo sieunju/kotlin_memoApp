@@ -2,6 +2,7 @@ package com.hmju.memo.ui.bindingadapter
 
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
@@ -13,6 +14,7 @@ import com.bumptech.glide.request.target.Target
 import com.hmju.memo.R
 import com.hmju.memo.define.NetInfo
 import com.hmju.memo.utils.JLogger
+import java.util.*
 
 /**
  * Description : 이미지 로더 Binding Adapter
@@ -21,20 +23,52 @@ import com.hmju.memo.utils.JLogger
  */
 
 
-@BindingAdapter("bindingImgUrl")
+@BindingAdapter("bindImg")
 fun bindingImg(
     imgView: AppCompatImageView,
     imgUrl: String?
 ) {
+
+    val placeHolder = listOf<Int>(
+        R.color.colorPlaceHolder_1,
+        R.color.colorPlaceHolder_2,
+        R.color.colorPlaceHolder_3,
+        R.color.colorPlaceHolder_4)
+    val ran = Random().nextInt(placeHolder.size)
+
     imgUrl?.let {
         Glide.with(imgView.context)
             .load(getUrl(it))
-            .placeholder(R.color.colorPrimary)
-            .listener(glideLoggerListener("original"))
+            .placeholder(placeHolder[ran])
             .override(200,200)
             .transform(CenterCrop())
             .into(imgView)
     }
+}
+
+@BindingAdapter("bind_img_header")
+fun setBindingHeaderImgUrl(
+    imgView: AppCompatImageView,
+    imgUrl: String?
+) {
+
+    val placeHolder = listOf<Int>(
+        R.color.colorPlaceHolder_1,
+        R.color.colorPlaceHolder_2,
+        R.color.colorPlaceHolder_3,
+        R.color.colorPlaceHolder_4)
+    val ran = Random().nextInt(placeHolder.size)
+
+    imgUrl?.let{
+        Glide.with(imgView.context)
+            .load(getUrl(it))
+            .placeholder(placeHolder[ran])
+            .dontAnimate()
+            .transform(CenterCrop())
+            .error(R.drawable.ic_profile_default)
+            .into(imgView)
+    }
+
 }
 
 fun getUrl(url: String?): String? {
@@ -65,10 +99,12 @@ fun glideLoggerListener(name: String) : RequestListener<Drawable> {
                                      target: Target<Drawable>?,
                                      dataSource: DataSource?,
                                      isFirstResource: Boolean): Boolean {
-            if (resource is BitmapDrawable) {
-                val bitmap = resource.bitmap
-                JLogger.d("onResourceReady ${bitmap.byteCount} Width ${bitmap.width} Height ${bitmap.height}")
-            }
+//            if (resource is BitmapDrawable) {
+//                val bitmap = resource.bitmap
+//                JLogger.d("onResourceReady ${bitmap.byteCount} Width ${bitmap.width} Height ${bitmap.height}")
+//            }
+
+            JLogger.d("onResourceReady ${resource.toString()}")
             return false
         }
 
@@ -81,5 +117,6 @@ fun glideLoggerListener(name: String) : RequestListener<Drawable> {
             JLogger.d("onLoadFailed Fail${e?.message} \tModel\t$model" )
             return false
         }
+
     }
 }

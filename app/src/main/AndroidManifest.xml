@@ -10,33 +10,34 @@
         android:icon="@mipmap/ic_launcher"
         android:label="${appLabel}"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:testOnly="${testOnly}"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+
         <activity
             android:name=".ui.home.MainActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.Memo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <category android:name="android.intent.category.APP_BROWSER"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.APP_BROWSER" />
 
                 <data
-                    android:scheme="https"
                     android:host="qtzz.synology.me"
-                    />
+                    android:scheme="https" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".ui.intro.IntroActivity"/>
+        <activity android:name=".ui.intro.IntroActivity" />
         <activity
             android:name=".ui.login.LoginActivity"
             android:launchMode="singleTop"
+            android:theme="@style/AppTheme.Login"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ui.memo.MemoDetailActivity" />
         <activity android:name=".ui.memo.MemoAddActivity" />

@@ -25,5 +25,9 @@
     <color name="color_tag6">#AF52DE</color>
     <color name="color_tag7">#8E8E93</color>
 
+    <color name="colorPlaceHolder_1">#43DABA91</color>
+    <color name="colorPlaceHolder_2">#4291DA9D</color>
+    <color name="colorPlaceHolder_3">#42DA9197</color>
+    <color name="colorPlaceHolder_4">#4291A1DA</color>
 
 </resources>

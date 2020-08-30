@@ -11,7 +11,7 @@
 
     <string name="large_text">
         MIT License
-        Copyright (c) 2019 Sieun Ju
+        Copyright © 2019 Sieun Ju
         Permission is hereby granted, free of charge, to any person obtaining a copy
         of this software and associated documentation files (the "Software"), to deal
         in the Software without restriction, including without limitation the rights
@@ -33,4 +33,12 @@
     </string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+    <string name="test_img">IMG_1595897676051afk1j1b40cc.jpeg</string>
+    
+    <string name="toolbar_home">홈</string>
+    <string name="toolbar_search">검색</string>
+    <string name="toolbar_add">추가</string>
+    <string name="toolbar_more">더보기</string>
+    <string name="ellipsis">&#8230;</string>
+
 </resources>

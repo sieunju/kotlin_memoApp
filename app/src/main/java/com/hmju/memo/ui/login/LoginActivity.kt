@@ -20,7 +20,6 @@ class LoginActivity : BaseActivity<ActivityLoginBinding,LoginViewModel> () {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fullScreen()
         with(viewModel){
             startFinish.observe(this@LoginActivity, Observer {isLogin->
                 if(isLogin){

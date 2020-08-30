@@ -5,10 +5,9 @@ import androidx.databinding.BindingAdapter
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.RecyclerView
 import com.hmju.memo.R
-import com.hmju.memo.base.BaseAdapter
-import com.hmju.memo.convenience.ListMutableLiveData
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.ui.adapter.MemoListAdapter
+import com.hmju.memo.ui.decoration.LinearItemDecoration
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.MainViewModel
 
@@ -24,7 +23,7 @@ fun setMemoListAdapter(
     viewModel: MainViewModel,
     memoList: PagedList<MemoItem>?
 ) {
-    view.adapter?.let {adapter->
+    view.adapter?.let { adapter ->
 
         if (adapter is MemoListAdapter) {
             JLogger.d("TEST:: 갱신 갱신")
@@ -33,11 +32,15 @@ fun setMemoListAdapter(
     } ?: run {
         MemoListAdapter(viewModel).apply {
             view.adapter = this
+            view.addItemDecoration(
+                LinearItemDecoration(
+                    divider = view.context.resources.getDimensionPixelSize(R.dimen.size_1)
+                )
+            )
             this.submitList(memoList)
             JLogger.d("TEST:: 추가")
         }
     }
-
 }
 
 @BindingAdapter("memoTagColor")
