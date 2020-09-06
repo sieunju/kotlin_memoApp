@@ -15,16 +15,16 @@ import org.koin.core.parameter.parametersOf
  *
  * Created by hmju on 2020-06-16
  */
-class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoDetailViewModel>() {
-
-    override val layoutId = R.layout.activity_memo_detail
-    override val viewModel: MemoDetailViewModel by viewModel{
-        parametersOf(intent.getSerializableExtra(MEMO_DETAIL))
-    }
-
-    override val bindingVariable = BR.viewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-}
+//class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoDetailViewModel>() {
+//
+//    override val layoutId = R.layout.activity_memo_detail
+//    override val viewModel: MemoDetailViewModel by viewModel{
+//        parametersOf(intent.getSerializableExtra(MEMO_DETAIL))
+//    }
+//
+//    override val bindingVariable = BR.viewModel
+//
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//    }
+//}

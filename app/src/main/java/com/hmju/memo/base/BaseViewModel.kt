@@ -1,6 +1,8 @@
 package com.hmju.memo.base
 
 import androidx.lifecycle.ViewModel
+import com.hmju.memo.convenience.SingleLiveEvent
+import com.hmju.memo.define.NetworkState
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.*
@@ -12,6 +14,8 @@ import kotlin.coroutines.coroutineContext
  * Created by juhongmin on 2020/06/04
  */
 open class BaseViewModel : ViewModel() {
+
+    protected val startNetworkState = SingleLiveEvent<NetworkState>()
 
     // 코루틴은 잠시 접어둠.. 롤리팝에서 이슈가 있음.
 //    /**

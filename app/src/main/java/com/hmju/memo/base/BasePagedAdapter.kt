@@ -12,6 +12,4 @@ import androidx.recyclerview.widget.RecyclerView
  */
 abstract class BasePagedAdapter<T, VH : RecyclerView.ViewHolder>(
     diffCallback: DiffUtil.ItemCallback<T>
-) : PagedListAdapter<T, VH>(diffCallback) {
-
-}
+) : PagedListAdapter<T, VH>(diffCallback)

@@ -21,13 +21,20 @@ data class MemoItem(
 ) {
 
     var imgList: ArrayList<String>? = null
+        get() {
+            return if (field.isNullOrEmpty()) {
+                null
+            } else {
+                field
+            }
+        }
 
     fun isNormal(): Boolean {
         return images.isNullOrEmpty()
     }
 
     fun thumbImg(): String? {
-        imgList?.let{
+        imgList?.let {
             return it[0]
         } ?: return ""
     }

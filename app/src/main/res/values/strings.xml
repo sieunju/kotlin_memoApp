@@ -34,11 +34,13 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="test_img">IMG_1595897676051afk1j1b40cc.jpeg</string>
-    
+
     <string name="toolbar_home">홈</string>
     <string name="toolbar_search">검색</string>
     <string name="toolbar_add">추가</string>
     <string name="toolbar_more">더보기</string>
     <string name="ellipsis">&#8230;</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

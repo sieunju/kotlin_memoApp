@@ -10,10 +10,6 @@
             type="com.hmju.memo.model.memo.MemoItem" />
 
         <variable
-            name="listener"
-            type="com.hmju.memo.base.BaseViewHolder.BaseClickListener" />
-
-        <variable
             name="viewModel"
             type="com.hmju.memo.viewModels.MainViewModel" />
     </data>
@@ -22,7 +18,7 @@
         style="@style/MemoRootStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:turtleClick="@{()->listener.memoClick(item)}">
+        app:turtleClick="@{()->viewModel.memoDetail(item)}">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"

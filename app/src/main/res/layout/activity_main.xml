@@ -14,40 +14,17 @@
             type="com.hmju.memo.viewModels.MainViewModel" />
     </data>
 
-    <!--    <com.hmju.memo.base.HeaderView-->
-    <!--        android:id="@+id/v_header"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:fitsSystemWindows="true"-->
-    <!--        android:visibility="@{viewModel.isPageStart ? View.VISIBLE : View.INVISIBLE}"-->
-    <!--        app:header_type="img_search">-->
-
-    <!--        <androidx.recyclerview.widget.RecyclerView-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:scrollbars="vertical"-->
-    <!--            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
-    <!--            app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
-    <!--            app:memoData="@{viewModel.pagedList}"-->
-    <!--            app:viewModel="@{viewModel}" />-->
-
-    <!--    </com.hmju.memo.base.HeaderView>-->
-
     <androidx.constraintlayout.motion.widget.MotionLayout
         android:id="@+id/clRoot"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutDescription="@xml/scene_memo">
 
-        <!-- Contents View -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvContents"
+        <FrameLayout
+            android:id="@+id/container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toTopOf="parent"
-            app:memoData="@{viewModel.pagedList}"
-            app:viewModel="@{viewModel}" />
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Header 영역 -->
         <com.hmju.memo.widget.BlurView
@@ -87,9 +64,24 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <include
-            android:id="@+id/bottomToolbar"
-            layout="@layout/layout_main_toolbar" />
+        <!-- ToolBar View -->
+        <com.hmju.memo.widget.BottomToolbar
+            android:id="@+id/bottomToolBar"
+            android:layout_width="match_parent"
+            android:layout_height="?android:actionBarSize"
+            app:activeItem="3"
+            app:backgroundColor="@color/colorPrimary"
+            app:iconMargin="2dp"
+            app:indicatorRadius="@dimen/size_10"
+            app:itemPadding="@dimen/size_10"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:menu="@menu/toolbar_menu"
+            app:viewModel="@{viewModel}" />
+
+        <FrameLayout
+            android:id="@+id/root_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
     </androidx.constraintlayout.motion.widget.MotionLayout>
 </layout>

@@ -13,19 +13,18 @@ import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.AttributeSet
-import android.view.Menu
-import android.view.MotionEvent
-import android.view.View
+import android.view.*
 import android.view.animation.DecelerateInterpolator
-import androidx.annotation.ColorInt
-import androidx.annotation.Dimension
-import androidx.annotation.FontRes
-import androidx.annotation.XmlRes
+import androidx.annotation.*
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.customview.widget.ViewDragHelper
+import androidx.lifecycle.LifecycleObserver
 import androidx.navigation.NavController
+import androidx.recyclerview.widget.RecyclerView
 import com.hmju.memo.R
+import com.hmju.memo.utils.JLogger
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -37,9 +36,10 @@ import kotlin.math.roundToInt
  */
 class BottomToolbar(
     private val ctx: Context,
-    private val attrs: AttributeSet) : View (ctx,attrs){
+    private val attrs: AttributeSet
+) : View(ctx, attrs), LifecycleObserver {
 
-    data class BottomBarItem (
+    data class BottomBarItem(
         var title: String,
         val icon: Drawable,
         var rect: RectF = RectF(),
@@ -108,6 +108,7 @@ class BottomToolbar(
     private var _itemMenuRes: Int = INVALID_RES
 
     private var _itemActiveIndex: Int = 0
+
 
     // Core Attributes
     var barBackgroundColor: Int
@@ -231,6 +232,8 @@ class BottomToolbar(
             applyItemActiveIndex()
         }
 
+    private lateinit var mDragHelpers: ViewDragHelper
+
     // Listeners
     var onItemSelectedListener: OnItemSelectedListener? = null
 
@@ -265,7 +268,8 @@ class BottomToolbar(
     init {
         val typedArray = ctx.obtainStyledAttributes(
             attrs,
-            R.styleable.BottomToolbar)
+            R.styleable.BottomToolbar
+        )
 
         try {
             barBackgroundColor = typedArray.getColor(
@@ -459,6 +463,10 @@ class BottomToolbar(
         item.icon.draw(canvas)
     }
 
+    fun setParallaxListener() {
+
+    }
+
     /**
      * Handle item clicks
      */
@@ -533,7 +541,7 @@ class BottomToolbar(
     /**
      * Created by Vladislav Perevedentsev on 29.07.2020.
      *
-     * Just call [SmoothBottomBar.setOnItemSelectedListener] to override [onItemSelectedListener]
+     * Just call [setOnItemSelectedListener] to override [onItemSelectedListener]
      *
      * @sample
      * setOnItemSelectedListener { position ->
@@ -552,7 +560,7 @@ class BottomToolbar(
     /**
      * Created by Vladislav Perevedentsev on 29.07.2020.
      *
-     * Just call [SmoothBottomBar.setOnItemReselectedListener] to override [onItemReselectedListener]
+     * Just call [setOnItemReselectedListener] to override [onItemReselectedListener]
      *
      * @sample
      * setOnItemReselectedListener { position ->

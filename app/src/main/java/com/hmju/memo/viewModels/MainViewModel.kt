@@ -1,24 +1,21 @@
 package com.hmju.memo.viewModels
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.google.android.material.snackbar.Snackbar
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.convenience.SingleLiveEvent
-import com.hmju.memo.model.form.MemoListParam
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.repository.network.paging.memolist.MemoListDataSourceFactory
 import com.hmju.memo.repository.preferences.AccountPref
+import com.hmju.memo.utils.DeviceProvider
+import com.hmju.memo.utils.JLogger
 import io.reactivex.BackpressureStrategy
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.internal.operators.flowable.FlowableBuffer
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import io.reactivex.subscribers.DisposableSubscriber
-import kotlinx.android.synthetic.main.activity_main.*
 
 /**
  * Description: MainViewModel Class
@@ -27,29 +24,23 @@ import kotlinx.android.synthetic.main.activity_main.*
  */
 class MainViewModel(
     private val actPref: AccountPref,
+    private val deviceProvider: DeviceProvider,
     private val apiService: ApiService
 ) : BaseViewModel() {
 
-    private val _isPageStart = MutableLiveData<Boolean>().apply { value = false }
-    val isPageStart: MutableLiveData<Boolean>
-        get() = _isPageStart
-
     val startLogin = SingleLiveEvent<Unit>()
+    val startMemo = SingleLiveEvent<Unit>()
+    val startMemoTop = SingleLiveEvent<Unit>()
     val startAlert = SingleLiveEvent<Unit>()
+    val startToolBarAction = SingleLiveEvent<Int>()
+    val startMemoDetail = SingleLiveEvent<MemoItem>()
     val finish = SingleLiveEvent<Boolean>()
-    val test = "IMG_1595897676051afk1j1b40cc.jpeg"
 
-    private val backButtonSubject : Subject<Long> =
+    private val backButtonSubject: Subject<Long> =
         BehaviorSubject.createDefault(0L).toSerialized()
 
     fun onBackPressed() {
         backButtonSubject.onNext(System.currentTimeMillis())
-    }
-
-    private val memoParam: MemoListParam by lazy {
-        MemoListParam(
-            pageNo = 1
-        )
     }
 
     private val config: PagedList.Config by lazy {
@@ -60,7 +51,7 @@ class MainViewModel(
     }
 
     private val factory: MemoListDataSourceFactory by lazy {
-        MemoListDataSourceFactory(actPref, apiService, memoParam)
+        MemoListDataSourceFactory(actPref, apiService, startNetworkState)
     }
 
     val pagedList: LiveData<PagedList<MemoItem>> =
@@ -69,18 +60,18 @@ class MainViewModel(
         ).build()
 
     init {
-        launch{
-            // BackPress 처
+        launch {
+            // BackPress 처리
             backButtonSubject.toFlowable(BackpressureStrategy.BUFFER)
                 .observeOn(AndroidSchedulers.mainThread())
-                .buffer(2,1)
-                .map { it[0] to it [1] }
+                .buffer(2, 1)
+                .map { it[0] to it[1] }
                 .subscribeWith(object : DisposableSubscriber<Pair<Long, Long>>() {
                     override fun onComplete() {
                     }
 
                     override fun onNext(t: Pair<Long, Long>?) {
-                        t?.let{
+                        t?.let {
                             finish.value = it.second - it.first < 2000
                         }
                     }
@@ -89,17 +80,27 @@ class MainViewModel(
                     }
                 })
         }
+
+        if (deviceProvider.isNavigationBar()) {
+            JLogger.d("네비게이션바 있다.")
+        } else {
+            JLogger.d("네비게이션바 없다.")
+        }
+
     }
 
     fun start() {
         // 로그인 상태인경우 메모장 API 콜한다.
         if (actPref.getLoginKey().isNotEmpty()) {
-            _isPageStart.value = true
+            startMemo.call()
             factory.refresh()
         } else {
             startLogin.call()
         }
+    }
 
+    fun memoDetail(item : MemoItem) {
+        startMemoDetail.value = item
     }
 }
 

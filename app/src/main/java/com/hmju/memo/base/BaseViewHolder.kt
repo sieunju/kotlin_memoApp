@@ -25,16 +25,4 @@ abstract class BaseViewHolder<out T : ViewDataBinding>(
 ) {
 
     val binding: T = DataBindingUtil.bind(itemView)!!
-
-    val memoClick = object : BaseClickListener {
-
-        override fun memoClick(item: MemoItem) {
-            JLogger.d("메모 클릭!했습니다." + item.manageNo)
-            ((itemView.context) as Activity).startAct<LoginActivity> {}
-        }
-    }
-
-    interface BaseClickListener {
-        fun memoClick(item: MemoItem)
-    }
 }

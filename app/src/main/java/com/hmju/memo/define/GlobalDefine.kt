@@ -18,3 +18,17 @@ object RequestCode {
 object ResultCode {
 
 }
+
+object ToolBarDefine {
+    const val POS_HOME = 3
+    const val POS_ADD = 2
+    const val POS_SEARCH = 1
+    const val POS_MORE = 0
+}
+
+enum class NetworkState {
+    SUCCESS,
+    LOADING,
+    ERROR,
+    RESULT_EMPTY
+}

@@ -7,30 +7,12 @@
         motion:constraintSetStart="@+id/start"
         motion:duration="2500">
 
-<!--        <OnSwipe-->
-<!--            motion:dragDirection="dragUp"-->
-<!--            motion:touchAnchorId="@+id/clHeaderToolbar"-->
-<!--            motion:touchAnchorSide="bottom" />-->
-
-        <OnSwipe motion:dragDirection="dragUp"
-            motion:touchAnchorId="@id/rvContents"
-            motion:touchAnchorSide="top"
-            />
+        <OnSwipe
+            motion:dragDirection="dragUp"
+            motion:touchAnchorId="@id/container"
+            motion:touchAnchorSide="top" />
 
     </Transition>
-
-<!--    <Transition-->
-<!--        motion:constraintSetEnd="@+id/toolbarEnd"-->
-<!--        motion:constraintSetStart="@+id/toolbarStart"-->
-<!--        motion:duration="2500"-->
-<!--        motion:motionInterpolator="linear">-->
-
-<!--        <OnSwipe-->
-<!--            motion:dragDirection="dragUp"-->
-<!--            motion:touchAnchorId="@+id/bottomToolbar"-->
-<!--            motion:touchAnchorSide="bottom" />-->
-
-<!--    </Transition>-->
 
     <!-- Start Point -->
     <ConstraintSet android:id="@+id/start">
@@ -79,9 +61,10 @@
 
         <!-- Contents 영역 -->
         <Constraint
-            android:id="@+id/rvContents"
+            android:id="@+id/container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            motion:layout_constraintBottom_toTopOf="@+id/bottomToolBar"
             motion:layout_constraintTop_toBottomOf="@+id/clHeaderToolbar">
 
         </Constraint>
@@ -135,41 +118,14 @@
 
         <!-- Contents 영역 -->
         <Constraint
-            android:id="@+id/rvContents"
+            android:id="@+id/container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            motion:layout_constraintBottom_toTopOf="@+id/bottomToolBar"
             motion:layout_constraintTop_toTopOf="parent">
 
         </Constraint>
 
     </ConstraintSet>
-
-    <!-- [s] ToolBar Motion Setting -->
-    <ConstraintSet android:id="@+id/toolbarStart">
-
-        <Constraint
-            android:id="@+id/bottomToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/size_70"
-            android:alpha="1.0"
-            motion:layout_constraintBottom_toBottomOf="parent">
-
-        </Constraint>
-
-    </ConstraintSet>
-
-    <ConstraintSet android:id="@+id/toolbarEnd">
-
-        <Constraint
-            android:id="@+id/bottomToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/size_70"
-            android:alpha="0.0"
-            motion:layout_constraintTop_toTopOf="parent">
-
-        </Constraint>
-
-    </ConstraintSet>
-    <!-- [e] ToolBar Motion Setting -->
 
 </MotionScene>

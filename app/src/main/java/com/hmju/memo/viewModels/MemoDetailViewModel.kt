@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations.map
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.model.memo.MemoDetailInfo
+import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.repository.preferences.AccountPref
 
@@ -14,8 +15,7 @@ import com.hmju.memo.repository.preferences.AccountPref
  * Created by hmju on 2020-06-16
  */
 class MemoDetailViewModel(
-    private val memoInfo: MemoDetailInfo,
-    private val actPref: AccountPref,
+    val memoInfo: MemoItem,
     private val apiService: ApiService
 ) : BaseViewModel() {
 

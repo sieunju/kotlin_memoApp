@@ -7,7 +7,11 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.BindingAdapter
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.textview.MaterialTextView
+import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.utils.JLogger
+import com.hmju.memo.viewModels.MainViewModel
+import com.hmju.memo.widget.BottomToolbar
 
 /**
  * Description : 공통 Binding Adapter
@@ -40,6 +44,20 @@ fun bindingHtmlText(
         }
     } ?: run {
         JLogger.d("왜 널이요?")
+    }
+}
+
+@BindingAdapter("commonHtmlText")
+fun bindingHtmlMaterialText(
+    textView : MaterialTextView,
+    text: String?
+) {
+    text?.let {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            textView.text = Html.fromHtml(it)
+        } else {
+            textView.text = Html.fromHtml(it, Html.FROM_HTML_MODE_LEGACY)
+        }
     }
 }
 
@@ -84,4 +102,20 @@ fun setTurtleClick(
 
 //    view.setOnSingleClickListener { listener.onClick(view) }
 
+}
+
+@BindingAdapter("viewModel")
+fun setBottomToolBarClick(
+    toolbar: BottomToolbar,
+    viewModel: BaseViewModel
+) {
+   if(viewModel is MainViewModel) {
+       toolbar.setOnItemReselectedListener { pos->
+           JLogger.d("ToolBar Click!!! $pos")
+           viewModel.startToolBarAction.value = pos
+       }
+       toolbar.setOnItemSelectedListener { pos->
+           viewModel.startToolBarAction.value = pos
+       }
+   }
 }

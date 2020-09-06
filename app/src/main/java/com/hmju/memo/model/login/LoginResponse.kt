@@ -1,7 +1,6 @@
 package com.hmju.memo.model.login
 
 import com.google.gson.annotations.SerializedName
-import com.hmju.memo.base.BaseResponse
 
 /**
  * Description: 로그인 Response Data Class

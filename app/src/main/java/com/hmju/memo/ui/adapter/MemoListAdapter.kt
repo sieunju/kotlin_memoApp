@@ -81,7 +81,6 @@ class MemoListAdapter(
         BaseViewHolder<ItemMemoNormalBinding>(parent, layoutId) {
         init {
             binding.viewModel = viewModel
-            binding.listener = memoClick
         }
     }
 
@@ -89,7 +88,6 @@ class MemoListAdapter(
         BaseViewHolder<ItemMemoImgBinding>(parent, layoutId) {
         init {
             binding.viewModel = viewModel
-            binding.listener = memoClick
         }
     }
 
