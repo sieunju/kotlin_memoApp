@@ -143,12 +143,12 @@ class BlurView(private val ctx: Context, private val attrs: AttributeSet) : View
         mBlurredBitmap = null
     }
 
-    protected fun release() {
+    private fun release() {
         releaseBitmap()
-        mBlurImpl!!.release()
+        mBlurImpl.release()
     }
 
-    protected fun prepare(): Boolean {
+    private fun prepare(): Boolean {
         if (mBlurRadius == 0f) {
             release()
             return false
@@ -192,7 +192,7 @@ class BlurView(private val ctx: Context, private val attrs: AttributeSet) : View
             }
         }
         if (dirty) {
-            mDirty = if (mBlurImpl!!.prepare(context, mBitmapToBlur, radius)) {
+            mDirty = if (mBlurImpl.prepare(context, mBitmapToBlur, radius)) {
                 false
             } else {
                 return false
@@ -201,8 +201,8 @@ class BlurView(private val ctx: Context, private val attrs: AttributeSet) : View
         return true
     }
 
-    protected fun blur(bitmapToBlur: Bitmap?, blurredBitmap: Bitmap?) {
-        mBlurImpl!!.blur(bitmapToBlur, blurredBitmap)
+    private fun blur(bitmapToBlur: Bitmap?, blurredBitmap: Bitmap?) {
+        mBlurImpl.blur(bitmapToBlur, blurredBitmap)
     }
 
     private val preDrawListener = ViewTreeObserver.OnPreDrawListener {

@@ -42,4 +42,11 @@
     </declare-styleable>
     <!-- [e] BottomToolbar Attrs -->
 
+    <declare-styleable name="CustomBottomSheetBehavior">
+        <attr name="bottomSheet_peekHeight" format="dimension" />
+        <attr name="bottomSheet_hideable" format="boolean"/>
+        <attr name="bottomSheet_skipHalfExpand" format="boolean"/>
+        <attr name="bottomSheet_skipCollapsed" format="boolean"/>
+    </declare-styleable>
+
 </resources>

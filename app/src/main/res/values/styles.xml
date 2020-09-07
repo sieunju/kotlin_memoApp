@@ -13,12 +13,24 @@
         <item name="android:statusBarColor" tools:ignore="NewApi">@color/color_transparent</item>
         <item name="windowActionBarOverlay">true</item>
         <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowLightStatusBar" tools:ignore="NewApi" >true</item>
+        <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
     </style>
 
     <style name="AppTheme.Login">
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.MemoDetail">
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowEnterTransition">@transition/explode</item>
+        <item name="android:windowExitTransition">@transition/explode</item>
+        <item name="android:windowSharedElementEnterTransition">
+            @transition/change_image_transform
+        </item>
+        <item name="android:windowSharedElementExitTransition">
+            @transition/change_image_transform
+        </item>
     </style>
 
     <style name="EditTextHint" parent="TextAppearance.AppCompat">

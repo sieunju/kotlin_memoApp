@@ -5,9 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
-import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
@@ -23,11 +21,10 @@ import com.hmju.memo.ui.login.LoginActivity
 import com.hmju.memo.ui.memo.MemoDetailFragment
 import com.hmju.memo.ui.memo.MemoFragment
 import com.hmju.memo.utils.JLogger
-import com.hmju.memo.utils.startAct
+import com.hmju.memo.utils.moveMemoDetail
 import com.hmju.memo.utils.startActResult
 import com.hmju.memo.viewModels.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
-import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 
 /**
@@ -71,8 +68,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                 }
             })
 
-            startMemoDetail.observe(this@MainActivity, Observer { item ->
-                addMemoFragment(item)
+            startMemoDetail.observe(this@MainActivity, Observer { itemAndView ->
+                moveMemoDetail(itemAndView.view, itemAndView.item)
+//                addMemoFragment(item)
             })
 
             finish.observe(this@MainActivity, Observer {

@@ -1,11 +1,13 @@
 package com.hmju.memo.viewModels
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.convenience.SingleLiveEvent
 import com.hmju.memo.model.memo.MemoItem
+import com.hmju.memo.model.memo.MemoItemAndView
 import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.repository.network.paging.memolist.MemoListDataSourceFactory
 import com.hmju.memo.repository.preferences.AccountPref
@@ -33,7 +35,7 @@ class MainViewModel(
     val startMemoTop = SingleLiveEvent<Unit>()
     val startAlert = SingleLiveEvent<Unit>()
     val startToolBarAction = SingleLiveEvent<Int>()
-    val startMemoDetail = SingleLiveEvent<MemoItem>()
+    val startMemoDetail = SingleLiveEvent<MemoItemAndView>()
     val finish = SingleLiveEvent<Boolean>()
 
     private val backButtonSubject: Subject<Long> =
@@ -99,8 +101,8 @@ class MainViewModel(
         }
     }
 
-    fun memoDetail(item : MemoItem) {
-        startMemoDetail.value = item
+    fun memoDetail(view: View, item: MemoItem) {
+        startMemoDetail.value = MemoItemAndView(view = view, item = item)
     }
 }
 

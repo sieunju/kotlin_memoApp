@@ -1,7 +1,9 @@
 package com.hmju.memo.model.memo
 
+import android.view.View
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 // Memo Data Response.
 data class MemoResponse(
@@ -12,13 +14,14 @@ data class MemoResponse(
 )
 
 // Memo Item
+@SuppressWarnings("serial")
 data class MemoItem(
     @SerializedName("TAG") val tag: Int,
     @SerializedName("MEMO_ID") val manageNo: Int,
     @SerializedName("TITLE") val title: String? = "",
     @SerializedName("CONTENTS") val contents: String? = "",
     @SerializedName("IMAGES") val images: String? = null
-) {
+) : Serializable {
 
     var imgList: ArrayList<String>? = null
         get() {
@@ -60,5 +63,9 @@ fun bindingTest(images: String?) {
         }
 
     }
-
 }
+
+data class MemoItemAndView(
+    val view : View,
+    val item : MemoItem
+)

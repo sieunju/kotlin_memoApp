@@ -22,4 +22,8 @@ class MemoDetailViewModel(
     val titleStr = MutableLiveData<String>().apply { value = "" }
     val contentsStr = MutableLiveData<String>().apply { value = "" }
     val contentsLength: LiveData<Int> = map(contentsStr) { it.length }
+
+    init {
+
+    }
 }

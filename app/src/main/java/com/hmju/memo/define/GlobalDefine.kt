@@ -13,6 +13,7 @@ object ExtraCode {
 
 object RequestCode {
     const val LOGIN = 100
+    const val MEMO_DETAIL = 200
 }
 
 object ResultCode {

@@ -2,6 +2,7 @@ package com.hmju.memo.ui.memo
 
 import android.os.Bundle
 import android.view.View
+import com.google.android.material.transition.platform.Hold
 import com.hmju.memo.R
 import com.hmju.memo.BR
 import com.hmju.memo.base.BaseFragment
@@ -30,8 +31,12 @@ class MemoDetailFragment(private val memoInfo: MemoItem) :
     override val viewModel: MemoDetailViewModel by viewModel {
         parametersOf(memoInfo)
     }
-
     override val bindingVariable = BR.viewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

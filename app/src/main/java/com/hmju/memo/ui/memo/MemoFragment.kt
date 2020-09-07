@@ -3,6 +3,8 @@ package com.hmju.memo.ui.memo
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
+import com.google.android.material.transition.platform.Hold
+import com.google.android.material.transition.platform.MaterialElevationScale
 import com.hmju.memo.BR
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseFragment
@@ -23,6 +25,12 @@ class MemoFragment : BaseFragment<FragmentMemoBinding,MainViewModel> (){
 
     override val viewModel: MainViewModel by sharedViewModel()
     override val bindingVariable = BR.viewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        exitTransition = MaterialElevationScale(false)
+        reenterTransition = MaterialElevationScale(false)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
