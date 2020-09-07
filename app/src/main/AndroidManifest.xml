@@ -39,7 +39,7 @@
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.Login"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.memo.MemoDetailActivity" />
+<!--        <activity android:name=".ui.memo.MemoDetailActivity" />-->
         <activity android:name=".ui.memo.MemoAddActivity" />
     </application>
 

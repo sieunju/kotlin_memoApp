@@ -47,7 +47,7 @@ fun bindingImg(
 }
 
 @BindingAdapter("bind_img_header")
-fun setBindingHeaderImgUrl(
+fun bindingImgHeader(
     imgView: AppCompatImageView,
     imgUrl: String?
 ) {
@@ -68,7 +68,27 @@ fun setBindingHeaderImgUrl(
             .error(R.drawable.ic_profile_default)
             .into(imgView)
     }
+}
 
+@BindingAdapter("memoDetailImg")
+fun bindingImgDetail(
+    imgView: AppCompatImageView,
+    imgUrl : String?
+) {
+    val placeHolder = listOf<Int>(
+        R.color.colorPlaceHolder_1,
+        R.color.colorPlaceHolder_2,
+        R.color.colorPlaceHolder_3,
+        R.color.colorPlaceHolder_4)
+    val ran = Random().nextInt(placeHolder.size)
+
+    imgUrl?.let {
+        Glide.with(imgView.context)
+            .load(getUrl(it))
+            .placeholder(placeHolder[ran])
+            .transform(CenterCrop())
+            .into(imgView)
+    }
 }
 
 fun getUrl(url: String?): String? {

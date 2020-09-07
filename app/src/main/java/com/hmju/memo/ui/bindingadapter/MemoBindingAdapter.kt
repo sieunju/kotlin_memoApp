@@ -4,8 +4,10 @@ import android.view.View
 import androidx.databinding.BindingAdapter
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.hmju.memo.R
 import com.hmju.memo.model.memo.MemoItem
+import com.hmju.memo.ui.adapter.MemoImagePagerAdapter
 import com.hmju.memo.ui.adapter.MemoListAdapter
 import com.hmju.memo.ui.decoration.LinearItemDecoration
 import com.hmju.memo.utils.JLogger
@@ -72,4 +74,23 @@ fun bindingTagColor(
         }
 
     }
+}
+
+@BindingAdapter("imgList")
+fun bindingMemoDetailViewPager(
+    viewPager : ViewPager2,
+    dataList : ArrayList<String>?
+) {
+    dataList?.let {
+        viewPager.visibility = View.VISIBLE
+
+        viewPager.adapter?.let{
+            it.notifyDataSetChanged()
+        } ?: run {
+            val adapter = MemoImagePagerAdapter(dataList)
+            viewPager.adapter = adapter
+        }
+    } ?: {
+        viewPager.visibility = View.GONE
+    } ()
 }
