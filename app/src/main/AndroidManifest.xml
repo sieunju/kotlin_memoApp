@@ -16,6 +16,7 @@
 
         <activity
             android:name=".ui.home.MainActivity"
+            android:configChanges="uiMode"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.Memo">
             <intent-filter>
@@ -36,12 +37,14 @@
         <activity android:name=".ui.intro.IntroActivity" />
         <activity
             android:name=".ui.login.LoginActivity"
+            android:configChanges="uiMode"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.Login"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.memo.MemoDetailActivity"
+            android:configChanges="uiMode"
             android:theme="@style/AppTheme.MemoDetail"
             android:windowSoftInputMode="adjustResize" />
 

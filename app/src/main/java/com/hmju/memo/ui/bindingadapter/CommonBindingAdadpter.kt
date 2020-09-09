@@ -1,12 +1,16 @@
 package com.hmju.memo.ui.bindingadapter
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import android.graphics.Rect
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.text.Html
 import android.view.MotionEvent
 import android.view.View
 import android.widget.TextView
+import androidx.annotation.DrawableRes
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.BindingAdapter
 import com.google.android.material.textfield.TextInputEditText
@@ -146,21 +150,21 @@ fun setBottomToolBarClick(
 }
 
 @SuppressLint("ClickableViewAccessibility")
-@BindingAdapter(value = ["editTextScrollListener","isTitle"])
+@BindingAdapter(value = ["editTextScrollListener", "isTitle"])
 fun setEditTextScrollListener(
     editText: TextInputEditText,
     viewModel: BaseViewModel,
-    isTitle : Boolean
+    isTitle: Boolean
 ) {
     // 긴 문장 입력시 스크롤 되도록 처리.
     editText.setOnTouchListener { view, event ->
-        if(view.isFocused) {
-            when(event.action and MotionEvent.ACTION_MASK) {
+        if (view.isFocused) {
+            when (event.action and MotionEvent.ACTION_MASK) {
                 MotionEvent.ACTION_MOVE -> {
                     val outRect = Rect()
                     view.getGlobalVisibleRect(outRect)
                     // 입력란 안에 있는 경우 입력란 터치 우선 순위.
-                    if(outRect.contains(event.rawX.toInt(),event.rawY.toInt())){
+                    if (outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
                         view.parent.requestDisallowInterceptTouchEvent(true)
                     } else {
                         // 입력란 밖에 있는 경우 터치 우선 순위 해제.
@@ -174,10 +178,27 @@ fun setEditTextScrollListener(
         }
         return@setOnTouchListener false
     }
-    editText.setOnLongClickListener { _->
-        if(viewModel is MemoDetailViewModel) {
+    editText.setOnLongClickListener { _ ->
+        if (viewModel is MemoDetailViewModel) {
             viewModel.onCopyText(isTitle)
         }
         return@setOnLongClickListener true
+    }
+}
+
+@BindingAdapter(value = ["dayResId", "nightResId"])
+fun bindingImageViewDayNight(
+    imgView: AppCompatImageView,
+    dayResId: Drawable,
+    nightResId: Drawable
+) {
+    val nightMode =
+        imgView.context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+    if (nightMode == Configuration.UI_MODE_NIGHT_NO) {
+        JLogger.d("모드가 변경되었습니다. 라이트 모드")
+        imgView.setImageDrawable(dayResId)
+    } else {
+        JLogger.d("모드가 변경되었습니다. 다크 모드")
+        imgView.setImageDrawable(nightResId)
     }
 }
