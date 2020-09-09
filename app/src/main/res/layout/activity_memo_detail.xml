@@ -14,15 +14,17 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/llContents"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <!-- 이미지  -->
@@ -93,7 +95,6 @@
                     android:layout_marginTop="@dimen/margin_size_10"
                     android:layout_marginRight="@dimen/margin_size_10"
                     android:hint="@string/str_title"
-                    android:paddingBottom="0dp"
                     app:counterEnabled="true"
                     app:counterMaxLength="40">
 
@@ -101,12 +102,9 @@
                         android:id="@+id/etTitle"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:inputType="textMultiLine"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
                         android:maxLength="40"
-                        android:maxLines="2"
-                        android:minLines="2"
-                        android:paddingBottom="0dp"
-                        android:scrollbars="vertical"
                         android:text="@={viewModel.changeData.title}"
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/text_size_20"
@@ -122,10 +120,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_size_10"
-                    android:layout_marginTop="@dimen/margin_size_10"
+                    android:layout_marginTop="@dimen/margin_size_5"
                     android:layout_marginRight="@dimen/margin_size_10"
                     android:hint="@string/str_contents"
-                    android:paddingBottom="0dp"
                     app:counterEnabled="true"
                     app:counterMaxLength="400">
 
@@ -133,9 +130,9 @@
                         android:id="@+id/dtContents"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:imeOptions="actionGo"
                         android:inputType="textMultiLine"
                         android:maxLength="400"
-                        android:maxLines="6"
                         android:minLines="3"
                         android:scrollbars="vertical"
                         android:text="@={viewModel.changeData.contents}"
@@ -151,7 +148,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_size_10"
-                    android:layout_marginTop="@dimen/margin_size_20"
+                    android:layout_marginTop="@dimen/margin_size_10"
                     android:layout_marginRight="@dimen/margin_size_10">
 
                     <!-- 사진 추가 버튼 -->

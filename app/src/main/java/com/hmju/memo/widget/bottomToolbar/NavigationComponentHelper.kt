@@ -1,4 +1,4 @@
-package com.hmju.memo.widget
+package com.hmju.memo.widget.bottomToolbar
 
 import android.os.Bundle
 import android.view.Menu

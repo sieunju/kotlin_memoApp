@@ -16,6 +16,7 @@ import com.hmju.memo.databinding.ActivityMemoDetailBinding
 import com.hmju.memo.define.ExtraCode
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.MemoDetailViewModel
+import com.hmju.memo.widget.keyboard.FluidContentResize
 import kotlinx.android.synthetic.main.activity_memo_detail.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -36,12 +37,14 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoDetailVie
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // 자연스러운 키보드 올라오기 위한 코드.
+        FluidContentResize.listen(this)
 
         with(viewModel) {
 
             startCopyText.observe(this@MemoDetailActivity, Observer { text->
                 val clipboard  = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip : ClipData = ClipData.newPlainText("MEMO",text)
+                val clip : ClipData = ClipData.newPlainText(getString(R.string.app_name),text)
                 clipboard.setPrimaryClip(clip)
                 Toast.makeText(this@MemoDetailActivity,"복사를 완료하였습니다.",Toast.LENGTH_SHORT).show()
             })

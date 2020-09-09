@@ -1,4 +1,4 @@
-package com.hmju.memo.widget
+package com.hmju.memo.widget.blurView
 
 import android.app.Activity
 import android.content.Context
@@ -18,7 +18,6 @@ import android.renderscript.Allocation
 import android.renderscript.Element
 import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.hmju.memo.utils.JLogger
 
 

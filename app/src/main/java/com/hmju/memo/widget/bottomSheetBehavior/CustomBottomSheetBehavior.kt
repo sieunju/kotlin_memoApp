@@ -1,6 +1,6 @@
 @file:Suppress("UNCHECKED_CAST")
 
-package com.hmju.memo.widget
+package com.hmju.memo.widget.bottomSheetBehavior
 
 import android.content.Context
 import android.os.Parcel

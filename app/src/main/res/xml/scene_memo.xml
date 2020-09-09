@@ -26,6 +26,14 @@
 
         </Constraint>
 
+        <!-- 헤더 배경 영역 -->
+        <Constraint
+            android:id="@+id/bgHeader"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_100"
+            motion:layout_constraintTop_toTopOf="parent"
+            />
+
         <!-- 타이틀 영역 -->
         <Constraint
             android:id="@+id/tvTitle"
@@ -82,6 +90,14 @@
             motion:layout_constraintTop_toTopOf="parent">
 
         </Constraint>
+
+        <!-- 헤더 배경 영역 -->
+        <Constraint
+            android:id="@+id/bgHeader"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_100"
+            motion:layout_constraintBottom_toTopOf="@+id/headerBlurView"
+            />
 
         <!-- 타이틀 영역 -->
         <Constraint

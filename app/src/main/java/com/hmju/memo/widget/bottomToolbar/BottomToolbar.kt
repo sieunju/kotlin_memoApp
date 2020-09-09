@@ -1,4 +1,4 @@
-package com.hmju.memo.widget
+package com.hmju.memo.widget.bottomToolbar
 
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
@@ -22,9 +22,7 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.customview.widget.ViewDragHelper
 import androidx.lifecycle.LifecycleObserver
 import androidx.navigation.NavController
-import androidx.recyclerview.widget.RecyclerView
 import com.hmju.memo.R
-import com.hmju.memo.utils.JLogger
 import kotlin.math.abs
 import kotlin.math.roundToInt
 

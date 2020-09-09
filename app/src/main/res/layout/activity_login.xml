@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_size_20"
-            android:layout_marginTop="200dp"
+            android:layout_marginTop="@dimen/size_200"
             android:layout_marginRight="@dimen/margin_size_20"
             android:orientation="vertical"
             app:layout_constraintTop_toTopOf="parent">
@@ -37,6 +37,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
                     android:maxLength="10"
                     android:maxLines="1"
                     android:text="@={viewModel.strId}" />
@@ -54,6 +56,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:text="@={viewModel.strPw}" />
@@ -76,14 +79,14 @@
             <com.google.android.material.button.MaterialButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:backgroundTint="@color/colorPrimaryNegative"
                 android:layout_marginTop="@dimen/margin_size_10"
                 android:onClick="@{()->viewModel.startNonLogin()}"
                 android:paddingTop="@dimen/padding_size_13"
                 android:paddingBottom="@dimen/padding_size_13"
                 android:text="@string/str_non_login"
                 android:textColor="@color/colorWhite"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:backgroundTint="@color/colorPrimaryNegative" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
     </com.hmju.memo.base.HeaderView>

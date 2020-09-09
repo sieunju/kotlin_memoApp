@@ -7,17 +7,15 @@ import android.text.Html
 import android.view.MotionEvent
 import android.view.View
 import android.widget.TextView
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.BindingAdapter
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.MainViewModel
 import com.hmju.memo.viewModels.MemoDetailViewModel
-import com.hmju.memo.widget.BottomToolbar
+import com.hmju.memo.widget.bottomToolbar.BottomToolbar
 
 /**
  * Description : 공통 Binding Adapter

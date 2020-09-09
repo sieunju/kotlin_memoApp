@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     app:layoutDescription="@xml/scene_toolbar">
 
-    <com.hmju.memo.widget.BottomToolbar
+    <com.hmju.memo.widget.bottomToolbar.BottomToolbar
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_70"
         app:activeItem="3"

@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimaryDark</item>
@@ -11,8 +11,6 @@
 
     <style name="AppTheme.Memo">
         <item name="android:statusBarColor" tools:ignore="NewApi">@color/color_transparent</item>
-        <item name="windowActionBarOverlay">true</item>
-        <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
     </style>
 
