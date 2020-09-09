@@ -41,9 +41,6 @@ abstract class BaseActivity<T : ViewDataBinding, VM : BaseViewModel>
         binding.setVariable(bindingVariable, viewModel)
     }
 
-    protected fun fullScreen() {
-    }
-
     protected fun setWindowFlag(bits: Int, on : Boolean) {
         val win = window ?: return
         val winParams = win.attributes
@@ -53,6 +50,16 @@ abstract class BaseActivity<T : ViewDataBinding, VM : BaseViewModel>
             winParams.flags = winParams.flags and bits.inv()
         }
         win.attributes = winParams
+    }
+
+    /**
+     * Status Bar 영역까지 넓히는 함수.
+     */
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    protected fun setFitsWindows() {
+        window.decorView.systemUiVisibility =
+            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
     }
 
     override fun onRestart() {

@@ -14,49 +14,177 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-
-        <!-- 이미지  -->
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewPager"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:transitionName="rootView"
-            app:imgList="@{viewModel.memoInfo.imgList}"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="gone" />
+        android:layout_height="match_parent">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/viewPager">
+            android:layout_height="match_parent">
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <!-- 제목 -->
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
+                <!-- 이미지  -->
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/viewPager"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_size_10"
-                    android:textSize="@dimen/text_size_20"
-                    app:commonHtmlText="@{viewModel.memoInfo.title}"
-                    tools:text="안녕하세요." />
+                    app:imgList="@{viewModel.changeData.imgList}"
+                    tools:visibility="gone" />
 
-                <!-- 내용  -->
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
+                <RadioGroup
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    app:selectTag="@{viewModel.changeData}">
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/tag_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/color_tag1" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/tag_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/color_tag2" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/tag_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/color_tag3" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/tag_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/color_tag4" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/tag_5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/color_tag5" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/tag_6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/color_tag6" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/tag_7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/color_tag7" />
+
+                </RadioGroup>
+
+                <!-- 제목 -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_size_10"
                     android:layout_marginTop="@dimen/margin_size_10"
-                    android:maxLength="400"
-                    android:textSize="@dimen/text_size_20"
-                    app:commonHtmlText="@{viewModel.memoInfo.contents}"
-                    tools:text="안녕하세요." />
+                    android:layout_marginRight="@dimen/margin_size_10"
+                    android:hint="@string/str_title"
+                    android:paddingBottom="0dp"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="40">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="textMultiLine"
+                        android:maxLength="40"
+                        android:maxLines="2"
+                        android:minLines="2"
+                        android:paddingBottom="0dp"
+                        android:scrollbars="vertical"
+                        android:text="@={viewModel.changeData.title}"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/text_size_20"
+                        app:editTextScrollListener="@{viewModel}"
+                        app:isTitle="@{true}"
+                        tools:text="안녕하세요" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- 내용 -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_size_10"
+                    android:layout_marginTop="@dimen/margin_size_10"
+                    android:layout_marginRight="@dimen/margin_size_10"
+                    android:hint="@string/str_contents"
+                    android:paddingBottom="0dp"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="400">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/dtContents"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textMultiLine"
+                        android:maxLength="400"
+                        android:maxLines="6"
+                        android:minLines="3"
+                        android:scrollbars="vertical"
+                        android:text="@={viewModel.changeData.contents}"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/text_size_20"
+                        app:editTextScrollListener="@{viewModel}"
+                        app:isTitle="@{false}"
+                        tools:text="@string/large_text" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_size_10"
+                    android:layout_marginTop="@dimen/margin_size_20"
+                    android:layout_marginRight="@dimen/margin_size_10">
+
+                    <!-- 사진 추가 버튼 -->
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/str_add_photo"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <!-- 수정 날짜. -->
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/text_size_14"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="수정: 09.01. 15:00" />
+
+                    <!-- 수정 버튼 -->
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/str_change"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 

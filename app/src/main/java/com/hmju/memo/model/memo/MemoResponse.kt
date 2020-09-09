@@ -16,11 +16,11 @@ data class MemoResponse(
 // Memo Item
 @SuppressWarnings("serial")
 data class MemoItem(
-    @SerializedName("TAG") val tag: Int,
+    @SerializedName("TAG") var tag: Int,
     @SerializedName("MEMO_ID") val manageNo: Int,
-    @SerializedName("TITLE") val title: String? = "",
-    @SerializedName("CONTENTS") val contents: String? = "",
-    @SerializedName("IMAGES") val images: String? = null
+    @SerializedName("TITLE") var title: String? = "",
+    @SerializedName("CONTENTS") var contents: String? = "",
+    @SerializedName("IMAGES") var images: String? = null
 ) : Serializable {
 
     var imgList: ArrayList<String>? = null

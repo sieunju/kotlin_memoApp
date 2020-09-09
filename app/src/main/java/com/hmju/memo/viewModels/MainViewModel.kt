@@ -82,13 +82,6 @@ class MainViewModel(
                     }
                 })
         }
-
-        if (deviceProvider.isNavigationBar()) {
-            JLogger.d("네비게이션바 있다.")
-        } else {
-            JLogger.d("네비게이션바 없다.")
-        }
-
     }
 
     fun start() {

@@ -21,7 +21,7 @@
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:imgList="@{viewModel.memoInfo.imgList}"
+            app:imgList="@{viewModel.changeData.imgList}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="gone" />
@@ -43,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_size_10"
                     android:textSize="@dimen/text_size_20"
-                    app:commonHtmlText="@{viewModel.memoInfo.title}"
+                    app:commonHtmlText="@{viewModel.changeData.title}"
                     tools:text="안녕하세요." />
 
                 <!-- 내용  -->
@@ -53,7 +53,7 @@
                     android:layout_marginTop="@dimen/margin_size_10"
                     android:maxLength="400"
                     android:textSize="@dimen/text_size_20"
-                    app:commonHtmlText="@{viewModel.memoInfo.contents}"
+                    app:commonHtmlText="@{viewModel.changeData.contents}"
                     tools:text="안녕하세요." />
 
             </androidx.appcompat.widget.LinearLayoutCompat>

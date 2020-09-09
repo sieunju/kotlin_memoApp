@@ -26,6 +26,6 @@ val viewModelModule = module {
 //        MemoDetailViewModel(memoInfo, get())
 //    }
     viewModel { (memoInfo: MemoItem) ->
-        MemoDetailViewModel(memoInfo = memoInfo, get())
+        MemoDetailViewModel(originData = memoInfo, get())
     }
 }

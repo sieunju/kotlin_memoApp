@@ -9,6 +9,11 @@
     <string name="str_login">로그인</string>
     <string name="str_non_login">비 로그인</string>
 
+    <string name="str_title">제목</string>
+    <string name="str_contents">내용</string>
+    <string name="str_change">수정</string>
+    <string name="str_add_photo">사진 추가</string>
+
     <string name="large_text">
         MIT License
         Copyright © 2019 Sieun Ju
@@ -40,7 +45,16 @@
     <string name="toolbar_add">추가</string>
     <string name="toolbar_more">더보기</string>
     <string name="ellipsis">&#8230;</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="radio_red">빨강</string>
+    <string name="radio_orange">주황</string>
+    <string name="radio_yellow">노랑</string>
+    <string name="radio_green">초록</string>
+    <string name="radio_blue">파랑</string>
+    <string name="radio_purple">보라</string>
+    <string name="radio_gray">기타</string>
+
+    <string name="str_clipboard_copy">복사 완료했습니다.</string>
+    <string name="str_back_press_info">\'뒤로\'버튼을 한번 더 누르시면 종료됩니다.</string>
 
 </resources>

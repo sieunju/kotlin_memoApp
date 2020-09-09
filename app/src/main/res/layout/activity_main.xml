@@ -15,20 +15,22 @@
     </data>
 
     <androidx.constraintlayout.motion.widget.MotionLayout
-        android:id="@+id/clRoot"
+        android:id="@+id/motionRootLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutDescription="@xml/scene_memo">
 
-        <FrameLayout
-            android:id="@+id/container"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvContents"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:memoData="@{viewModel.pagedList}"
+            app:viewModel="@{viewModel}" />
 
         <!-- Header 영역 -->
         <com.hmju.memo.widget.BlurView
-            android:id="@+id/clHeaderToolbar"
+            android:id="@+id/headerBlurView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/size_100"
             app:blurRadius="10dp"
@@ -43,9 +45,9 @@
             android:text="Title"
             android:textColor="@color/colorBlack"
             android:textSize="@dimen/text_size_20"
-            app:layout_constraintBottom_toBottomOf="@+id/headerToolBar"
+            app:layout_constraintBottom_toBottomOf="@+id/clHeaderToolbar"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/headerToolBar" />
+            app:layout_constraintTop_toTopOf="@+id/clHeaderToolbar" />
 
         <!-- 프로필 이미지 뷰 -->
         <com.google.android.material.card.MaterialCardView
@@ -77,11 +79,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:menu="@menu/toolbar_menu"
             app:viewModel="@{viewModel}" />
-
-        <FrameLayout
-            android:id="@+id/root_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
 
     </androidx.constraintlayout.motion.widget.MotionLayout>
 </layout>

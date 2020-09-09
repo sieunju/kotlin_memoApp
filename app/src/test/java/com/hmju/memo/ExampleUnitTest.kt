@@ -62,4 +62,15 @@ class ExampleUnitTest {
         linkedList.add(1)
         println("LinkedList Normal Add Time\t${System.currentTimeMillis() - time}")
     }
+
+    @Test
+    fun userAgentMatchesTest(){
+        val userAgent = "Mozilla/5.0 (Linux; Android 10; SM-G975N Build/QP1A.190711.020; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/80.0.3987.99 Mobile Safari/537.36/APTRACK_ANDROID"
+        val pattern = "^[a-zA-Z]*\$"
+        if(userAgent.contains("Android")){
+            println("Android 입니다.")
+        } else {
+            println("아닙니다.")
+        }
+    }
 }

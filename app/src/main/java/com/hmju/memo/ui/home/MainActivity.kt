@@ -1,10 +1,12 @@
 package com.hmju.memo.ui.home
 
+import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentManager
@@ -14,10 +16,13 @@ import com.hmju.memo.BR
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseActivity
 import com.hmju.memo.databinding.ActivityMainBinding
+import com.hmju.memo.define.ExtraCode
 import com.hmju.memo.define.RequestCode
+import com.hmju.memo.define.ResultCode
 import com.hmju.memo.define.ToolBarDefine.POS_HOME
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.ui.login.LoginActivity
+import com.hmju.memo.ui.memo.MemoDetailActivity
 import com.hmju.memo.ui.memo.MemoDetailFragment
 import com.hmju.memo.ui.memo.MemoFragment
 import com.hmju.memo.utils.JLogger
@@ -41,6 +46,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // StatusBar 까지 영역 표시.
+        setFitsWindows()
+
         with(viewModel) {
 
             startLogin.observe(this@MainActivity, Observer {
@@ -48,7 +56,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
             })
 
             startMemo.observe(this@MainActivity, Observer {
-                initMemoFragment()
+                val ani = ObjectAnimator.ofFloat(rvContents,"alpha",0.25f,1F,1F)
+                ani.duration = 500
+                ani.start()
             })
 
             startAlert.observe(this@MainActivity, Observer {
@@ -60,8 +70,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                     POS_HOME -> {
                         // 맨위로 올리고 초기화.
                         startMemoTop.call()
-                        clRoot.post {
-                            clRoot.progress = 0.0F
+                        motionRootLayout.post {
+                            motionRootLayout.progress = 0.0F
                         }
                     }
 
@@ -69,7 +79,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
             })
 
             startMemoDetail.observe(this@MainActivity, Observer { itemAndView ->
-                moveMemoDetail(itemAndView.view, itemAndView.item)
+                startActResult<MemoDetailActivity>(RequestCode.MEMO_DETAIL) {
+                    val bundle = Bundle()
+                    bundle.putSerializable(ExtraCode.MEMO_DETAIL,itemAndView.item)
+                    putExtras(bundle)
+                }
+//                moveMemoDetail(itemAndView.view, itemAndView.item)
 //                addMemoFragment(item)
             })
 
@@ -79,12 +94,13 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                     ActivityCompat.finishAffinity(this@MainActivity)
                 } else {
                     // SnackBar 노출.
-                    Snackbar.make(clRoot, "뒤로가기 버튼을 한번 더 누르면 종료됩니다.", Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(
+                        window.decorView,
+                        "뒤로가기 버튼을 한번 더 누르면 종료됩니다.",
+                        Snackbar.LENGTH_LONG
+                    ).show()
                 }
             })
-
-            // StatusBar 까지 영역 표시.
-            setFitsWindows()
 
             // API 호출.
             start()
@@ -92,16 +108,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     }
 
     override fun onBackPressed() {
-        if (supportFragmentManager.backStackEntryCount > 0) {
-            with(supportFragmentManager) {
-                popBackStack(
-                    MemoDetailFragment.TAG_DETAIL,
-                    FragmentManager.POP_BACK_STACK_INCLUSIVE
-                )
-            }
-        } else {
-            viewModel.onBackPressed()
-        }
+        viewModel.onBackPressed()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -114,41 +121,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                     }
                 }
             }
-        }
-    }
-
-    /**
-     * Status Bar 영역까지 넓히는 함수.
-     */
-    private fun setFitsWindows() {
-        val baseMoviesPadding = pxFromDp(5f)
-        val toolbarHeight = clHeaderToolbar.layoutParams.height
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            clRoot.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        } else {
-            clHeaderToolbar.updatePadding(top = toolbarHeight + baseMoviesPadding)
-        }
-
-        clRoot.requestLayout()
-    }
-
-    private fun pxFromDp(dp: Float): Int {
-        return (dp * resources.displayMetrics.density).toInt()
-    }
-
-    private fun setNavigationBarChanged() {
-
-    }
-
-    private fun initMemoFragment(isAnimate: Boolean = true) {
-        with(supportFragmentManager.beginTransaction()) {
-            if (isAnimate) {
-                setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top)
-            }
-            replace(R.id.container, MemoFragment())
-            commit()
         }
     }
 

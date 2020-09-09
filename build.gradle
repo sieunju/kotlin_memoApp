@@ -17,7 +17,7 @@ buildscript {
         glideVersion = '4.11.0'
 
         // Material
-        materialVersion = '1.2.0'
+        materialVersion = '1.2.1'
 
         // MultiDex
         multiDexVersion = '2.0.1'
