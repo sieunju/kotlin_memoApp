@@ -32,7 +32,7 @@
                     android:id="@+id/viewPager"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:imgList="@{viewModel.changeData.imgList}"
+                    app:fileList="@{viewModel.changeData.fileList}"
                     tools:visibility="gone" />
 
                 <RadioGroup

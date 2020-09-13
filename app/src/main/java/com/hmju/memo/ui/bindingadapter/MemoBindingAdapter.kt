@@ -10,13 +10,12 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.hmju.memo.R
 import com.hmju.memo.define.TagType
+import com.hmju.memo.model.memo.FileItem
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.ui.adapter.MemoImagePagerAdapter
 import com.hmju.memo.ui.adapter.MemoListAdapter
 import com.hmju.memo.ui.decoration.LinearItemDecoration
-import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.MainViewModel
-import com.hmju.memo.viewModels.MemoDetailViewModel
 
 /**
  * Description : 메모 리스트 Binding Adapter
@@ -38,7 +37,7 @@ fun setMemoListAdapter(
     } ?: run {
         MemoListAdapter(viewModel).apply {
             view.adapter = this
-            view.layoutManager = StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL)
+            view.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
             view.addItemDecoration(
                 LinearItemDecoration(
                     divider = view.context.resources.getDimensionPixelSize(R.dimen.size_1)
@@ -79,10 +78,10 @@ fun bindingTagColor(
     }
 }
 
-@BindingAdapter("imgList")
+@BindingAdapter("fileList")
 fun bindingMemoDetailViewPager(
     viewPager: ViewPager2,
-    dataList: ArrayList<String>?
+    dataList: ArrayList<FileItem>?
 ) {
     dataList?.let {
         viewPager.visibility = View.VISIBLE
@@ -103,7 +102,7 @@ fun bindingSelectTag(
     data: MutableLiveData<MemoItem>
 ) {
     // 데이터 세팅.
-    when(data.value?.tag) {
+    when (data.value?.tag) {
         TagType.RED.tag -> {
             radioGroup.check(R.id.tag_1)
         }
@@ -127,7 +126,7 @@ fun bindingSelectTag(
         }
     }
 
-    radioGroup.setOnCheckedChangeListener { group, checkedId ->
+    radioGroup.setOnCheckedChangeListener { _, checkedId ->
         when (checkedId) {
             R.id.tag_1 -> {
                 data.value?.tag = TagType.RED.tag

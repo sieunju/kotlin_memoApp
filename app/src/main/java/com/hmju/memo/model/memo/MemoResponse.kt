@@ -20,20 +20,26 @@ data class MemoItem(
     @SerializedName("tag") var tag: Int,
     @SerializedName("title") var title: String? = "",
     @SerializedName("contents") var contents: String? = "",
-    @SerializedName("fileList") val imgList: ArrayList<String>? = null
+    @SerializedName("fileList") val fileList: ArrayList<FileItem>? = null
 ) : Serializable {
 
     val isNormal: Boolean
-        get() = imgList.isNullOrEmpty()
+        get() = fileList.isNullOrEmpty()
 
     fun thumbImg(): String? {
-        return if (imgList.isNullOrEmpty()) {
+        return if (fileList.isNullOrEmpty()) {
             ""
         } else {
-            imgList[0]
+            fileList[0].filePath
         }
     }
 }
+
+// Memo File Item
+data class FileItem(
+    @SerializedName("manageNo") val manageNo: Int,
+    @SerializedName("path") val filePath: String? = ""
+) : Serializable
 
 fun bindingTest(images: String?) {
     images?.let { imgs ->
