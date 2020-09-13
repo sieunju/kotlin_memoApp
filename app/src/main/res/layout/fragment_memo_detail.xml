@@ -43,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_size_10"
                     android:textSize="@dimen/text_size_20"
-                    app:commonHtmlText="@{viewModel.changeData.title}"
+                    app:htmlText="@{viewModel.changeData.title}"
                     tools:text="안녕하세요." />
 
                 <!-- 내용  -->
@@ -53,7 +53,7 @@
                     android:layout_marginTop="@dimen/margin_size_10"
                     android:maxLength="400"
                     android:textSize="@dimen/text_size_20"
-                    app:commonHtmlText="@{viewModel.changeData.contents}"
+                    app:htmlText="@{viewModel.changeData.contents}"
                     tools:text="안녕하세요." />
 
             </androidx.appcompat.widget.LinearLayoutCompat>

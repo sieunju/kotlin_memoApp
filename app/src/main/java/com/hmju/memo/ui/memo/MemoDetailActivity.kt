@@ -14,6 +14,7 @@ import com.hmju.memo.R
 import com.hmju.memo.base.BaseActivity
 import com.hmju.memo.databinding.ActivityMemoDetailBinding
 import com.hmju.memo.define.ExtraCode
+import com.hmju.memo.ui.toast.showToast
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.MemoDetailViewModel
 import com.hmju.memo.widget.keyboard.FluidContentResize
@@ -29,25 +30,31 @@ import org.koin.core.parameter.parametersOf
 class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoDetailViewModel>() {
 
     override val layoutId = R.layout.activity_memo_detail
-    override val viewModel: MemoDetailViewModel by viewModel{
+    override val viewModel: MemoDetailViewModel by viewModel {
         parametersOf(intent.getSerializableExtra(ExtraCode.MEMO_DETAIL))
     }
 
     override val bindingVariable = BR.viewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        onTransFormationEndContainer()
         super.onCreate(savedInstanceState)
         // 자연스러운 키보드 올라오기 위한 코드.
         FluidContentResize.listen(this)
 
         with(viewModel) {
 
-            startCopyText.observe(this@MemoDetailActivity, Observer { text->
-                val clipboard  = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip : ClipData = ClipData.newPlainText(getString(R.string.app_name),text)
+            startCopyText.observe(this@MemoDetailActivity, Observer { text ->
+                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip: ClipData = ClipData.newPlainText(getString(R.string.app_name), text)
+                JLogger.d("Copy \t$text")
                 clipboard.setPrimaryClip(clip)
-                Toast.makeText(this@MemoDetailActivity,"복사를 완료하였습니다.",Toast.LENGTH_SHORT).show()
+                showToast(R.string.str_clipboard_copy)
             })
         }
+    }
+
+    override fun onBackPressed() {
+        supportFinishAfterTransition()
     }
 }

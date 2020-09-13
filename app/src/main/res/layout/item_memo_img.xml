@@ -58,7 +58,7 @@
                 android:paddingRight="@dimen/padding_size_10"
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/text_size_14"
-                app:commonHtmlText="@{item.contents}"
+                app:htmlText="@{item.contents}"
                 tools:text="@string/large_text" />
 
             <View

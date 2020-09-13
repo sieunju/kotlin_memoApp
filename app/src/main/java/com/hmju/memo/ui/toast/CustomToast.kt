@@ -4,22 +4,25 @@ import android.app.Activity
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.StringRes
 import com.hmju.memo.R
+import kotlinx.android.synthetic.main.toast_view.*
 import kotlinx.android.synthetic.main.toast_view.view.*
 
-/**
- * Description :
- *
- * Created by hmju on 2020-09-09
- */
+fun Activity.showToast(@StringRes resId: Int, duration: Int = Toast.LENGTH_SHORT) {
+    showToast(
+        text = getString(resId),
+        duration = duration
+    )
+}
 
-inline fun Toast.showToast(act : Activity,text: String, duration: Int) {
-    val inflater = act.layoutInflater
-    val view = inflater.inflate(R.layout.toast_view,act as ViewGroup)
+fun Activity.showToast(text: String, duration: Int = Toast.LENGTH_SHORT) {
+    val inflater = layoutInflater
+    val view = inflater.inflate(R.layout.toast_view, toastDesignRoot)
     view.tvToast.text = text
 
-    val toast = Toast(act)
-    toast.setGravity(Gravity.CENTER,0,0)
+    val toast = Toast(this)
+    toast.setGravity(Gravity.CENTER, 0, 0)
     toast.duration = duration
     toast.view = view
     toast.show()

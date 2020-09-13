@@ -25,11 +25,14 @@ import com.hmju.memo.ui.login.LoginActivity
 import com.hmju.memo.ui.memo.MemoDetailActivity
 import com.hmju.memo.ui.memo.MemoDetailFragment
 import com.hmju.memo.ui.memo.MemoFragment
+import com.hmju.memo.ui.toast.showToast
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.moveMemoDetail
 import com.hmju.memo.utils.startActResult
 import com.hmju.memo.viewModels.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.rvContents
+import kotlinx.android.synthetic.main.fragment_memo.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 /**
@@ -44,6 +47,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     override val bindingVariable = BR.viewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        onTransFormationStartContainer()
         super.onCreate(savedInstanceState)
 
         // StatusBar 까지 영역 표시.
@@ -69,7 +73,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                 when (toolBarPos) {
                     POS_HOME -> {
                         // 맨위로 올리고 초기화.
-                        startMemoTop.call()
+                        rvContents.scrollToPosition(0)
                         motionRootLayout.post {
                             motionRootLayout.progress = 0.0F
                         }
@@ -79,12 +83,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
             })
 
             startMemoDetail.observe(this@MainActivity, Observer { itemAndView ->
-                startActResult<MemoDetailActivity>(RequestCode.MEMO_DETAIL) {
-                    val bundle = Bundle()
-                    bundle.putSerializable(ExtraCode.MEMO_DETAIL,itemAndView.item)
-                    putExtras(bundle)
-                }
-//                moveMemoDetail(itemAndView.view, itemAndView.item)
+                moveMemoDetail(itemAndView.view, itemAndView.item)
 //                addMemoFragment(item)
             })
 
@@ -93,12 +92,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                 if (it) {
                     ActivityCompat.finishAffinity(this@MainActivity)
                 } else {
-                    // SnackBar 노출.
-                    Snackbar.make(
-                        window.decorView,
-                        "뒤로가기 버튼을 한번 더 누르면 종료됩니다.",
-                        Snackbar.LENGTH_LONG
-                    ).show()
+                    showToast(R.string.str_back_press_info)
                 }
             })
 

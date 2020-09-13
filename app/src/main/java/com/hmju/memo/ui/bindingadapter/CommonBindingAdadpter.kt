@@ -13,6 +13,7 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.BindingAdapter
+import androidx.databinding.InverseBindingAdapter
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
 import com.hmju.memo.base.BaseViewModel
@@ -27,20 +28,18 @@ import com.hmju.memo.widget.bottomToolbar.BottomToolbar
  * Created by hmju on 2020-06-12
  */
 
-@BindingAdapter("commonText")
+@BindingAdapter("text")
 fun bindingText(
     textView: AppCompatTextView,
     text: String?
 ) {
     text?.let {
         textView.text = text
-    } ?: run {
-        JLogger.d("왜 널이요???")
     }
 }
 
 @Suppress("DEPRECATION")
-@BindingAdapter("commonHtmlText")
+@BindingAdapter("htmlText")
 fun bindingHtmlText(
     textView: AppCompatTextView,
     text: String?
@@ -51,35 +50,17 @@ fun bindingHtmlText(
         } else {
             textView.text = Html.fromHtml(it, Html.FROM_HTML_MODE_LEGACY)
         }
-    } ?: run {
-        JLogger.d("왜 널이요?")
     }
 }
 
 @Suppress("DEPRECATION")
-@BindingAdapter("commonHtmlText")
-fun bindingHtmlMaterialText(
-    textView: MaterialTextView,
-    text: String?
-) {
-    text?.let {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            textView.text = Html.fromHtml(it)
-        } else {
-            textView.text = Html.fromHtml(it, Html.FROM_HTML_MODE_LEGACY)
-        }
-    }
-}
-
-@Suppress("DEPRECATION")
-@BindingAdapter("commonHtmlText")
-fun bindingHtmlEditText(
+@BindingAdapter("htmlText")
+fun setHtmlTextInputEditText(
     textView: TextInputEditText,
     text: String?
 ) {
     text?.let {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-
             textView.setText(Html.fromHtml(it), TextView.BufferType.EDITABLE)
         } else {
             textView.setText(
@@ -88,6 +69,12 @@ fun bindingHtmlEditText(
             )
         }
     }
+}
+
+@Suppress("DEPRECATION")
+@InverseBindingAdapter(attribute = "htmlText", event = "android:textAttrChanged")
+fun getHtmlTextInputEditText(editText: TextInputEditText) : String {
+    return editText.text.toString()
 }
 
 class OnSingleClickListener(private val onSingleCLick: (View) -> Unit) : View.OnClickListener {

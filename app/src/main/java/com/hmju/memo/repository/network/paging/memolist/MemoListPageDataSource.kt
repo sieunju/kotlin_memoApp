@@ -47,12 +47,7 @@ class MemoListPageDataSource(
                 if (response.isSuccessful) {
                     response.body()?.let {
                         memoParam.pageNo++
-                        // 이미지 리스트 바인딩 처리.
-                        it.dataList.forEach { item ->
-                            if (!item.isNormal()) {
-                                item.bindingImgList()
-                            }
-                        }
+
                         callback.onResult(it.dataList, null, memoParam.pageNo)
 
                         if (it.dataList.size > 0) {
@@ -90,12 +85,7 @@ class MemoListPageDataSource(
                 if (response.isSuccessful) {
                     response.body()?.let {
                         memoParam.pageNo++
-                        // 이미지 리스트 바인딩 처리.
-                        it.dataList.forEach { item ->
-                            if (!item.isNormal()) {
-                                item.bindingImgList()
-                            }
-                        }
+
                         callback.onResult(it.dataList, memoParam.pageNo)
                         networkState.value = NetworkState.SUCCESS
                     } ?: run {

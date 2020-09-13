@@ -16,39 +16,21 @@ data class MemoResponse(
 // Memo Item
 @SuppressWarnings("serial")
 data class MemoItem(
-    @SerializedName("TAG") var tag: Int,
-    @SerializedName("MEMO_ID") val manageNo: Int,
-    @SerializedName("TITLE") var title: String? = "",
-    @SerializedName("CONTENTS") var contents: String? = "",
-    @SerializedName("IMAGES") var images: String? = null
+    @SerializedName("manageNo") val manageNo: Int,
+    @SerializedName("tag") var tag: Int,
+    @SerializedName("title") var title: String? = "",
+    @SerializedName("contents") var contents: String? = "",
+    @SerializedName("fileList") val imgList: ArrayList<String>? = null
 ) : Serializable {
 
-    var imgList: ArrayList<String>? = null
-        get() {
-            return if (field.isNullOrEmpty()) {
-                null
-            } else {
-                field
-            }
-        }
-
-    fun isNormal(): Boolean {
-        return images.isNullOrEmpty()
-    }
+    val isNormal: Boolean
+        get() = imgList.isNullOrEmpty()
 
     fun thumbImg(): String? {
-        imgList?.let {
-            return it[0]
-        } ?: return ""
-    }
-
-    fun bindingImgList() {
-        try {
-            images?.let { imgs ->
-                imgList = GsonBuilder().create().fromJson(imgs, ArrayList<String>()::class.java)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+        return if (imgList.isNullOrEmpty()) {
+            ""
+        } else {
+            imgList[0]
         }
     }
 }
@@ -66,6 +48,6 @@ fun bindingTest(images: String?) {
 }
 
 data class MemoItemAndView(
-    val view : View,
-    val item : MemoItem
+    val view: View,
+    val item: MemoItem
 )

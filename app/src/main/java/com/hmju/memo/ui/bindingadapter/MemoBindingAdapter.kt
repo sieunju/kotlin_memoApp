@@ -6,6 +6,7 @@ import androidx.databinding.BindingAdapter
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.hmju.memo.R
 import com.hmju.memo.define.TagType
@@ -32,19 +33,18 @@ fun setMemoListAdapter(
     view.adapter?.let { adapter ->
 
         if (adapter is MemoListAdapter) {
-            JLogger.d("TEST:: 갱신 갱신")
             adapter.submitList(memoList)
         }
     } ?: run {
         MemoListAdapter(viewModel).apply {
             view.adapter = this
+            view.layoutManager = StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL)
             view.addItemDecoration(
                 LinearItemDecoration(
                     divider = view.context.resources.getDimensionPixelSize(R.dimen.size_1)
                 )
             )
             this.submitList(memoList)
-            JLogger.d("TEST:: 추가")
         }
     }
 }

@@ -105,10 +105,10 @@
                         android:imeOptions="actionNext"
                         android:inputType="text"
                         android:maxLength="40"
-                        android:text="@={viewModel.changeData.title}"
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/text_size_20"
                         app:editTextScrollListener="@{viewModel}"
+                        app:htmlText="@={viewModel.changeData.title}"
                         app:isTitle="@{true}"
                         tools:text="안녕하세요" />
 
@@ -135,10 +135,10 @@
                         android:maxLength="400"
                         android:minLines="3"
                         android:scrollbars="vertical"
-                        android:text="@={viewModel.changeData.contents}"
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/text_size_20"
                         app:editTextScrollListener="@{viewModel}"
+                        app:htmlText="@={viewModel.changeData.contents}"
                         app:isTitle="@{false}"
                         tools:text="@string/large_text" />
 

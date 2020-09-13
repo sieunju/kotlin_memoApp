@@ -28,7 +28,6 @@ fun bindingImg(
     imgView: AppCompatImageView,
     imgUrl: String?
 ) {
-
     val placeHolder = listOf<Int>(
         R.color.colorPlaceHolder_1,
         R.color.colorPlaceHolder_2,
@@ -37,6 +36,8 @@ fun bindingImg(
     val ran = Random().nextInt(placeHolder.size)
 
     imgUrl?.let {
+        if(it == "null") return@let
+
         Glide.with(imgView.context)
             .load(getUrl(it))
             .placeholder(placeHolder[ran])

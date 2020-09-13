@@ -12,6 +12,8 @@ class JLogger {
     companion object {
         val TAG = "JLogger"
 
+        @JvmStatic
+        @JvmName("d")
         fun d(msg: String) {
             if (BuildConfig.APP_DEBUG) {
                 val ste = Thread.currentThread().stackTrace[4]
@@ -19,7 +21,7 @@ class JLogger {
                 sb.append("[")
                 sb.append(ste.methodName)
                 sb.append("]")
-                Log.i("$TAG:$sb", msg)
+                Log.d("$TAG:$sb", msg)
             }
         }
 
