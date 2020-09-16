@@ -11,5 +11,5 @@ import com.hmju.memo.define.NetworkState
  */
 data class PagingModel<T>(
     val pagedList: LiveData<PagedList<T>>,
-    val networkState: LiveData<NetworkState>
+    var networkState: LiveData<NetworkState>? = null
 )

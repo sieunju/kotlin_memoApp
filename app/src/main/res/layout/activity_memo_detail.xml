@@ -27,6 +27,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <!-- Tag Color -->
+                <View
+                    android:id="@+id/vSelectedTag"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:actionBarSize" />
+
                 <!-- 이미지  -->
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/viewPager"
@@ -40,6 +46,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="horizontal"
+                    app:bgView="@{vSelectedTag}"
                     app:selectTag="@{viewModel.changeData}">
 
                     <com.google.android.material.radiobutton.MaterialRadioButton

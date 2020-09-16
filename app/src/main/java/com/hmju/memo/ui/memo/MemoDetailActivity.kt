@@ -51,6 +51,8 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoDetailVie
                 clipboard.setPrimaryClip(clip)
                 showToast(R.string.str_clipboard_copy)
             })
+
+
         }
     }
 

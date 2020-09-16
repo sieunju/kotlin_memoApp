@@ -59,7 +59,8 @@
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:text="@={viewModel.strPw}" />
+                    android:text="@={viewModel.strPw}"
+                    app:editTextListener="@{viewModel}" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

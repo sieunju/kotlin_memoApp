@@ -6,7 +6,9 @@ import android.os.Build
 import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.MotionEvent
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
@@ -19,6 +21,8 @@ import com.google.android.material.textfield.TextInputLayout
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.utils.JLogger
+import com.hmju.memo.viewModels.LoginViewModel
+import com.hmju.memo.viewModels.MainViewModel
 import com.hmju.memo.viewModels.MemoDetailViewModel
 
 /**
@@ -76,35 +80,50 @@ fun setEditTextListener(
     editText: TextInputEditText,
     viewModel: BaseViewModel
 ) {
-    // 긴 문장 입력시 스크롤 되도록 처리.
-    editText.setOnTouchListener { view, event ->
-        if (view.isFocused) {
-            when (event.action and MotionEvent.ACTION_MASK) {
-                MotionEvent.ACTION_MOVE -> {
-                    val outRect = Rect()
-                    view.getGlobalVisibleRect(outRect)
-                    // 입력란 안에 있는 경우 입력란 터치 우선 순위.
-                    if (outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
-                        view.parent.requestDisallowInterceptTouchEvent(true)
-                    } else {
-                        // 입력란 밖에 있는 경우 터치 우선 순위 해제.
-                        view.parent.requestDisallowInterceptTouchEvent(false)
-                    }
+
+    when(viewModel) {
+        is LoginViewModel -> {
+            // Ket Action Listener
+            editText.setOnEditorActionListener { v, actionId, event ->
+                if(event?.keyCode == KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_DONE) {
+                    viewModel.startLogin()
                 }
-                MotionEvent.ACTION_UP -> {
-                    view.parent.requestDisallowInterceptTouchEvent(false)
-                }
+                return@setOnEditorActionListener false
             }
         }
-        return@setOnTouchListener false
-    }
+        is MainViewModel -> {
 
-    // 복사 리스너 세팅
-    editText.setOnLongClickListener { v ->
-        if (viewModel is MemoDetailViewModel) {
-            viewModel.onCopyText(v.id)
         }
-        return@setOnLongClickListener true
+        is MemoDetailViewModel -> {
+            // 긴 문장 입력시 스크롤 되도록 처리.
+            editText.setOnTouchListener { view, event ->
+                if (view.isFocused) {
+                    when (event.action and MotionEvent.ACTION_MASK) {
+                        MotionEvent.ACTION_MOVE -> {
+                            val outRect = Rect()
+                            view.getGlobalVisibleRect(outRect)
+                            // 입력란 안에 있는 경우 입력란 터치 우선 순위.
+                            if (outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+                                view.parent.requestDisallowInterceptTouchEvent(true)
+                            } else {
+                                // 입력란 밖에 있는 경우 터치 우선 순위 해제.
+                                view.parent.requestDisallowInterceptTouchEvent(false)
+                            }
+                        }
+                        MotionEvent.ACTION_UP -> {
+                            view.parent.requestDisallowInterceptTouchEvent(false)
+                        }
+                    }
+                }
+                return@setOnTouchListener false
+            }
+
+            // 복사 리스너 세팅
+            editText.setOnLongClickListener { v ->
+                viewModel.onCopyText(v.id)
+                return@setOnLongClickListener true
+            }
+        }
     }
 }
 

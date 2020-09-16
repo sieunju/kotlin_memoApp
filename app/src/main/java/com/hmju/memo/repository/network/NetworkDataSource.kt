@@ -10,5 +10,7 @@ import com.hmju.memo.repository.network.paging.PagingModel
  * Created by hmju on 2020-09-16
  */
 interface NetworkDataSource {
+
     fun fetchMemoList(params: MemoListParam): PagingModel<MemoItem>
+
 }
