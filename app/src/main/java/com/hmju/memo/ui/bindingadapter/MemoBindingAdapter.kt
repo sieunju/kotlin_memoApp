@@ -23,7 +23,7 @@ import com.hmju.memo.viewModels.MainViewModel
  * Created by hmju on 2020-06-12
  */
 
-@BindingAdapter(value = ["viewModel", "memoData"])
+@BindingAdapter(value = ["viewModel", "memoList"])
 fun setMemoListAdapter(
     view: RecyclerView,
     viewModel: MainViewModel,

@@ -1,13 +1,12 @@
 package com.hmju.memo.di
 
-import com.hmju.memo.repository.network.ApiRemoteDataSource
 import com.hmju.memo.repository.network.ApiService
+import com.hmju.memo.repository.network.NetworkDataSource
+import com.hmju.memo.repository.network.NetworkDataSourceImpl
 import com.hmju.memo.repository.network.TestApiService
 import com.hmju.memo.utils.createOkHttpClient
 import com.hmju.memo.utils.createRetrofit
-import com.hmju.memo.utils.forbiddenInterceptor
 import com.hmju.memo.utils.headerInterceptor
-import okhttp3.OkHttpClient
 import org.koin.dsl.module
 
 /**
@@ -28,11 +27,15 @@ val apiModule = module {
         createOkHttpClient(get())
     }
 
-    // Retrofit2
+    // API Network Service
     single<ApiService> {
-        ApiRemoteDataSource(
-            createRetrofit(get()),
-            get()
+        createRetrofit(get())
+    }
+
+    // Network Data Source
+    single<NetworkDataSource> {
+        NetworkDataSourceImpl(
+            get(), get()
         )
     }
 

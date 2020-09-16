@@ -52,8 +52,3 @@ fun bindingTest(images: String?) {
 
     }
 }
-
-data class MemoItemAndView(
-    val view: View,
-    val item: MemoItem
-)

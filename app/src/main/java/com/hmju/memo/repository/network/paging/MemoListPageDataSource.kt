@@ -1,7 +1,7 @@
-package com.hmju.memo.repository.network.paging.memolist
+package com.hmju.memo.repository.network.paging
 
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
-import com.hmju.memo.convenience.SingleLiveEvent
 import com.hmju.memo.define.NetworkState
 import com.hmju.memo.model.form.MemoListParam
 import com.hmju.memo.model.memo.MemoItem
@@ -21,14 +21,10 @@ import retrofit2.Response
 class MemoListPageDataSource(
     private val actPref: AccountPref,
     private val apiService: ApiService,
-    private val networkState: SingleLiveEvent<NetworkState>
+    private val memoParams: MemoListParam,
 ) : PageKeyedDataSource<Int, MemoItem>() {
 
-    private val memoParam: MemoListParam by lazy {
-        MemoListParam(
-            pageNo = 1
-        )
-    }
+    var networkState = MutableLiveData<NetworkState>()
 
     override fun loadInitial(
         params: LoadInitialParams<Int>,
@@ -39,37 +35,38 @@ class MemoListPageDataSource(
             return
         }
         JLogger.d("loadInitial " + params.requestedLoadSize)
+        networkState.postValue(NetworkState.LOADING)
         apiService.fetchMemoList(
-            pageNo = memoParam.pageNo
+            pageNo = memoParams.pageNo
         ).enqueue(object : Callback<MemoResponse> {
 
             override fun onResponse(call: Call<MemoResponse>, response: Response<MemoResponse>) {
                 if (response.isSuccessful) {
                     response.body()?.let {
-                        memoParam.pageNo++
+                        memoParams.pageNo++
 
-                        callback.onResult(it.dataList, null, memoParam.pageNo)
+                        callback.onResult(it.dataList, null, memoParams.pageNo)
 
                         if (it.dataList.size > 0) {
-                            networkState.value = NetworkState.SUCCESS
+                            networkState.postValue(NetworkState.SUCCESS)
                         } else {
                             // 처음 Call 할때 데이터가 없는 경우
-                            networkState.value = NetworkState.RESULT_EMPTY
+                            networkState.postValue(NetworkState.RESULT_EMPTY)
                         }
 
                     } ?: run {
                         // Body Null
-                        networkState.value = NetworkState.ERROR
+                        networkState.postValue(NetworkState.ERROR)
                     }
                 } else {
                     // Server Error
-                    networkState.value = NetworkState.ERROR
+                    networkState.postValue(NetworkState.ERROR)
                 }
             }
 
             override fun onFailure(call: Call<MemoResponse>, t: Throwable) {
                 JLogger.d("onFailure\t${t.message}")
-                networkState.value = NetworkState.ERROR
+                networkState.postValue(NetworkState.ERROR)
             }
 
         })
@@ -77,30 +74,31 @@ class MemoListPageDataSource(
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, MemoItem>) {
         JLogger.d("loadAfter ")
+        networkState.postValue(NetworkState.LOADING)
         apiService.fetchMemoList(
-            pageNo = memoParam.pageNo
+            pageNo = memoParams.pageNo
         ).enqueue(object : Callback<MemoResponse> {
 
             override fun onResponse(call: Call<MemoResponse>, response: Response<MemoResponse>) {
                 if (response.isSuccessful) {
                     response.body()?.let {
-                        memoParam.pageNo++
+                        memoParams.pageNo++
 
-                        callback.onResult(it.dataList, memoParam.pageNo)
-                        networkState.value = NetworkState.SUCCESS
+                        callback.onResult(it.dataList, memoParams.pageNo)
+                        networkState.postValue(NetworkState.SUCCESS)
                     } ?: run {
                         // Body Null
-                        networkState.value = NetworkState.ERROR
+                        networkState.postValue(NetworkState.ERROR)
                     }
                 } else {
                     // Server Error
-                    networkState.value = NetworkState.ERROR
+                    networkState.postValue(NetworkState.ERROR)
                 }
             }
 
             override fun onFailure(call: Call<MemoResponse>, t: Throwable) {
                 JLogger.d("onFailure\t${t.message}")
-                networkState.value = NetworkState.ERROR
+                networkState.postValue(NetworkState.ERROR)
             }
         })
 

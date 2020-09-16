@@ -2,7 +2,7 @@
 
 buildscript {
     ext {
-        kotlinVersion = '1.4.0'
+        kotlinVersion = '1.4.10'
         androidPluginVersion = '4.0.1'
 
         // Common

@@ -107,9 +107,8 @@
                         android:maxLength="40"
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/text_size_20"
-                        app:editTextScrollListener="@{viewModel}"
-                        app:htmlText="@={viewModel.changeData.title}"
-                        app:isTitle="@{true}"
+                        app:editTextListener="@{viewModel}"
+                        app:htmlText="@{viewModel.memoTitle}"
                         tools:text="안녕하세요" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -127,7 +126,7 @@
                     app:counterMaxLength="400">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/dtContents"
+                        android:id="@+id/etContents"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:imeOptions="actionGo"
@@ -137,9 +136,8 @@
                         android:scrollbars="vertical"
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/text_size_20"
-                        app:editTextScrollListener="@{viewModel}"
-                        app:htmlText="@={viewModel.changeData.contents}"
-                        app:isTitle="@{false}"
+                        app:editTextListener="@{viewModel}"
+                        app:htmlText="@{viewModel.memoContent}"
                         tools:text="@string/large_text" />
 
                 </com.google.android.material.textfield.TextInputLayout>

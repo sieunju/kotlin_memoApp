@@ -53,30 +53,6 @@ fun bindingHtmlText(
     }
 }
 
-@Suppress("DEPRECATION")
-@BindingAdapter("htmlText")
-fun setHtmlTextInputEditText(
-    textView: TextInputEditText,
-    text: String?
-) {
-    text?.let {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            textView.setText(Html.fromHtml(it), TextView.BufferType.EDITABLE)
-        } else {
-            textView.setText(
-                Html.fromHtml(it, Html.FROM_HTML_MODE_LEGACY),
-                TextView.BufferType.EDITABLE
-            )
-        }
-    }
-}
-
-@Suppress("DEPRECATION")
-@InverseBindingAdapter(attribute = "htmlText", event = "android:textAttrChanged")
-fun getHtmlTextInputEditText(editText: TextInputEditText) : String {
-    return editText.text.toString()
-}
-
 class OnSingleClickListener(private val onSingleCLick: (View) -> Unit) : View.OnClickListener {
     companion object {
         const val CLICK_INTERVAL = 500
@@ -133,43 +109,6 @@ fun setBottomToolBarClick(
         toolbar.setOnItemSelectedListener { pos ->
             viewModel.startToolBarAction.value = pos
         }
-    }
-}
-
-@SuppressLint("ClickableViewAccessibility")
-@BindingAdapter(value = ["editTextScrollListener", "isTitle"])
-fun setEditTextScrollListener(
-    editText: TextInputEditText,
-    viewModel: BaseViewModel,
-    isTitle: Boolean
-) {
-    // 긴 문장 입력시 스크롤 되도록 처리.
-    editText.setOnTouchListener { view, event ->
-        if (view.isFocused) {
-            when (event.action and MotionEvent.ACTION_MASK) {
-                MotionEvent.ACTION_MOVE -> {
-                    val outRect = Rect()
-                    view.getGlobalVisibleRect(outRect)
-                    // 입력란 안에 있는 경우 입력란 터치 우선 순위.
-                    if (outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
-                        view.parent.requestDisallowInterceptTouchEvent(true)
-                    } else {
-                        // 입력란 밖에 있는 경우 터치 우선 순위 해제.
-                        view.parent.requestDisallowInterceptTouchEvent(false)
-                    }
-                }
-                MotionEvent.ACTION_UP -> {
-                    view.parent.requestDisallowInterceptTouchEvent(false)
-                }
-            }
-        }
-        return@setOnTouchListener false
-    }
-    editText.setOnLongClickListener { _ ->
-        if (viewModel is MemoDetailViewModel) {
-            viewModel.onCopyText(isTitle)
-        }
-        return@setOnLongClickListener true
     }
 }
 

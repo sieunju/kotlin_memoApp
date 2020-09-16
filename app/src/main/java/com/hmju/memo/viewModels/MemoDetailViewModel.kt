@@ -1,8 +1,11 @@
 package com.hmju.memo.viewModels
 
+import androidx.annotation.IdRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.Transformations.map
+import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.convenience.SingleLiveEvent
 import com.hmju.memo.model.memo.MemoDetailInfo
@@ -20,28 +23,18 @@ class MemoDetailViewModel(
     private val apiService: ApiService
 ) : BaseViewModel() {
 
-    val changeData = MutableLiveData<MemoItem>()
+    val changeData = MutableLiveData<MemoItem>().apply { originData }
+
+    val memoTitle: LiveData<String> = map(changeData) { it.title }
+    val memoContent: LiveData<String> = map(changeData) { it.contents }
+
     val startCopyText = SingleLiveEvent<String>()
 
-    val titleStr = MutableLiveData<String>().apply { value = "" }
-    val contentsStr = MutableLiveData<String>().apply { value = "" }
-    val contentsLength: LiveData<Int> = map(contentsStr) { it.length }
-
-    init {
-        changeData.value = originData
-    }
-
-    fun onCopyText(isTitle : Boolean){
-        // 제목
-        if(isTitle) {
-            changeData.value?.let{
-                startCopyText.value = it.title
-            }
-        } else {
-            // 내용
-            changeData.value?.let{
-                startCopyText.value = it.contents
-            }
+    fun onCopyText(@IdRes id: Int) {
+        if (id == R.id.etTitle) {
+            startCopyText.value = memoTitle.value
+        } else if (id == R.id.etContents) {
+            startCopyText.value = memoContent.value
         }
     }
 }

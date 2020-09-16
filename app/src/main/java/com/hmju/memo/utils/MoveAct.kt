@@ -36,15 +36,17 @@ inline fun <reified T : Activity> Activity.startActResult(
     startActivityForResult(intent, requestCode)
 }
 
+/**
+ * 메모 상세보기 페이지 진입
+ */
 fun Activity.moveMemoDetail(
-    rootView : View,
-    memoData: MemoItem
+    pair: Pair<View, MemoItem>
 ) {
     val options =
-        ActivityOptions.makeSceneTransitionAnimation(this, rootView, BaseActivity.TRANSITIONNAME)
+        ActivityOptions.makeSceneTransitionAnimation(this, pair.first, BaseActivity.TRANSITIONNAME)
     val intent = Intent(this, MemoDetailActivity::class.java)
     val bundle = Bundle()
-    bundle.putSerializable(ExtraCode.MEMO_DETAIL, memoData)
+    bundle.putSerializable(ExtraCode.MEMO_DETAIL, pair.second)
     intent.putExtras(bundle)
 
     startActivityForResult(intent, RequestCode.MEMO_DETAIL, options.toBundle())

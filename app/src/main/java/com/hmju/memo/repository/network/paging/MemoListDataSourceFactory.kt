@@ -1,9 +1,8 @@
-package com.hmju.memo.repository.network.paging.memolist
+package com.hmju.memo.repository.network.paging
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
-import com.hmju.memo.convenience.SingleLiveEvent
-import com.hmju.memo.define.NetworkState
+import com.hmju.memo.model.form.MemoListParam
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.repository.preferences.AccountPref
@@ -11,17 +10,17 @@ import com.hmju.memo.utils.JLogger
 
 
 /**
- * Description : MemoListDataSourceFactory Class
+ * Description : PagedList Data Source Class
  *
  * Created by juhongmin on 2020/06/21
  */
 class MemoListDataSourceFactory(
-    private val actPref: AccountPref,
     private val apiService: ApiService,
-    private val networkState: SingleLiveEvent<NetworkState>
+    private val actPref: AccountPref,
+    private val memoParams: MemoListParam
 ) : DataSource.Factory<Int, MemoItem>() {
 
-    private val sourceLiveData = MutableLiveData<MemoListPageDataSource>()
+    val sourceLiveData = MutableLiveData<MemoListPageDataSource>()
 
     override fun create(): DataSource<Int, MemoItem> {
         JLogger.d("onCreate!!")
@@ -29,12 +28,15 @@ class MemoListDataSourceFactory(
             MemoListPageDataSource(
                 actPref = actPref,
                 apiService = apiService,
-                networkState = networkState
+                memoParams = memoParams
             )
         sourceLiveData.postValue(source)
         return source
     }
 
+    /**
+     * Factory 갱신 처리 함수.
+     */
     fun refresh() {
         JLogger.d("갱신 갱신!")
         val item = sourceLiveData.value

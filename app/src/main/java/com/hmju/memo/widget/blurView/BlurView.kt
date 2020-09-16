@@ -119,7 +119,7 @@ class BlurView(private val ctx: Context, private val attrs: AttributeSet) : View
 
     fun setDownsampleFactor(factor: Float) {
         require(factor > 0) { "Downsample factor must be greater than 0." }
-        if (mDownSampleFactor !== factor) {
+        if (mDownSampleFactor != factor) {
             mDownSampleFactor = factor
             mDirty = true // may also change blur radius
             releaseBitmap()

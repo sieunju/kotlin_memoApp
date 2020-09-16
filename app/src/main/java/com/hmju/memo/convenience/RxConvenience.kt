@@ -2,11 +2,9 @@ package com.hmju.memo.convenience
 
 import io.reactivex.Flowable
 import io.reactivex.Maybe
-import io.reactivex.Scheduler
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.Schedulers.io
+import io.reactivex.subscribers.DisposableSubscriber
 import java.util.concurrent.TimeUnit
 
 /**
@@ -37,3 +35,13 @@ fun <T> Flowable<T>.multi() = subscribeOn(io())
 // 여러개의 API를 한꺼번에 보내는 경우 Delay 타입.
 fun <T> Flowable<T>.multiDelay(_delay: Int) = subscribeOn(io()).delay(_delay.toLong(),TimeUnit.SECONDS)
 
+open class SimpleDisposableSubscriber<T> : DisposableSubscriber<T>() {
+    override fun onNext(t: T) {
+    }
+
+    override fun onError(t: Throwable?) {
+    }
+
+    override fun onComplete() {
+    }
+}

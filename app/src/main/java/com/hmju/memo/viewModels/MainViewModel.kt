@@ -2,22 +2,23 @@ package com.hmju.memo.viewModels
 
 import android.view.View
 import androidx.lifecycle.LiveData
-import androidx.paging.LivePagedListBuilder
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations.switchMap
 import androidx.paging.PagedList
 import com.hmju.memo.base.BaseViewModel
+import com.hmju.memo.convenience.SimpleDisposableSubscriber
 import com.hmju.memo.convenience.SingleLiveEvent
+import com.hmju.memo.define.NetworkState
+import com.hmju.memo.model.form.MemoListParam
 import com.hmju.memo.model.memo.MemoItem
-import com.hmju.memo.model.memo.MemoItemAndView
 import com.hmju.memo.repository.network.ApiService
-import com.hmju.memo.repository.network.paging.memolist.MemoListDataSourceFactory
+import com.hmju.memo.repository.network.NetworkDataSource
+import com.hmju.memo.repository.network.paging.PagingModel
 import com.hmju.memo.repository.preferences.AccountPref
-import com.hmju.memo.utils.DeviceProvider
-import com.hmju.memo.utils.JLogger
 import io.reactivex.BackpressureStrategy
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
-import io.reactivex.subscribers.DisposableSubscriber
 
 /**
  * Description: MainViewModel Class
@@ -26,16 +27,15 @@ import io.reactivex.subscribers.DisposableSubscriber
  */
 class MainViewModel(
     private val actPref: AccountPref,
-    private val deviceProvider: DeviceProvider,
+    private val networkDataSource: NetworkDataSource,
     private val apiService: ApiService
 ) : BaseViewModel() {
 
     val startLogin = SingleLiveEvent<Unit>()
-    val startMemo = SingleLiveEvent<Unit>()
     val startMemoTop = SingleLiveEvent<Unit>()
     val startAlert = SingleLiveEvent<Unit>()
     val startToolBarAction = SingleLiveEvent<Int>()
-    val startMemoDetail = SingleLiveEvent<MemoItemAndView>()
+    val startMemoDetail = SingleLiveEvent<Pair<View, MemoItem>>()
     val finish = SingleLiveEvent<Boolean>()
 
     private val backButtonSubject: Subject<Long> =
@@ -45,21 +45,17 @@ class MainViewModel(
         backButtonSubject.onNext(System.currentTimeMillis())
     }
 
-    private val config: PagedList.Config by lazy {
-        PagedList.Config.Builder()
-            .setPageSize(20)
-            .setEnablePlaceholders(true)
-            .build()
-    }
+    private val pagingModel = MutableLiveData<PagingModel<MemoItem>>()
+    val memoList: LiveData<PagedList<MemoItem>> =
+        switchMap(pagingModel) { it.pagedList }
+    val networkState: LiveData<NetworkState> =
+        switchMap(pagingModel) { it.networkState }
 
-    private val factory: MemoListDataSourceFactory by lazy {
-        MemoListDataSourceFactory(actPref, apiService, startNetworkState)
+    private val params by lazy {
+        MemoListParam(
+            pageNo = 1
+        )
     }
-
-    val pagedList: LiveData<PagedList<MemoItem>> =
-        LivePagedListBuilder(
-            factory, config
-        ).build()
 
     init {
         launch {
@@ -68,17 +64,9 @@ class MainViewModel(
                 .observeOn(AndroidSchedulers.mainThread())
                 .buffer(2, 1)
                 .map { it[0] to it[1] }
-                .subscribeWith(object : DisposableSubscriber<Pair<Long, Long>>() {
-                    override fun onComplete() {
-                    }
-
-                    override fun onNext(t: Pair<Long, Long>?) {
-                        t?.let {
-                            finish.value = it.second - it.first < 2000
-                        }
-                    }
-
-                    override fun onError(t: Throwable?) {
+                .subscribeWith(object : SimpleDisposableSubscriber<Pair<Long, Long>>() {
+                    override fun onNext(t: Pair<Long, Long>) {
+                        finish.value = t.second - t.first < 2000
                     }
                 })
         }
@@ -87,15 +75,14 @@ class MainViewModel(
     fun start() {
         // 로그인 상태인경우 메모장 API 콜한다.
         if (actPref.getLoginKey().isNotEmpty()) {
-            startMemo.call()
-            factory.refresh()
+            pagingModel.postValue(networkDataSource.fetchMemoList(params))
         } else {
             startLogin.call()
         }
     }
 
     fun memoDetail(view: View, item: MemoItem) {
-        startMemoDetail.value = MemoItemAndView(view = view, item = item)
+        startMemoDetail.value = Pair(view, item)
     }
 }
 

@@ -59,12 +59,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                 startActResult<LoginActivity>(RequestCode.LOGIN) {}
             })
 
-            startMemo.observe(this@MainActivity, Observer {
-                val ani = ObjectAnimator.ofFloat(rvContents,"alpha",0.25f,1F,1F)
-                ani.duration = 500
-                ani.start()
-            })
-
             startAlert.observe(this@MainActivity, Observer {
             })
 
@@ -82,8 +76,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                 }
             })
 
-            startMemoDetail.observe(this@MainActivity, Observer { itemAndView ->
-                moveMemoDetail(itemAndView.view, itemAndView.item)
+            startMemoDetail.observe(this@MainActivity, Observer { pair ->
+                moveMemoDetail(pair)
 //                addMemoFragment(item)
             })
 

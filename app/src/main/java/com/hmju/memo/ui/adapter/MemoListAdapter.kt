@@ -1,6 +1,11 @@
 package com.hmju.memo.ui.adapter
 
+import android.animation.ObjectAnimator
+import android.content.Context
+import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.recyclerview.widget.DiffUtil
 import com.hmju.memo.R
 import com.hmju.memo.base.BasePagedAdapter
@@ -9,7 +14,11 @@ import com.hmju.memo.databinding.ItemHorizontalLoadingBinding
 import com.hmju.memo.databinding.ItemMemoImgBinding
 import com.hmju.memo.databinding.ItemMemoNormalBinding
 import com.hmju.memo.model.memo.MemoItem
+import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.MainViewModel
+import kotlinx.android.synthetic.main.item_memo_img.view.*
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 
 /**
@@ -19,7 +28,10 @@ import com.hmju.memo.viewModels.MainViewModel
  */
 class MemoListAdapter(
     val viewModel: MainViewModel
-) : BasePagedAdapter<MemoItem, BaseViewHolder<*>>(DIFF_CALLBACK) {
+) : BasePagedAdapter<MemoItem, BaseViewHolder<*>>(DIFF_CALLBACK), KoinComponent {
+
+    private val context: Context by inject()
+    private var lastPos = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         when (viewType) {
@@ -47,13 +59,25 @@ class MemoListAdapter(
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder<*>, pos: Int) {
-        when(holder){
+        when (holder) {
             is MemoNormalViewHolder -> {
                 holder.binding.item = getItem(pos)
             }
             is MemoImgViewHolder -> {
                 holder.binding.item = getItem(pos)
             }
+        }
+
+        setAnimation(holder.itemView, pos)
+    }
+
+    /**
+     * 좌 -> 우 및  Fade 효과도 있는 애니메이션
+     */
+    private fun setAnimation(view: View, pos: Int) {
+        if (pos > lastPos) {
+            view.startAnimation(AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left))
+            lastPos = pos
         }
     }
 
@@ -92,5 +116,5 @@ class MemoListAdapter(
     }
 
     class LoadingViewHolder(parent: ViewGroup, layoutId: Int) :
-            BaseViewHolder<ItemHorizontalLoadingBinding>(parent,layoutId)
+        BaseViewHolder<ItemHorizontalLoadingBinding>(parent, layoutId)
 }

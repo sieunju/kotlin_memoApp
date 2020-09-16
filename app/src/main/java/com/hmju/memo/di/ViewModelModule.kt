@@ -1,6 +1,5 @@
 package com.hmju.memo.di
 
-import com.hmju.memo.model.memo.MemoDetailInfo
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.viewModels.LoginViewModel
 import com.hmju.memo.viewModels.MainViewModel

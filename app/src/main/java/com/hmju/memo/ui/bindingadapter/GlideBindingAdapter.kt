@@ -91,7 +91,7 @@ fun getUrl(url: String?): String? {
     }
 }
 
-fun glideLoggerListener(name: String) : RequestListener<Drawable> {
+fun glideLoggerListener() : RequestListener<Drawable> {
     return object : RequestListener<Drawable> {
 
         override fun onResourceReady(resource: Drawable?,
