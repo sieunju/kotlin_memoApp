@@ -77,6 +77,9 @@ fun getUrl(url: String?): String? {
             it.startsWith("http") -> {
                 it
             }
+            it.startsWith(NetInfo.IMG_PATH.substring(1)) -> {
+                NetInfo.BASE_URL + "/" + it
+            }
             // 정상 적인 Path 값인 경우.
             it.startsWith("/") -> {
                 NetInfo.BASE_URL + NetInfo.IMG_PATH + it
