@@ -108,7 +108,7 @@
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/text_size_20"
                         app:editTextListener="@{viewModel}"
-                        app:htmlText="@{viewModel.memoTitle}"
+                        app:htmlEdit="@={viewModel.changeData.title}"
                         tools:text="안녕하세요" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -137,7 +137,7 @@
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/text_size_20"
                         app:editTextListener="@{viewModel}"
-                        app:htmlText="@{viewModel.memoContent}"
+                        app:htmlEdit="@={viewModel.changeData.contents}"
                         tools:text="@string/large_text" />
 
                 </com.google.android.material.textfield.TextInputLayout>

@@ -3,12 +3,16 @@ package com.hmju.memo.ui.bindingadapter
 import android.annotation.SuppressLint
 import android.graphics.Rect
 import android.os.Build
+import android.text.Editable
 import android.text.Html
+import android.text.TextWatcher
 import android.view.MotionEvent
+import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
+import androidx.databinding.InverseBindingListener
 import androidx.lifecycle.LiveData
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -23,16 +27,16 @@ import com.hmju.memo.viewModels.MemoDetailViewModel
  * Created by juhongmin on 2020/06/07
  */
 @Suppress("DEPRECATION")
-@BindingAdapter("htmlText")
-fun setHtmlTextInputEditText(
-    textView: TextInputEditText,
+@BindingAdapter("htmlEdit")
+fun setHtmlEdit(
+    view: EditText,
     text: String?
 ) {
     text?.let {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            textView.setText(Html.fromHtml(it), TextView.BufferType.EDITABLE)
+            view.setText(Html.fromHtml(it), TextView.BufferType.EDITABLE)
         } else {
-            textView.setText(
+            view.setText(
                 Html.fromHtml(it, Html.FROM_HTML_MODE_LEGACY),
                 TextView.BufferType.EDITABLE
             )
@@ -40,27 +44,30 @@ fun setHtmlTextInputEditText(
     }
 }
 
-@InverseBindingAdapter(attribute = "htmlText", event = "android:textAttrChanged")
-fun getHtmlText(editText: TextInputEditText): String {
-    return editText.text.toString()
+@InverseBindingAdapter(attribute = "htmlEdit", event = "textAttrChanged")
+fun getHtmlText(view: EditText): String {
+    return view.text.toString()
 }
 
-@Suppress("DEPRECATION")
-@BindingAdapter("htmlText")
-fun setHtmlTextLiveData(
-    textView: TextInputEditText,
-    data: LiveData<String>
+@BindingAdapter("textAttrChanged", requireAll = false)
+fun setEditTextChanged(
+    view: TextView,
+    textChanged: InverseBindingListener
 ) {
-    data.value?.let{
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            textView.setText(Html.fromHtml(it),TextView.BufferType.EDITABLE)
-        } else {
-            textView.setText(
-                Html.fromHtml(it,Html.FROM_HTML_MODE_LEGACY),
-                TextView.BufferType.EDITABLE
-            )
+    val listener = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            textChanged.onChange()
+        }
+
+        override fun afterTextChanged(s: Editable?) {
         }
     }
+    view.removeTextChangedListener(listener)
+    view.addTextChangedListener(listener)
+
 }
 
 @SuppressLint("ClickableViewAccessibility")
