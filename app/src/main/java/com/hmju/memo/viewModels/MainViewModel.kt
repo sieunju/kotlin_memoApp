@@ -35,7 +35,7 @@ class MainViewModel(
     val startMemoTop = SingleLiveEvent<Unit>()
     val startAlert = SingleLiveEvent<Unit>()
     val startToolBarAction = SingleLiveEvent<Int>()
-    val startMemoDetail = SingleLiveEvent<Pair<View, MemoItem>>()
+    val startMemoDetail = SingleLiveEvent<Triple<View, MemoItem, Int>>()
     val finish = SingleLiveEvent<Boolean>()
 
     private val backButtonSubject: Subject<Long> =
@@ -81,8 +81,8 @@ class MainViewModel(
         }
     }
 
-    fun memoDetail(view: View, item: MemoItem) {
-        startMemoDetail.value = Pair(view, item)
+    fun memoDetail(view: View, item: MemoItem, pos: Int) {
+        startMemoDetail.value = Triple(view, item, pos)
     }
 }
 

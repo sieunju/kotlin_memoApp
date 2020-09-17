@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="pos"
+            type="Integer" />
+
+        <variable
             name="item"
             type="com.hmju.memo.model.memo.MemoItem" />
 
@@ -18,7 +22,7 @@
         style="@style/MemoRootStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:turtleClick="@{(v)->viewModel.memoDetail(v,item)}">
+        app:turtleClick="@{(v)->viewModel.memoDetail(v,item,pos)}">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"

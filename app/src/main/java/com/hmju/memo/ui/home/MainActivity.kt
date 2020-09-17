@@ -1,38 +1,25 @@
 package com.hmju.memo.ui.home
 
-import android.animation.ObjectAnimator
-import android.app.Activity
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
-import androidx.core.view.updatePadding
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
-import com.google.android.material.snackbar.Snackbar
 import com.hmju.memo.BR
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseActivity
 import com.hmju.memo.databinding.ActivityMainBinding
 import com.hmju.memo.define.ExtraCode
 import com.hmju.memo.define.RequestCode
-import com.hmju.memo.define.ResultCode
 import com.hmju.memo.define.ToolBarDefine.POS_HOME
 import com.hmju.memo.model.memo.MemoItem
+import com.hmju.memo.ui.adapter.MemoListAdapter
 import com.hmju.memo.ui.login.LoginActivity
-import com.hmju.memo.ui.memo.MemoDetailActivity
-import com.hmju.memo.ui.memo.MemoDetailFragment
-import com.hmju.memo.ui.memo.MemoFragment
 import com.hmju.memo.ui.toast.showToast
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.moveMemoDetail
 import com.hmju.memo.utils.startActResult
 import com.hmju.memo.viewModels.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.rvContents
-import kotlinx.android.synthetic.main.fragment_memo.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 /**
@@ -76,9 +63,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                 }
             })
 
-            startMemoDetail.observe(this@MainActivity, Observer { pair ->
-                moveMemoDetail(pair)
-//                addMemoFragment(item)
+            startMemoDetail.observe(this@MainActivity, Observer { triple ->
+                moveMemoDetail(triple)
             })
 
             finish.observe(this@MainActivity, Observer {
@@ -103,22 +89,29 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             RequestCode.LOGIN -> {
-                if (resultCode == Activity.RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                     with(viewModel) {
                         start()
                     }
                 }
             }
-        }
-    }
-
-    private fun addMemoFragment(item: MemoItem) {
-        JLogger.d("자세히 보기 화면 이동!")
-        with(supportFragmentManager.beginTransaction()) {
-            setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top)
-            replace(R.id.container, MemoDetailFragment.newInstance(item))
-            addToBackStack(MemoDetailFragment.TAG_DETAIL)
-            commit()
+            RequestCode.MEMO_DETAIL -> {
+                if (resultCode == RESULT_OK) {
+                    // 메모 상세에서 데이터가 변경 했다면 데이터 갱신 처리.
+                    data?.let {
+                        val clickPos = it.getIntExtra(ExtraCode.MEMO_DETAIL_POS, -1)
+                        if (clickPos != -1) {
+                            val changedItem =
+                                it.getSerializableExtra(ExtraCode.MEMO_DETAIL) as MemoItem
+                            rvContents.adapter?.let { adapter ->
+                                if (adapter is MemoListAdapter) {
+                                    adapter.setChangedData(clickPos,changedItem)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

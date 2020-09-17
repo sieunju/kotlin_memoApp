@@ -20,7 +20,8 @@ data class MemoItem(
     @SerializedName("tag") var tag: Int,
     @SerializedName("title") var title: String? = "",
     @SerializedName("contents") var contents: String? = "",
-    @SerializedName("fileList") val fileList: ArrayList<FileItem>? = null
+    @SerializedName("fileList") val fileList: ArrayList<FileItem>? = null,
+    @SerializedName("regDtm") val regDtm: String? = null
 ) : Serializable {
 
     val isNormal: Boolean

@@ -1,11 +1,9 @@
 package com.hmju.memo.ui.adapter
 
-import android.animation.ObjectAnimator
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.recyclerview.widget.DiffUtil
 import com.hmju.memo.R
 import com.hmju.memo.base.BasePagedAdapter
@@ -14,9 +12,7 @@ import com.hmju.memo.databinding.ItemHorizontalLoadingBinding
 import com.hmju.memo.databinding.ItemMemoImgBinding
 import com.hmju.memo.databinding.ItemMemoNormalBinding
 import com.hmju.memo.model.memo.MemoItem
-import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.MainViewModel
-import kotlinx.android.synthetic.main.item_memo_img.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -61,14 +57,33 @@ class MemoListAdapter(
     override fun onBindViewHolder(holder: BaseViewHolder<*>, pos: Int) {
         when (holder) {
             is MemoNormalViewHolder -> {
+                holder.binding.pos = pos
                 holder.binding.item = getItem(pos)
             }
             is MemoImgViewHolder -> {
+                holder.binding.pos = pos
                 holder.binding.item = getItem(pos)
             }
         }
 
         setAnimation(holder.itemView, pos)
+    }
+
+    /**
+     * Index 갱신 처리.
+     * @param pos 변경하고 싶은 위치값
+     * @param tmpItem 변경하고 싶은 데이터
+     */
+    fun setChangedData(pos: Int, tmpItem: MemoItem) {
+        val item = getItem(pos)
+        item?.let {
+            // 우선순위 같은 경우에만 갱신 처리
+            if (it.tag == tmpItem.tag) {
+                it.title = tmpItem.title
+                it.contents = tmpItem.contents
+                notifyItemChanged(pos)
+            }
+        }
     }
 
     /**

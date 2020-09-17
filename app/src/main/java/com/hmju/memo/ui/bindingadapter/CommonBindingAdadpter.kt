@@ -1,25 +1,16 @@
 package com.hmju.memo.ui.bindingadapter
 
-import android.annotation.SuppressLint
 import android.content.res.Configuration
-import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.text.Html
-import android.view.MotionEvent
 import android.view.View
-import android.widget.TextView
-import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.BindingAdapter
-import androidx.databinding.InverseBindingAdapter
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textview.MaterialTextView
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.MainViewModel
-import com.hmju.memo.viewModels.MemoDetailViewModel
 import com.hmju.memo.widget.bottomToolbar.BottomToolbar
 
 /**

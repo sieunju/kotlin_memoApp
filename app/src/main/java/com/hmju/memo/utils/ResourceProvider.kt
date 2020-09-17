@@ -1,5 +1,6 @@
 package com.hmju.memo.utils
 
+import android.content.ContentResolver
 import android.content.Context
 import android.graphics.drawable.Drawable
 import androidx.annotation.*
@@ -18,6 +19,7 @@ interface ResourceProvider {
     fun getColor(@ColorRes color: Int) : Int
     fun getString(@StringRes resId : Int) : String
     fun getStringArray(@ArrayRes resId: Int) : Array<String>
+    fun getContentResolver() : ContentResolver
 }
 
 class ResourceProviderImpl(private val ctx: Context) : ResourceProvider {
@@ -34,4 +36,8 @@ class ResourceProviderImpl(private val ctx: Context) : ResourceProvider {
     override fun getString(resId: Int) = res.getString(resId)
 
     override fun getStringArray(resId: Int) = res.getStringArray(resId)
+
+    override fun getContentResolver(): ContentResolver {
+        return ctx.contentResolver
+    }
 }

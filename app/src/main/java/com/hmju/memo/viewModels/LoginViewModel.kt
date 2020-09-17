@@ -9,9 +9,6 @@ import com.hmju.memo.model.login.LoginResponse
 import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.repository.preferences.AccountPref
 import com.hmju.memo.utils.JLogger
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
 
 /**
  * Description: Login ViewModel Class
@@ -42,13 +39,11 @@ class LoginViewModel(
                     id = strId.value!!.trim(),
                     pw = strPw.value!!.trim()
                 )
-            )
-                .single()
+            ).single()
                 .subscribe({
                     JLogger.d("Result$it")
                     it.loginKey?.let { loginKey ->
                         actPref.setLoginKey(loginKey)
-                        JLogger.d("TEST:: 로그인 성공")
                         startFinish.value = true
                     }
                 }, {
@@ -61,7 +56,7 @@ class LoginViewModel(
     /**
      * 비 로그인 시작.
      */
-    fun startNonLogin(){
+    fun startNonLogin() {
         JLogger.d("Non Login Start")
         startFinish.value = false
     }

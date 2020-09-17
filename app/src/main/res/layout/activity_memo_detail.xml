@@ -167,6 +167,7 @@
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:nightResId="@{@drawable/ic_add_camera_white}"
+                        app:turtleClick="@{()->viewModel.moveAlbumAndCamera(viewModel.changeData.manageNo)}"
                         tools:src="@drawable/ic_add_camera_black" />
 
                     <!-- 사진 추가 버튼 -->
@@ -180,6 +181,7 @@
                         app:layout_constraintLeft_toRightOf="@+id/imgCamera"
                         app:layout_constraintTop_toTopOf="parent"
                         app:nightResId="@{@drawable/ic_add_photo_white}"
+                        app:turtleClick="@{()->viewModel.moveAlbumAndCamera(viewModel.changeData.manageNo)}"
                         tools:src="@drawable/ic_add_photo_black" />
 
                     <!-- 수정 날짜. -->
@@ -201,7 +203,8 @@
                         android:text="@string/str_change"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:turtleClick="@{()->viewModel.memoUpdate()}" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

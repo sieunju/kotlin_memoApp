@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName
  * Created by juhongmin on 2020/06/05
  */
 data class LoginResponse(
-    @SerializedName("resCode") val code: Int,
-    @SerializedName("resMsg") val msg: String,
+    @SerializedName("status") val code: Boolean,
+    @SerializedName("errMsg") val errMsg: String? = null,
     @SerializedName("loginKey") val loginKey: String?
 )

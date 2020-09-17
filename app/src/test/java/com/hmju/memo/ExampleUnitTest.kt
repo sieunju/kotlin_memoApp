@@ -73,4 +73,10 @@ class ExampleUnitTest {
             println("아닙니다.")
         }
     }
+
+    @Test
+    fun setRegDtm(){
+        val regDtm = "2020-08-09 23:26:29"
+
+    }
 }

@@ -11,12 +11,15 @@ import com.hmju.memo.R
 
 object ExtraCode {
     const val MEMO_MANAGE_NO = "memo_manage_no"
-    const val MEMO_DETAIL = "memo_detail"
+    const val MEMO_DETAIL = "a"
+    const val MEMO_DETAIL_POS = "b"
+    const val ALBUM_MANAGE_NO = "a"
 }
 
 object RequestCode {
     const val LOGIN = 100
     const val MEMO_DETAIL = 200
+    const val ALBUM = 300
 }
 
 object ResultCode {

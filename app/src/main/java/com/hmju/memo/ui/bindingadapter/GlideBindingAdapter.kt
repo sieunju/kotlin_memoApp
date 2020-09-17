@@ -32,12 +32,11 @@ fun bindingImg(
         R.color.colorPlaceHolder_1,
         R.color.colorPlaceHolder_2,
         R.color.colorPlaceHolder_3,
-        R.color.colorPlaceHolder_4)
+        R.color.colorPlaceHolder_4
+    )
     val ran = Random().nextInt(placeHolder.size)
 
     imgUrl?.let {
-        if(it == "null") return@let
-
         Glide.with(imgView.context)
             .load(getUrl(it))
             .placeholder(placeHolder[ran])
@@ -57,10 +56,11 @@ fun bindingImgHeader(
         R.color.colorPlaceHolder_1,
         R.color.colorPlaceHolder_2,
         R.color.colorPlaceHolder_3,
-        R.color.colorPlaceHolder_4)
+        R.color.colorPlaceHolder_4
+    )
     val ran = Random().nextInt(placeHolder.size)
 
-    imgUrl?.let{
+    imgUrl?.let {
         Glide.with(imgView.context)
             .load(getUrl(it))
             .placeholder(placeHolder[ran])
@@ -71,22 +71,48 @@ fun bindingImgHeader(
     }
 }
 
+@BindingAdapter("bindImgAlbum")
+fun bindingImgAlbum(
+    imgView: AppCompatImageView,
+    imgUrl: String?
+) {
+    val placeHolder = listOf<Int>(
+        R.color.colorPlaceHolder_1,
+        R.color.colorPlaceHolder_2,
+        R.color.colorPlaceHolder_3,
+        R.color.colorPlaceHolder_4
+    )
+    val ran = Random().nextInt(placeHolder.size)
+
+    imgUrl?.let {
+        Glide.with(imgView.context)
+            .load(it)
+            .placeholder(placeHolder[ran])
+            .thumbnail(0.1F)
+            .transform(CenterCrop())
+            .addListener(glideLoggerListener())
+            .into(imgView)
+    }
+}
+
 fun getUrl(url: String?): String? {
     url?.let {
         return when {
             it.startsWith("http") -> {
                 it
             }
-            it.startsWith(NetInfo.IMG_PATH.substring(1)) -> {
-                NetInfo.BASE_URL + "/" + it
+            it.startsWith(NetInfo.IMG_PATH) -> {
+                String.format("%s/%s", NetInfo.BASE_URL, it)
             }
-            // 정상 적인 Path 값인 경우.
+            // 앞에 '/' 있는 경우
             it.startsWith("/") -> {
-                NetInfo.BASE_URL + NetInfo.IMG_PATH + it
+                // www.example.com/resource/imgPath
+                String.format("%s/%s%s", NetInfo.BASE_URL, NetInfo.IMG_PATH, it)
             }
             // 정상 적인 Path 값이 아닌경우
             else -> {
-                NetInfo.BASE_URL + NetInfo.IMG_PATH + "/" + it
+                // www.example.com/resource/imagePath
+                String.format("%s/%s/%s", NetInfo.BASE_URL, NetInfo.IMG_PATH, it)
             }
         }
     } ?: run {
@@ -94,14 +120,16 @@ fun getUrl(url: String?): String? {
     }
 }
 
-fun glideLoggerListener() : RequestListener<Drawable> {
+fun glideLoggerListener(): RequestListener<Drawable> {
     return object : RequestListener<Drawable> {
 
-        override fun onResourceReady(resource: Drawable?,
-                                     model: Any?,
-                                     target: Target<Drawable>?,
-                                     dataSource: DataSource?,
-                                     isFirstResource: Boolean): Boolean {
+        override fun onResourceReady(
+            resource: Drawable?,
+            model: Any?,
+            target: Target<Drawable>?,
+            dataSource: DataSource?,
+            isFirstResource: Boolean
+        ): Boolean {
 //            if (resource is BitmapDrawable) {
 //                val bitmap = resource.bitmap
 //                JLogger.d("onResourceReady ${bitmap.byteCount} Width ${bitmap.width} Height ${bitmap.height}")
@@ -117,7 +145,7 @@ fun glideLoggerListener() : RequestListener<Drawable> {
             target: Target<Drawable>?,
             isFirstResource: Boolean
         ): Boolean {
-            JLogger.d("onLoadFailed Fail${e?.message} \tModel\t$model" )
+            JLogger.d("onLoadFailed Fail${e?.message} \tModel\t$model")
             return false
         }
 

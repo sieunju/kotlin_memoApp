@@ -17,32 +17,33 @@ import org.koin.core.parameter.parametersOf
  *
  * Created by juhongmin on 2020/09/06
  */
-class MemoDetailFragment(private val memoInfo: MemoItem) :
-    BaseFragment<FragmentMemoDetailBinding, MemoDetailViewModel>() {
-
-    companion object {
-        const val TAG_DETAIL = "MemoDetailFragment"
-        fun newInstance(memoInfo: MemoItem): MemoDetailFragment {
-            return MemoDetailFragment(memoInfo)
-        }
-    }
-
-    override val layoutId = R.layout.fragment_memo_detail
-    override val viewModel: MemoDetailViewModel by viewModel {
-        parametersOf(memoInfo)
-    }
-    override val bindingVariable = BR.viewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        with(viewModel) {
-
-        }
-    }
-}
+//class MemoDetailFragment(private val memoInfo: MemoItem) :
+//    BaseFragment<FragmentMemoDetailBinding, MemoDetailViewModel>() {
+//
+//    companion object {
+//        const val TAG_DETAIL = "MemoDetailFragment"
+//        fun newInstance(memoInfo: MemoItem): MemoDetailFragment {
+//            return MemoDetailFragment(memoInfo)
+//        }
+//    }
+//
+//    override val layoutId = R.layout.fragment_memo_detail
+//    override val viewModel: MemoDetailViewModel by viewModel {
+//        parametersOf(0)
+//        parametersOf(memoInfo)
+//    }
+//    override val bindingVariable = BR.viewModel
+//
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//
+//    }
+//
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//
+//        with(viewModel) {
+//
+//        }
+//    }
+//}

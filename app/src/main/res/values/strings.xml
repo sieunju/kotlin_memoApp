@@ -14,6 +14,10 @@
     <string name="str_change">수정</string>
     <string name="str_add_photo">사진 추가</string>
 
+    <string name="str_confirm">확인</string>
+    <string name="str_cancel">취소</string>
+    <string name="str_permission_denied">권한 동의해주세요.</string>
+
     <string name="large_text">
         MIT License
         Copyright © 2019 Sieun Ju
