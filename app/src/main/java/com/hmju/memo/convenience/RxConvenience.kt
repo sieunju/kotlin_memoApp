@@ -2,6 +2,7 @@ package com.hmju.memo.convenience
 
 import io.reactivex.Flowable
 import io.reactivex.Maybe
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subscribers.DisposableSubscriber
@@ -28,6 +29,8 @@ import java.util.concurrent.TimeUnit
 
 // 단일로 요청하는 경우.
 fun <T> Maybe<T>.single() = subscribeOn(io()).observeOn(AndroidSchedulers.mainThread())
+
+fun <T> Observable<T>.single() = subscribeOn(io()).observeOn(AndroidSchedulers.mainThread())
 
 // 여러개의 API 를 한꺼번에 보내는 경우
 fun <T> Flowable<T>.multi() = subscribeOn(io())

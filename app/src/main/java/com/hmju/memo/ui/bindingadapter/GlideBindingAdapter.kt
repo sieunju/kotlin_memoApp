@@ -37,11 +37,13 @@ fun bindingImg(
     val ran = Random().nextInt(placeHolder.size)
 
     imgUrl?.let {
+        JLogger.d("TEST:: Url\t${getUrl(it)}")
         Glide.with(imgView.context)
             .load(getUrl(it))
             .placeholder(placeHolder[ran])
             .thumbnail(0.1F)
             .transform(CenterCrop())
+            .error(R.drawable.ic_profile_default)
             .into(imgView)
     }
 }
@@ -52,7 +54,7 @@ fun bindingImgHeader(
     imgUrl: String?
 ) {
 
-    val placeHolder = listOf<Int>(
+    val placeHolder = listOf(
         R.color.colorPlaceHolder_1,
         R.color.colorPlaceHolder_2,
         R.color.colorPlaceHolder_3,
@@ -90,11 +92,15 @@ fun bindingImgAlbum(
             .placeholder(placeHolder[ran])
             .thumbnail(0.1F)
             .transform(CenterCrop())
-            .addListener(glideLoggerListener())
+//            .addListener(glideLoggerListener())
             .into(imgView)
     }
 }
 
+/**
+ * Glide ImageLoader
+ * 각 Url 맞게 가공해서 리턴 하는 함수.
+ */
 fun getUrl(url: String?): String? {
     url?.let {
         return when {

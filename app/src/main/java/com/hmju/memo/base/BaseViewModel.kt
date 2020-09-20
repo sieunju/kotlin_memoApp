@@ -15,7 +15,7 @@ import kotlin.coroutines.coroutineContext
  */
 open class BaseViewModel : ViewModel() {
 
-    protected val startNetworkState = SingleLiveEvent<NetworkState>()
+    val startNetworkState = SingleLiveEvent<NetworkState>()
 
     // 코루틴은 잠시 접어둠.. 롤리팝에서 이슈가 있음.
 //    /**

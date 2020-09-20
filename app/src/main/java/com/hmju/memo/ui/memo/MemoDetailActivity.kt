@@ -13,7 +13,9 @@ import com.hmju.memo.R
 import com.hmju.memo.base.BaseActivity
 import com.hmju.memo.databinding.ActivityMemoDetailBinding
 import com.hmju.memo.define.ExtraCode
+import com.hmju.memo.define.NetworkState
 import com.hmju.memo.define.RequestCode
+import com.hmju.memo.define.ResultCode
 import com.hmju.memo.dialog.ConfirmDialog
 import com.hmju.memo.ui.album.AlbumActivity
 import com.hmju.memo.ui.toast.showToast
@@ -50,6 +52,20 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoDetailVie
         FluidContentResize.listen(this)
 
         with(viewModel) {
+
+            startNetworkState.observe(this@MemoDetailActivity, Observer {state->
+                when(state) {
+                    NetworkState.LOADING -> {
+                        JLogger.d("로딩중우우우우")
+                    }
+                    NetworkState.ERROR -> {
+                        JLogger.d("에러 입니다아아앙")
+                    }
+                    else -> {
+                        JLogger.d("성공 성공!")
+                    }
+                }
+            })
 
             startCopyText.observe(this@MemoDetailActivity, Observer { text ->
                 val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -109,7 +125,16 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoDetailVie
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             RequestCode.ALBUM -> {
-                JLogger.d("앨범!!")
+                if(resultCode == RESULT_OK) {
+                    JLogger.d("TEST:: 데이터를 전달 받았습니다.")
+                    with(viewModel){
+                        data?.getStringArrayListExtra(ExtraCode.ALBUM_SELECT_IMAGES)?.let{
+                            addFileUpload(it)
+                        }
+                    }
+                } else {
+                    JLogger.d("아무 동작 안함")
+                }
 
             }
         }

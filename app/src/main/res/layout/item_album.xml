@@ -5,9 +5,19 @@
 
     <data>
 
+        <import type="android.view.View"/>
+
         <variable
             name="imgUrl"
             type="String" />
+
+        <variable
+            name="pos"
+            type="Integer" />
+
+        <variable
+            name="isSelected"
+            type="Boolean" />
 
         <variable
             name="viewModel"
@@ -16,9 +26,11 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:turtleClick="@{()-> viewModel.onSelect(pos,imgUrl,clSelected)}">
 
         <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img_thumb"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:adjustViewBounds="true"
@@ -28,13 +40,47 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/temp1" />
 
-        <!-- 선택 했을떄 나타내는 View -->
-<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent">-->
+        <!-- 선택할떄 나타내는 영역 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clSelected"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_selected_album"
+            android:visibility="@{isSelected ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@+id/img_thumb"
+            app:layout_constraintTop_toTopOf="@+id/img_thumb"
+            tools:visibility="visible">
 
+<!--            <androidx.appcompat.widget.AppCompatTextView-->
+<!--                android:layout_width="@dimen/size_20"-->
+<!--                android:layout_height="@dimen/size_20"-->
+<!--                android:layout_marginLeft="@dimen/margin_size_5"-->
+<!--                android:layout_marginTop="@dimen/margin_size_5"-->
+<!--                android:autoSizeMaxTextSize="@dimen/text_size_20"-->
+<!--                android:autoSizeMinTextSize="1dp"-->
+<!--                android:autoSizeTextType="uniform"-->
+<!--                android:background="@drawable/bg_selected_album_cnt"-->
+<!--                android:gravity="center"-->
+<!--                android:paddingLeft="@dimen/padding_size_2"-->
+<!--                android:paddingRight="@dimen/padding_size_2"-->
+<!--                android:textColor="@color/colorWhite"-->
+<!--                android:textSize="@dimen/text_size_14"-->
+<!--                app:layout_constraintLeft_toLeftOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                tools:text="400" />-->
 
-<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_done"
+                app:filterColorId="@{@color/colorPrimary}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

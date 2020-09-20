@@ -15,7 +15,7 @@ class JLogger {
         @JvmStatic
         @JvmName("d")
         fun d(msg: String) {
-            if (BuildConfig.APP_DEBUG) {
+            if (BuildConfig.IS_DEBUG) {
                 val ste = Thread.currentThread().stackTrace[4]
                 val sb = StringBuilder()
                 sb.append("[")
@@ -26,7 +26,7 @@ class JLogger {
         }
 
         fun d(tag: String, msg: String) {
-            if (BuildConfig.APP_DEBUG) {
+            if (BuildConfig.IS_DEBUG) {
                 Log.d(tag, msg)
             }
         }

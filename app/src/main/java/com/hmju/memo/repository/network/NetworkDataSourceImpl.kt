@@ -3,11 +3,19 @@ package com.hmju.memo.repository.network
 import androidx.lifecycle.Transformations
 import androidx.paging.Config
 import androidx.paging.toLiveData
+import com.bumptech.glide.load.resource.file.FileResource
 import com.hmju.memo.model.form.MemoListParam
+import com.hmju.memo.model.memo.MemoFileResponse
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.repository.network.paging.MemoListDataSourceFactory
 import com.hmju.memo.repository.network.paging.PagingModel
 import com.hmju.memo.repository.preferences.AccountPref
+import com.hmju.memo.utils.ResourceProvider
+import io.reactivex.Maybe
+import io.reactivex.Observable
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 
 /**
  * Description : Network 통신후 데이터 처리를 위한 클래스,
@@ -17,7 +25,8 @@ import com.hmju.memo.repository.preferences.AccountPref
  */
 class NetworkDataSourceImpl(
     private val apiService: ApiService,
-    private val actPref: AccountPref
+    private val actPref: AccountPref,
+    private val provider: ResourceProvider
 ) : NetworkDataSource {
 
     override fun fetchMemoList(params: MemoListParam): PagingModel<MemoItem> {

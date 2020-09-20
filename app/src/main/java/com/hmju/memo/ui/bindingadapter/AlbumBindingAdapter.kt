@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hmju.memo.R
 import com.hmju.memo.ui.adapter.AlbumAdapter
+import com.hmju.memo.ui.decoration.AlbumItemDecoration
 import com.hmju.memo.ui.decoration.LinearItemDecoration
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.AlbumViewModel
@@ -36,11 +37,11 @@ fun setAlbumListAdapter(
             view.adapter = this
             view.layoutManager = GridLayoutManager(view.context, 3)
             view.addItemDecoration(
-                LinearItemDecoration(
+                AlbumItemDecoration(
+                    spanCnt = 3,
                     divider = view.context.resources.getDimensionPixelSize(R.dimen.size_1)
                 )
             )
-
             cursor?.let {
                 this.setCursor(it)
             } ?: {

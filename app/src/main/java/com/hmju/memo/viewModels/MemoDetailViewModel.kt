@@ -8,11 +8,23 @@ import com.hmju.memo.convenience.ListMutableLiveData
 import com.hmju.memo.convenience.NonNullMutableLiveData
 import com.hmju.memo.convenience.SingleLiveEvent
 import com.hmju.memo.convenience.single
+import com.hmju.memo.define.NetworkState
 import com.hmju.memo.model.form.MemoItemForm
+import com.hmju.memo.model.memo.FileItem
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.utils.JLogger
+import com.hmju.memo.utils.ResourceProvider
+import io.reactivex.Maybe
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers.io
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.jetbrains.annotations.NotNull
+import java.io.File
 
 /**
  * Description : 메모 자세히 보기 ViewModel Class
@@ -22,7 +34,8 @@ import org.jetbrains.annotations.NotNull
 class MemoDetailViewModel(
     val memoPosition: Int,
     private val originData: MemoItem,
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    private val provider: ResourceProvider
 ) : BaseViewModel() {
 
     private val _changeData = NonNullMutableLiveData(
@@ -40,7 +53,6 @@ class MemoDetailViewModel(
     val startFinish = SingleLiveEvent<Unit>()
     val startCopyText = SingleLiveEvent<String>()
     val startAlbumAndCamera = SingleLiveEvent<Int>()
-    val selectedFileList = ListMutableLiveData<String>()
 
     fun onCopyText(@IdRes id: Int) {
         if (id == R.id.etTitle) {
@@ -85,11 +97,54 @@ class MemoDetailViewModel(
         }
     }
 
-    fun moveAlbumAndCamera(manageNo : Int){
+    fun moveAlbumAndCamera(manageNo: Int) {
         startAlbumAndCamera.value = manageNo
     }
 
-    fun fileUploads(){
+    fun addFileUpload(filePathList: List<String>) {
+        JLogger.d("File Upload 진행 합니다.")
+        val tmpFileList = arrayListOf<File>()
 
+        startNetworkState.value = NetworkState.LOADING
+
+        launch {
+            Observable.fromIterable(filePathList).flatMap { path ->
+                Observable.just(provider.getImageFileContents(path))
+            }.flatMap { fileInfo ->
+                tmpFileList.add(fileInfo.second)
+                val body = fileInfo.second.asRequestBody(fileInfo.first)
+                Observable.just(
+                    MultipartBody.Part.createFormData(
+                        name = "files",
+                        filename = fileInfo.second.name,
+                        body = body
+                    )
+                )
+            }.single()
+                .toList()
+                .subscribe({ list ->
+                    apiService.addFile(
+                        memoId = changeData.value.manageNo,
+                        files = list
+                    ).single()
+                        .doOnError { startNetworkState.value = NetworkState.ERROR }
+                        .doOnSubscribe { startNetworkState.value = NetworkState.LOADING }
+                        .doOnComplete { startNetworkState.value = NetworkState.SUCCESS }
+                        .subscribe({
+                            JLogger.d("Success $it")
+                            val manageNo = changeData.value.manageNo
+                            it.pathList?.let{responseFileList->
+                                responseFileList.zip(listOf(manageNo)).forEach {  }
+                            }
+                            provider.deleteFiles(tmpFileList)
+                        }, {
+                            JLogger.d("Server File ${it.message}")
+                            provider.deleteFiles(tmpFileList)
+                        })
+                }, {
+                    JLogger.d("Error\t ${it.message}")
+                    provider.deleteFiles(tmpFileList)
+                })
+        }
     }
 }

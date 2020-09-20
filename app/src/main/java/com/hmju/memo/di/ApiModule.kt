@@ -35,7 +35,7 @@ val apiModule = module {
     // Network Data Source
     single<NetworkDataSource> {
         NetworkDataSourceImpl(
-            get(), get()
+            get(), get(), get()
         )
     }
 

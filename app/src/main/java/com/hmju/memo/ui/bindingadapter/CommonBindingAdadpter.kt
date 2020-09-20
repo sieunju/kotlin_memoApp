@@ -1,13 +1,19 @@
 package com.hmju.memo.ui.bindingadapter
 
 import android.content.res.Configuration
+import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.text.Html
 import android.view.View
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
+import androidx.annotation.IdRes
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.MainViewModel
@@ -118,4 +124,12 @@ fun bindingImageViewDayNight(
         JLogger.d("모드가 변경되었습니다. 다크 모드")
         imgView.setImageDrawable(nightResId)
     }
+}
+
+@BindingAdapter("filterColorId")
+fun setImageColorFilter(
+    imgView: AppCompatImageView,
+    @ColorInt colorResId: Int
+) {
+    imgView.setColorFilter(colorResId, PorterDuff.Mode.SRC_IN)
 }

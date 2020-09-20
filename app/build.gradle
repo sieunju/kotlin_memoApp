@@ -52,6 +52,7 @@ android {
             versionCode 1
             versionName "0.0.1"
             manifestPlaceholders = [appLabel: "DevApp",testOnly: "true"]
+            buildConfigField "Boolean" , "IS_DEBUG" , "true"
         }
 
         study {
@@ -60,7 +61,7 @@ android {
             versionCode 1
             versionName "0.0.1"
             manifestPlaceholders = [appLabel: "StudyApp", testOnly: "false"]
-            buildConfigField "Boolean" , "APP_DEBUG" , "true"
+            buildConfigField "Boolean" , "IS_DEBUG" , "false"
         }
     }
 

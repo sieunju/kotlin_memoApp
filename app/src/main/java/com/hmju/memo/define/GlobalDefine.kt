@@ -14,6 +14,7 @@ object ExtraCode {
     const val MEMO_DETAIL = "a"
     const val MEMO_DETAIL_POS = "b"
     const val ALBUM_MANAGE_NO = "a"
+    const val ALBUM_SELECT_IMAGES = "a"
 }
 
 object RequestCode {
@@ -23,7 +24,6 @@ object RequestCode {
 }
 
 object ResultCode {
-
 }
 
 object ToolBarDefine {

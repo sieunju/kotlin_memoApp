@@ -21,7 +21,8 @@ val viewModelModule = module {
         MemoDetailViewModel(
             memoPosition = pos,
             originData = memoInfo,
-            apiService = get()
+            apiService = get(),
+            provider = get()
         )
     }
 
