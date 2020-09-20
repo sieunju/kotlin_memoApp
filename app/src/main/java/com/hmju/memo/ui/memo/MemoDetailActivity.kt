@@ -15,7 +15,6 @@ import com.hmju.memo.databinding.ActivityMemoDetailBinding
 import com.hmju.memo.define.ExtraCode
 import com.hmju.memo.define.NetworkState
 import com.hmju.memo.define.RequestCode
-import com.hmju.memo.define.ResultCode
 import com.hmju.memo.dialog.ConfirmDialog
 import com.hmju.memo.ui.album.AlbumActivity
 import com.hmju.memo.ui.toast.showToast

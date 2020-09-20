@@ -1,7 +1,6 @@
 package com.hmju.memo.dialog
 
 import android.content.Context
-import android.content.DialogInterface
 import android.graphics.drawable.ColorDrawable
 import android.view.Window
 import androidx.appcompat.app.AppCompatDialog

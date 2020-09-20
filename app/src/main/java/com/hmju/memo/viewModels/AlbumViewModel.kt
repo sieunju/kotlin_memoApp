@@ -1,32 +1,13 @@
 package com.hmju.memo.viewModels
 
 import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
-import android.graphics.Matrix
-import android.net.Uri
-import android.os.Build
 import android.provider.MediaStore
 import android.view.View
-import android.webkit.MimeTypeMap
-import androidx.exifinterface.media.ExifInterface
 import androidx.lifecycle.MutableLiveData
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewModel
-import com.hmju.memo.convenience.ListMutableLiveData
 import com.hmju.memo.convenience.SingleLiveEvent
-import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.ResourceProvider
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStream
 
 /**
  * Description : 앨범 및 카메라 ViewModel Class
