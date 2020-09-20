@@ -38,7 +38,7 @@ class AlbumViewModel(
     private val provider: ResourceProvider
 ) : BaseViewModel() {
 
-    val UPLOAD_FILE_MAX_CNT = 5
+    val UPLOAD_FILE_MAX_CNT = 10
     val cursor = MutableLiveData<Cursor>()
     val selectedPhotoList = HashMap<Int,String>()
     val startCamera = SingleLiveEvent<Unit>()

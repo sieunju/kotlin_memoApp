@@ -57,12 +57,15 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoDetailVie
                 when(state) {
                     NetworkState.LOADING -> {
                         JLogger.d("로딩중우우우우")
+                        showLoadingDialog()
                     }
                     NetworkState.ERROR -> {
                         JLogger.d("에러 입니다아아앙")
+                        dismissLoadingDialog()
                     }
                     else -> {
                         JLogger.d("성공 성공!")
+                        dismissLoadingDialog()
                     }
                 }
             })

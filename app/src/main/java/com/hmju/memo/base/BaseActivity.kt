@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModel
 import com.google.android.material.transition.platform.MaterialArcMotion
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
+import com.hmju.memo.dialog.LoadingDialog
 import com.hmju.memo.utils.JLogger
 
 /**
@@ -38,6 +39,8 @@ abstract class BaseActivity<T : ViewDataBinding, VM : BaseViewModel>
     companion object {
         const val TRANSITIONNAME = "transName"
     }
+
+    private var loadingDialog: LoadingDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,5 +110,34 @@ abstract class BaseActivity<T : ViewDataBinding, VM : BaseViewModel>
     override fun onStop() {
         super.onStop()
         JLogger.d("onStop")
+    }
+
+    /**
+     * 로딩 화면 노출
+     */
+    fun showLoadingDialog(){
+        if(isFinishing) {
+            return
+        }
+
+        loadingDialog?.let {
+            if(!it.isShowing) {
+                it.show()
+            }
+        }?: run {
+            loadingDialog = LoadingDialog(this)
+            loadingDialog!!.show()
+        }
+    }
+
+    /**
+     * 로딩 화면 비노
+     */
+    fun dismissLoadingDialog(){
+        loadingDialog?.let{
+            if(it.isShowing) {
+                it.dismiss()
+            }
+        }
     }
 }
