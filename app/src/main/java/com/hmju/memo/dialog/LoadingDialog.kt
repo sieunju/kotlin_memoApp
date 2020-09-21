@@ -23,18 +23,11 @@ class LoadingDialog(private val ctx: Context): AppCompatDialog(ctx) {
         window?.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         setOnShowListener {
-            Glide.with(ctx)
-                .asGif()
-                .override(300,300)
-                .load(R.raw.dot_loading)
-                .error(R.drawable.temp1)
-                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                .into(imgLoading)
         }
 
         setOnDismissListener {
             try {
-                Thread.interrupted()
+                dismiss()
             } catch (e: Exception) {
                 e.printStackTrace()
             }

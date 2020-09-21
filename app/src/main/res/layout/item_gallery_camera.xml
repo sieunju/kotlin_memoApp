@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.hmju.memo.viewModels.AlbumViewModel" />
+            type="com.hmju.memo.viewModels.GalleryViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

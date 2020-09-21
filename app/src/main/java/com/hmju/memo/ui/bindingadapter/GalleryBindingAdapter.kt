@@ -5,11 +5,10 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hmju.memo.R
-import com.hmju.memo.ui.adapter.AlbumAdapter
+import com.hmju.memo.ui.adapter.GalleryAdapter
 import com.hmju.memo.ui.decoration.AlbumItemDecoration
-import com.hmju.memo.ui.decoration.LinearItemDecoration
 import com.hmju.memo.utils.JLogger
-import com.hmju.memo.viewModels.AlbumViewModel
+import com.hmju.memo.viewModels.GalleryViewModel
 
 /**
  * Description : Album 및 Camera Binding Adapter
@@ -20,20 +19,20 @@ import com.hmju.memo.viewModels.AlbumViewModel
 @BindingAdapter(value = ["viewModel", "albumCursor"])
 fun setAlbumListAdapter(
     view: RecyclerView,
-    viewModel: AlbumViewModel,
+    viewModel: GalleryViewModel,
     cursor: Cursor?
 ) {
     view.adapter?.let { adapter ->
         cursor?.let {
 
-            if (adapter is AlbumAdapter) {
+            if (adapter is GalleryAdapter) {
                 adapter.setCursor(it)
             }
         } ?: {
             JLogger.d("커서가 널입니다!")
         }()
     } ?: run {
-        AlbumAdapter(viewModel).apply {
+        GalleryAdapter(viewModel).apply {
             view.adapter = this
             view.layoutManager = GridLayoutManager(view.context, 3)
             view.addItemDecoration(

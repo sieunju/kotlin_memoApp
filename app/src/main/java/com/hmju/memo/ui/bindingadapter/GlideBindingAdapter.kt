@@ -35,7 +35,6 @@ fun bindingImg(
     val ran = Random().nextInt(placeHolder.size)
 
     imgUrl?.let {
-        JLogger.d("TEST:: Url\t${getUrl(it)}")
         Glide.with(imgView.context)
             .load(getUrl(it))
             .placeholder(placeHolder[ran])

@@ -19,6 +19,7 @@
     <string name="str_confirm">확인</string>
     <string name="str_cancel">취소</string>
     <string name="str_permission_denied">권한 동의해주세요.</string>
+    <string name="str_gallery_all">전체 보기</string>
 
     <string name="large_text">
         MIT License

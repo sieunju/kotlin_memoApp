@@ -6,6 +6,7 @@ import android.view.View
 import androidx.lifecycle.MutableLiveData
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewModel
+import com.hmju.memo.convenience.NonNullMutableLiveData
 import com.hmju.memo.convenience.SingleLiveEvent
 import com.hmju.memo.utils.ResourceProvider
 
@@ -14,49 +15,65 @@ import com.hmju.memo.utils.ResourceProvider
  *
  * Created by hmju on 2020-09-17
  */
-class AlbumViewModel(
+class GalleryViewModel(
     private val manageNo: Int,
     private val provider: ResourceProvider
 ) : BaseViewModel() {
 
-    val UPLOAD_FILE_MAX_CNT = 10
+    val UPLOAD_FILE_MAX_CNT = 5
     val cursor = MutableLiveData<Cursor>()
-    val selectedPhotoList = HashMap<Int,String>()
+    val selectedPhotoList = HashMap<Int, String>()
     val startCamera = SingleLiveEvent<Unit>()
     val startSubmit = SingleLiveEvent<Unit>()
     val startToast = SingleLiveEvent<String>()
+    val startFilter = SingleLiveEvent<Unit>()
+
+    val filterGallery = NonNullMutableLiveData(LinkedHashSet<String>()).apply {
+        value.add(provider.getString(R.string.str_gallery_all))
+    }
+    val selectedFilter = NonNullMutableLiveData(provider.getString(R.string.str_gallery_all))
 
     fun start() {
         cursor.postValue(photoCursor())
+        cursor.value?.close()
     }
 
     private fun photoCursor(): Cursor? {
         val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        val projection = arrayOf(MediaStore.Images.Media._ID, MediaStore.Images.Media.DISPLAY_NAME)
+        val projection = arrayOf(
+            MediaStore.Images.Media._ID,
+            MediaStore.Images.Media.DISPLAY_NAME,
+            MediaStore.Images.Media.DATA,
+            MediaStore.Images.Media.BUCKET_DISPLAY_NAME
+        )
+
         // 정렬 순서.
         val sortOrderDesc = MediaStore.Images.Media.DATE_ADDED + " desc"
-
         return provider.getContentResolver()
             .query(uri, projection, null, null, sortOrderDesc)
     }
 
-    fun moveCamera(){
+    fun moveCamera() {
         startCamera.call()
     }
 
-    fun moveSubmit(){
+    fun moveSubmit() {
         startSubmit.call()
     }
 
-    fun onSelect(pos : Int, path: String ,view: View) {
+    fun showFilterSheet() {
+        startFilter.call()
+    }
+
+    fun onSelect(pos: Int, path: String, view: View) {
         // 선택된 이미지 검사.
-        if(selectedPhotoList.containsKey(pos)) {
+        if (selectedPhotoList.containsKey(pos)) {
             selectedPhotoList.remove(pos)
 
             view.visibility = View.GONE
         } else {
             // 선택된 이미지가 없는 경우 추가.
-            if(UPLOAD_FILE_MAX_CNT > selectedPhotoList.size) {
+            if (UPLOAD_FILE_MAX_CNT > selectedPhotoList.size) {
                 selectedPhotoList[pos] = path
 
                 view.visibility = View.VISIBLE
@@ -67,7 +84,7 @@ class AlbumViewModel(
         }
     }
 
-    fun isSelected(pos : Int) : Boolean {
+    fun isSelected(pos: Int): Boolean {
         return selectedPhotoList.containsKey(pos)
     }
 }

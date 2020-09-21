@@ -16,7 +16,7 @@ import com.hmju.memo.define.ExtraCode
 import com.hmju.memo.define.NetworkState
 import com.hmju.memo.define.RequestCode
 import com.hmju.memo.dialog.ConfirmDialog
-import com.hmju.memo.ui.album.AlbumActivity
+import com.hmju.memo.ui.gallery.GalleryActivity
 import com.hmju.memo.ui.toast.showToast
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.startActResult
@@ -89,7 +89,8 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoDetailVie
                     ).subscribe { isGranted ->
                         // 동의 한경우.
                         if (isGranted) {
-                            startActResult<AlbumActivity>(RequestCode.ALBUM) {
+                            JLogger.d("TEST Start!!")
+                            startActResult<GalleryActivity>(RequestCode.ALBUM) {
                                 putExtra(ExtraCode.ALBUM_MANAGE_NO, manageNo)
                             }
                         } else {

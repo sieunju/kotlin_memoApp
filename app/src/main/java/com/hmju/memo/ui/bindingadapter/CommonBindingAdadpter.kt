@@ -13,8 +13,11 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewModel
+import com.hmju.memo.ui.adapter.BottomSheetSelectAdapter
+import com.hmju.memo.ui.bottomsheet.SelectBottomSheet
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.MainViewModel
 import com.hmju.memo.widget.bottomToolbar.BottomToolbar
@@ -132,4 +135,19 @@ fun setImageColorFilter(
     @ColorInt colorResId: Int
 ) {
     imgView.setColorFilter(colorResId, PorterDuff.Mode.SRC_IN)
+}
+
+@BindingAdapter(value=["selectDialogDataList","selectDialogListener"])
+fun setSelectBottomSheetAdapter(
+    recyclerView: RecyclerView,
+    dataList : List<SelectBottomSheet.BottomSheetSelect>,
+    listener: SelectBottomSheet.Listener
+){
+    recyclerView.adapter?.let{
+        it.notifyDataSetChanged()
+    } ?: run {
+        BottomSheetSelectAdapter(dataList,listener).apply {
+            recyclerView.adapter = this
+        }
+    }
 }

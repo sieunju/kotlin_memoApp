@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="java.util.List" />
+
+        <import type="com.hmju.memo.ui.bottomsheet.SelectBottomSheet" />
+
+        <variable
+            name="listener"
+            type="com.hmju.memo.ui.bottomsheet.SelectBottomSheet.Listener" />
+
+        <variable
+            name="dataList"
+            type="List&lt;SelectBottomSheet.BottomSheetSelect>" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_size_20"
+            android:splitMotionEvents="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toTopOf="parent"
+            app:selectDialogDataList="@{dataList}"
+            app:selectDialogListener="@{listener}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
