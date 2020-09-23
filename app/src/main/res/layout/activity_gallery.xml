@@ -29,9 +29,9 @@
                 android:layout_marginLeft="@dimen/margin_size_5"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:turtleClick="@{()->viewModel.showFilterSheet()}"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:turtleClick="@{()->viewModel.showFilterSheet()}">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
@@ -50,6 +50,17 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:turtleClick="@{()->viewModel.testClick()}"
+                android:text="테스트"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/text_size_14"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <!-- 전송 버튼 -->
             <com.google.android.material.button.MaterialButton

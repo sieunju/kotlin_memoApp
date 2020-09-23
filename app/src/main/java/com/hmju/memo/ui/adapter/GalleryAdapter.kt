@@ -84,8 +84,6 @@ class GalleryAdapter(
                 holder.binding.pos = dataPos
                 holder.binding.isSelected = viewModel.isSelected(dataPos)
                 holder.binding.imgUrl = photoList[dataPos].id
-
-                JLogger.d("Album Path\t${photoList[dataPos].category}")
             }
         }
     }

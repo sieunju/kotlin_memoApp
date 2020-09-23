@@ -85,6 +85,8 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoDetailVie
                 with(RxPermissions(this@MemoDetailActivity)) {
                     request(
                         Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.ACCESS_MEDIA_LOCATION,
                         Manifest.permission.CAMERA
                     ).subscribe { isGranted ->
                         // 동의 한경우.
