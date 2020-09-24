@@ -104,12 +104,10 @@ abstract class BaseActivity<T : ViewDataBinding, VM : BaseViewModel>
 
     override fun onRestart() {
         super.onRestart()
-        JLogger.d("onRestart")
     }
 
     override fun onStop() {
         super.onStop()
-        JLogger.d("onStop")
     }
 
     /**

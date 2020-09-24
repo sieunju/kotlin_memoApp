@@ -17,16 +17,24 @@ class ListMutableLiveData<T> : MutableLiveData<ArrayList<T>>() {
     // NonNull 형
     override fun getValue() = super.getValue()!!
 
-    fun add(item: T) {
+//    fun add(item: T) {
+//        val items = value
+//        items.add(item)
+//        value = items
+//    }
+
+    fun postAdd(item: T) {
         val items = value
         items.add(item)
-        value = items
+        postValue(items)
+    }
+
+    fun add(item: T) {
+        value.add(item)
     }
 
     fun add(pos: Int, item: T) {
-        val items = value
-        items.add(pos,item)
-        value = items
+        value.add(pos,item)
     }
 
     fun addAll(itemList: List<T>) {

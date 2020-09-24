@@ -8,6 +8,7 @@ import com.hmju.memo.BR
 import com.hmju.memo.base.BaseActivity
 import com.hmju.memo.databinding.ActivityGalleryBinding
 import com.hmju.memo.define.ExtraCode
+import com.hmju.memo.define.NetworkState
 import com.hmju.memo.ui.bottomsheet.SelectBottomSheet
 import com.hmju.memo.ui.toast.showToast
 import com.hmju.memo.utils.JLogger
@@ -29,7 +30,7 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
 
     override val bindingVariable = BR.viewModel
 
-    private lateinit var selectDialog : SelectBottomSheet
+    private lateinit var selectDialog: SelectBottomSheet
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +39,20 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
 //        setFitsWindows()
 
         with(viewModel) {
+
+            startNetworkState.observe(this@GalleryActivity, Observer { state ->
+                when (state) {
+                    NetworkState.LOADING -> {
+                        showLoadingDialog()
+                    }
+                    NetworkState.ERROR -> {
+                        dismissLoadingDialog()
+                    }
+                    else -> {
+                        dismissLoadingDialog()
+                    }
+                }
+            })
 
             startCamera.observe(this@GalleryActivity, Observer {
                 JLogger.d("카메라 촬영 시작!")
@@ -53,30 +68,26 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
 
             startFilter.observe(this@GalleryActivity, Observer {
                 val list = arrayListOf<SelectBottomSheet.BottomSheetSelect>()
-                filterGallery.value.forEach { filter ->
-                    if (selectedFilter.value == filter) {
-                        list.add(
-                            SelectBottomSheet.BottomSheetSelect(
-                                name = filter,
-                                isSelected = true
-                            )
+                filterList.value.forEach {
+                    list.add(
+                        SelectBottomSheet.BottomSheetSelect(
+                            id = it.id,
+                            name = it.name,
+                            isSelected = it.isSelected
                         )
-                    } else {
-                        list.add(
-                            SelectBottomSheet.BottomSheetSelect(
-                                name = filter,
-                                isSelected = false
-                            )
-                        )
-                    }
+                    )
                 }
 
-                selectDialog = SelectBottomSheet.newInstance(list) { pos, name ->
-                    JLogger.d("Selected $pos $name")
-                    selectedFilter.value = name
+                selectDialog = SelectBottomSheet.newInstance(list) { pos, id ->
+                    startNetworkState.postValue(NetworkState.LOADING)
+                    JLogger.d("Selected $pos $id")
+                    resetFilter()
+                    selectedFilter(id)
+
+                    fetchGallery()
                     selectDialog.dismiss()
                 }.also {
-                    it.show(supportFragmentManager,"")
+                    it.show(supportFragmentManager, "")
                 }
 
             })

@@ -16,33 +16,33 @@ import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.GalleryViewModel
 
 /**
- * Description : 갤러 Adapter Class
+ * Description : 갤러리 Adapter Class
  *
  * Created by juhongmin on 2020/06/21
  */
 class GalleryAdapter(
     private val viewModel: GalleryViewModel
-) : RecyclerView.Adapter<BaseViewHolder<*>>(), Filterable {
+) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
-    data class Item(
-        val id: String,
-        val category: String
-    )
-
-    //    private val photoList = arrayListOf<String>()
-    private val photoList = arrayListOf<Item>()
-    private var filteredList = arrayListOf<Item>()
-    private var unFilteredList = arrayListOf<Item>()
+    private val photoList = arrayListOf<String>()
     private var lastPos = -1
     private var size = 0
     private var photoCursor: Cursor? = null
 
     fun setCursor(cursor: Cursor) {
+        // init Variable
         photoList.clear()
-        photoCursor = cursor
+        lastPos = -1
         size = cursor.count
-        notifyDataSetChanged()
+
         JLogger.d("Cursor Size\t$size")
+
+        // set Cursor
+        if(photoCursor != null && !photoCursor!!.isClosed) {
+            photoCursor!!.close()
+        }
+        photoCursor = cursor
+        notifyDataSetChanged()
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder<*>, pos: Int) {
@@ -64,18 +64,7 @@ class GalleryAdapter(
                             contentId.toString()
                         )
 
-                        val filterName =
-                            it.getString(it.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME))
-
-                        viewModel.filterGallery.value.add(filterName)
-
-                        photoList.add(
-                            Item(
-                                id = uri.toString(),
-                                category = filterName
-                            )
-                        )
-//                        photoList.add(uri.toString())
+                        photoList.add(uri.toString())
                     }
                 }
             }
@@ -83,7 +72,12 @@ class GalleryAdapter(
             if (holder is PhotoViewHolder) {
                 holder.binding.pos = dataPos
                 holder.binding.isSelected = viewModel.isSelected(dataPos)
-                holder.binding.imgUrl = photoList[dataPos].id
+                holder.binding.imgUrl = photoList[dataPos]
+            }
+
+            if(lastPos == size + 1) {
+                JLogger.d("맨 마지막입니다.")
+                photoCursor?.close()
             }
         }
     }
@@ -115,25 +109,6 @@ class GalleryAdapter(
 
     override fun getItemCount(): Int {
         return size + 1
-    }
-
-    override fun getFilter(): Filter {
-        return object : Filter(){
-            override fun performFiltering(constraint: CharSequence?): FilterResults? {
-                constraint?.let{
-                    JLogger.d("Filter\t$it")
-
-                    TODO("Not yet implemented")
-
-                } ?: run {
-                    return null
-                }
-            }
-
-            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                TODO("Not yet implemented")
-            }
-        }
     }
 
     class CameraCaptureViewHolder(parent: ViewGroup, layoutId: Int, viewModel: GalleryViewModel) :

@@ -1,15 +1,24 @@
 package com.hmju.memo.viewModels
 
+import android.app.Application
+import android.content.ContentResolver
+import android.database.ContentObserver
 import android.database.Cursor
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import android.view.View
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewModel
+import com.hmju.memo.convenience.ListMutableLiveData
 import com.hmju.memo.convenience.NonNullMutableLiveData
 import com.hmju.memo.convenience.SingleLiveEvent
 import com.hmju.memo.convenience.single
+import com.hmju.memo.define.NetworkState
+import com.hmju.memo.model.memo.GalleryFilterItem
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.ResourceProvider
 import io.reactivex.Maybe
@@ -25,173 +34,193 @@ class GalleryViewModel(
     private val provider: ResourceProvider
 ) : BaseViewModel() {
 
-    val UPLOAD_FILE_MAX_CNT = 5
+    companion object {
+        const val DEFAULT_FILTER_ID = "ALL"
+        const val DEFAULT_FILTER_NAME = "최근 항목"
+        const val UPLOAD_FILE_MAX_CNT = 5
+    }
+
+    private var contentObserver: ContentObserver? = null
     val cursor = MutableLiveData<Cursor>()
     val selectedPhotoList = HashMap<Int, String>()
     val startCamera = SingleLiveEvent<Unit>()
     val startSubmit = SingleLiveEvent<Unit>()
     val startToast = SingleLiveEvent<String>()
     val startFilter = SingleLiveEvent<Unit>()
-    val startTest = SingleLiveEvent<Unit>()
-    val galleryFilter = LinkedHashSet<Pair<String, String>>()
-    val renewalFilter = ArrayList<Pair<String, String>>().apply {
-        add(Pair("all", "최근 항목"))
-    }
 
-    val filterGallery = NonNullMutableLiveData(LinkedHashSet<String>()).apply {
-        value.add(provider.getString(R.string.str_gallery_all))
-    }
-    val selectedFilter = NonNullMutableLiveData(provider.getString(R.string.str_gallery_all))
-
-    fun start() {
-        cursor.postValue(photoCursor())
-    }
-
-    private fun photoCursor(): Cursor? {
-        val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        val projection = arrayOf(
-            MediaStore.Images.Media._ID,
-            MediaStore.Images.Media.DISPLAY_NAME,
-            MediaStore.Images.Media.DATA,
-            MediaStore.Images.Media.BUCKET_DISPLAY_NAME
+    private val _filterList = ListMutableLiveData<GalleryFilterItem>().apply {
+        add(GalleryFilterItem(DEFAULT_FILTER_ID, DEFAULT_FILTER_NAME, true))
+    } // 필터 영역
+    val filterList: ListMutableLiveData<GalleryFilterItem>
+        get() = _filterList
+    val selectedFilter = NonNullMutableLiveData(
+        GalleryFilterItem(
+            id = DEFAULT_FILTER_ID,
+            name = DEFAULT_FILTER_NAME,
+            isSelected = true
         )
+    ) // 선택한 필터
 
-        // 정렬 순서.
-        val sortOrderDesc = MediaStore.Images.Media.DATE_ADDED + " desc"
-        return provider.getContentResolver()
-            .query(uri, projection, null, null, sortOrderDesc)
+    fun resetFilter() {
+        _filterList.value.map { it.isSelected = false }
     }
 
-    private fun firstCursor(uri: Uri, projection: Array<String>, sort: String): Cursor? {
-        return provider.getContentResolver().query(uri, projection, null, null, sort)
-    }
+    fun selectedFilter(id: String) {
+        _filterList.value.forEach {
+            if (it.id == id) {
+                it.isSelected = true
+                selectedFilter.value = it
+                return@forEach
 
-    private fun renewalTest() {
-        val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        val firstProjection = arrayOf(
-            MediaStore.Images.Media.BUCKET_ID,
-            MediaStore.Images.Media.BUCKET_DISPLAY_NAME
-        )
-
-        val firstSort = "${MediaStore.Images.Media.DATE_TAKEN} DESC limit 1"
-
-        firstCursor(uri, firstProjection, firstSort)?.let {
-            if (it.count > 0) {
-                JLogger.d("TEST:: Count!! ${it.count}")
-                if (it.moveToNext()) {
-                    val id = it.getString(0)
-                    val name = it.getString(1)
-                    JLogger.d("TEST:: First $id\t$name")
-                    renewalFilter.add(Pair(id, name))
-
-                    it.close()
-                } else {
-                    it.close()
-                }
-            } else {
-                JLogger.d("사진이 없는 경우...")
             }
-            it.close()
         }
     }
 
-    private fun renewalFilter(){
+    fun start() {
+        fetchFilter()
+
+        if (contentObserver == null) {
+            contentObserver = provider.getContentResolver().registerObserver(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            ) {
+                JLogger.d("Data Changed! $it")
+//                if(it) {
+//                    fetchGallery()
+//                }
+
+                fetchGallery()
+            }
+        }
+    }
+
+    /**
+     * 갤러리 모든 앨범 가져오는 함수.
+     *
+     * @author hmju
+     */
+    private fun fetchFilter() {
+        // 로딩바 노출
+        startNetworkState.postValue(NetworkState.LOADING)
+
         val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val projection = arrayOf(
+            MediaStore.Images.Media._ID,
             MediaStore.Images.Media.BUCKET_ID,
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME
         )
         val selection = StringBuilder()
-        selection.append("${MediaStore.Images.Media.BUCKET_ID} != ")
         val selectionArgs = arrayListOf<String>()
-        selectionArgs.add(renewalFilter[0].first)
 
-        val sort = "${MediaStore.Images.Media.DATE_TAKEN} DESC limit 1"
+        // 데이터 하나만 가져오도록... 비용 최소화
+        val sort = "${MediaStore.Images.Media.DATE_ADDED} DESC LIMIT 1"
 
-        Observable.create<Unit> {observable->
-            try{
-                val cursor = provider.getContentResolver().query(uri,projection,selection.toString(),selectionArgs.toArray() as Array<out String>,sort)
-                cursor?.let{
+        launch {
+            Observable.create<GalleryFilterItem> {
+                try {
+                    loop@ while (true) {
 
-                    if(it.moveToNext()) {
-                        val id = it.getString(it.getColumnIndex(MediaStore.Images.Media.BUCKET_ID))
-                        val name = it.getString(it.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME))
-                        renewalFilter.add(Pair(id,name))
+//                        JLogger.d("===================================================")
+//                        JLogger.d("TEST:: Selection $selection")
+//                        JLogger.d("TEST:: Argument $selectionArgs")
+//                        JLogger.d("===================================================")
+
+                        val cursor = provider.getContentResolver().query(
+                            uri,
+                            projection,
+                            if (selection.isEmpty()) null else selection.toString(),
+                            if (selectionArgs.isEmpty()) null else selectionArgs.toTypedArray(),
+                            sort
+                        )
+
+                        if (cursor == null) break@loop
+
+                        if (cursor.moveToLast()) {
+                            val id =
+                                cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media._ID))
+                            val bucketId =
+                                cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID))
+                            val bucketName =
+                                cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME))
+
+                            if (!cursor.isClosed) {
+                                cursor.close()
+                            }
+
+                            if (selection.isEmpty()) {
+                                selection.append("${MediaStore.Images.Media.BUCKET_ID} !=?")
+                            } else {
+                                selection.append(" AND ")
+                                selection.append("${MediaStore.Images.Media.BUCKET_ID} !=?")
+                            }
+                            selectionArgs.add(bucketId)
+
+                            it.onNext(
+                                GalleryFilterItem(
+                                    id = bucketId,
+                                    name = bucketName,
+                                    isSelected = false,
+                                    contentId = id
+                                )
+                            )
+                        } else {
+                            if (!cursor.isClosed) {
+                                cursor.close()
+                            }
+                            break@loop
+                        }
                     }
+                    JLogger.d("TEST:: 여길 지납니다.")
 
-                    it.close()
+                    it.onComplete()
+                } catch (ex: Exception) {
+                    JLogger.d("Try Catch Error ${ex.message}")
+                    it.onError(ex)
+                    it.onComplete()
                 }
-            } catch (ex : Exception){
-                JLogger.d("Error ${ex.message}")
             }
-        }.doOnNext {
+                .doOnError {
+                    JLogger.d("Error ${it.message}")
 
+                }
+                .doOnNext {
+                    JLogger.d("onNext $it")
+                    _filterList.value.add(it)
+                }
+                .doOnComplete {
+                    JLogger.d("onComplete !")
+                    fetchGallery()
+                }
+                .single()
+                .subscribe()
         }
     }
 
-    private fun testCursor(): Cursor? {
+    /**
+     * 갤러리 이미지 가져오기
+     * 필터가 걸려있으면 자동으로 처리함.
+     */
+    fun fetchGallery() {
+        JLogger.d("TEST:: fetchGallery")
         val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val projection = arrayOf(
-            MediaStore.Images.Media._ID,
-            MediaStore.Images.Media.BUCKET_ID,
-            MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
-            MediaStore.Images.Media.TITLE
+            MediaStore.Images.Media._ID
         )
 
-        val sortOrder = "${MediaStore.Images.Media.DATE_TAKEN} DESC"
-        return provider.getContentResolver().query(uri, projection, null, null, sortOrder)
-    }
+        val sort = "${MediaStore.Images.Media.DATE_ADDED} DESC"
+        val selection = "${MediaStore.Images.Media.BUCKET_ID} ==?"
 
-    private fun runTest() {
-        testCursor()?.let { cs ->
-            JLogger.d("TEST:: Size ${cs.count}")
-            val time = System.currentTimeMillis()
-            launch {
-                Observable.create<Triple<String, String, String>> {
-                    try {
-                        if (cs.moveToLast()) {
-                            do {
-                                val first = cs.getString(0)
-                                val second = cs.getString(1)
-                                val third = cs.getString(2)
-
-                                galleryFilter.add(Pair(second, third))
-
-                                it.onNext(Triple(first, second, third))
-                            } while (cs.moveToPrevious())
-                            cs.close()
-                            it.onComplete()
-                        } else {
-                            cs.close()
-                            it.onComplete()
-                        }
-                    } catch (ex: Exception) {
-                        JLogger.d("Error ${ex.message}")
-                        cs.close()
-                        it.onError(ex)
-                    }
-                }
-                    .doOnComplete {
-                        JLogger.d("TEST:: onCompleted Diff Time${System.currentTimeMillis() - time}")
-                        JLogger.d("TEST:: Filter ${galleryFilter}")
-                    }
-                    .doOnError {
-                        JLogger.d("TEST:: Error ${it.message}")
-                    }
-                    .doOnNext {
-//                        JLogger.d("TEST:: Next\t ${it.first}\t${it.second}\t${it.third}")
-                    }
-                    .single()
-                    .toList()
-                    .subscribe({
-                        JLogger.d("TEST:: subscribe Diff Time${System.currentTimeMillis() - time}")
-                    }, {
-                        JLogger.d("TEST:: subscribe Error ${it.message}")
-                    })
-            }
-
-        }
-
+        // 기존 남아 있는 커서 Exit
+        cursor.value?.close()
+        cursor.postValue(
+            provider.getContentResolver().query(
+                uri,
+                projection,
+                if (selectedFilter.value.id == DEFAULT_FILTER_ID) null else selection,
+                if (selectedFilter.value.id == DEFAULT_FILTER_ID) null else arrayOf(selectedFilter.value.id),
+                sort
+            )
+        )
+        startNetworkState.postValue(NetworkState.SUCCESS)
     }
 
     fun moveCamera() {
@@ -204,12 +233,6 @@ class GalleryViewModel(
 
     fun showFilterSheet() {
         startFilter.call()
-    }
-
-    fun testClick() {
-        startTest.call()
-//        runTest()
-        renewalTest()
     }
 
 
@@ -234,5 +257,29 @@ class GalleryViewModel(
 
     fun isSelected(pos: Int): Boolean {
         return selectedPhotoList.containsKey(pos)
+    }
+
+    override fun onCleared() {
+        // contentObserver 해제.
+        contentObserver?.let{
+            provider.getContentResolver().unregisterContentObserver(it)
+        }
+        super.onCleared()
+    }
+
+    /**
+     * Convenience extension method to register a [ContentObserver] given a lambda.
+     */
+    private fun ContentResolver.registerObserver(
+        uri: Uri,
+        observer: (selfChange: Boolean) -> Unit
+    ): ContentObserver {
+        val contentObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
+            override fun onChange(selfChange: Boolean) {
+                observer(selfChange)
+            }
+        }
+        registerContentObserver(uri, true, contentObserver)
+        return contentObserver
     }
 }

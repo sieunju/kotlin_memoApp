@@ -35,6 +35,8 @@ fun <T> Observable<T>.single() = subscribeOn(io()).observeOn(AndroidSchedulers.m
 // 여러개의 API 를 한꺼번에 보내는 경우
 fun <T> Flowable<T>.multi() = subscribeOn(io())
 
+fun <T> Observable<T>.multi() = subscribeOn(io())
+
 // 여러개의 API를 한꺼번에 보내는 경우 Delay 타입.
 fun <T> Flowable<T>.multiDelay(_delay: Int) = subscribeOn(io()).delay(_delay.toLong(),TimeUnit.SECONDS)
 

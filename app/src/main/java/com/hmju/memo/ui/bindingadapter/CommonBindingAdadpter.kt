@@ -121,10 +121,10 @@ fun bindingImageViewDayNight(
     val nightMode =
         imgView.context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
     if (nightMode == Configuration.UI_MODE_NIGHT_NO) {
-        JLogger.d("모드가 변경되었습니다. 라이트 모드")
+//        JLogger.d("모드가 변경되었습니다. 라이트 모드")
         imgView.setImageDrawable(dayResId)
     } else {
-        JLogger.d("모드가 변경되었습니다. 다크 모드")
+//        JLogger.d("모드가 변경되었습니다. 다크 모드")
         imgView.setImageDrawable(nightResId)
     }
 }
@@ -143,9 +143,7 @@ fun setSelectBottomSheetAdapter(
     dataList : List<SelectBottomSheet.BottomSheetSelect>,
     listener: SelectBottomSheet.Listener
 ){
-    recyclerView.adapter?.let{
-        it.notifyDataSetChanged()
-    } ?: run {
+    recyclerView.adapter?.notifyDataSetChanged() ?: run {
         BottomSheetSelectAdapter(dataList,listener).apply {
             recyclerView.adapter = this
         }

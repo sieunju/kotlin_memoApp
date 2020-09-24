@@ -20,6 +20,7 @@ class SelectBottomSheet : RoundedBottomSheet() {
     }
 
     data class BottomSheetSelect(
+        val id: String? = null,
         val name: String,
         val isSelected: Boolean,
         val data: Any? = null

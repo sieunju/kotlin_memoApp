@@ -24,13 +24,11 @@ fun setAlbumListAdapter(
 ) {
     view.adapter?.let { adapter ->
         cursor?.let {
-
             if (adapter is GalleryAdapter) {
+                view.scrollToPosition(0)
                 adapter.setCursor(it)
             }
-        } ?: {
-            JLogger.d("커서가 널입니다!")
-        }()
+        }
     } ?: run {
         GalleryAdapter(viewModel).apply {
             view.adapter = this
@@ -42,10 +40,9 @@ fun setAlbumListAdapter(
                 )
             )
             cursor?.let {
+                view.scrollToPosition(0)
                 this.setCursor(it)
-            } ?: {
-                JLogger.d("커서가 널입니다!!!!!")
-            }()
+            }
         }
     }
 }
