@@ -1,16 +1,12 @@
 package com.hmju.memo.viewModels
 
-import android.app.Application
-import android.content.ContentResolver
 import android.database.ContentObserver
 import android.database.Cursor
-import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
 import android.view.View
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.convenience.ListMutableLiveData
@@ -18,10 +14,9 @@ import com.hmju.memo.convenience.NonNullMutableLiveData
 import com.hmju.memo.convenience.SingleLiveEvent
 import com.hmju.memo.convenience.single
 import com.hmju.memo.define.NetworkState
-import com.hmju.memo.model.memo.GalleryFilterItem
+import com.hmju.memo.model.gallery.GalleryFilterItem
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.ResourceProvider
-import io.reactivex.Maybe
 import io.reactivex.Observable
 
 /**
@@ -40,9 +35,19 @@ class GalleryViewModel(
         const val UPLOAD_FILE_MAX_CNT = 5
     }
 
-    private var contentObserver: ContentObserver? = null
+    // 갤러리에서 사진이 추가 / 삭제 되는 경우 갱신 처리.
+    private val contentObserver: ContentObserver by lazy {
+        return@lazy object : ContentObserver(Handler(Looper.getMainLooper())) {
+            override fun onChange(selfChange: Boolean) {
+                JLogger.d("onChange $selfChange")
+                super.onChange(selfChange)
+            }
+        }
+    }
     val cursor = MutableLiveData<Cursor>()
-    val selectedPhotoList = HashMap<Int, String>()
+    private val _selectedPhotoList = ListMutableLiveData<String>() // 선택한 사진들
+    val selectedPhotoList: ListMutableLiveData<String>
+        get() = _selectedPhotoList
     val startCamera = SingleLiveEvent<Unit>()
     val startSubmit = SingleLiveEvent<Unit>()
     val startToast = SingleLiveEvent<String>()
@@ -79,18 +84,13 @@ class GalleryViewModel(
     fun start() {
         fetchFilter()
 
-        if (contentObserver == null) {
-            contentObserver = provider.getContentResolver().registerObserver(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-            ) {
-                JLogger.d("Data Changed! $it")
-//                if(it) {
-//                    fetchGallery()
-//                }
-
-                fetchGallery()
-            }
-        }
+        provider
+            .getContentResolver()
+            .registerContentObserver(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                true,
+                contentObserver
+            )
     }
 
     /**
@@ -236,16 +236,16 @@ class GalleryViewModel(
     }
 
 
-    fun onSelect(pos: Int, path: String, view: View) {
+    fun onSelect(pos: Int, id: String, view: View) {
         // 선택된 이미지 검사.
-        if (selectedPhotoList.containsKey(pos)) {
-            selectedPhotoList.remove(pos)
+        if (selectedPhotoList.contains(id)) {
+            selectedPhotoList.postRemove(id)
 
             view.visibility = View.GONE
         } else {
             // 선택된 이미지가 없는 경우 추가.
-            if (UPLOAD_FILE_MAX_CNT > selectedPhotoList.size) {
-                selectedPhotoList[pos] = path
+            if (UPLOAD_FILE_MAX_CNT > selectedPhotoList.size()) {
+                selectedPhotoList.postAdd(id)
 
                 view.visibility = View.VISIBLE
             } else {
@@ -255,31 +255,38 @@ class GalleryViewModel(
         }
     }
 
-    fun isSelected(pos: Int): Boolean {
-        return selectedPhotoList.containsKey(pos)
+    fun isSelected(id: String): Boolean {
+        return if(selectedPhotoList.size() > 0) {
+            selectedPhotoList.contains(id)
+        } else {
+            false
+        }
+    }
+
+    fun removePhoto(id: String) {
+        _selectedPhotoList.remove(id)
     }
 
     override fun onCleared() {
         // contentObserver 해제.
-        contentObserver?.let{
-            provider.getContentResolver().unregisterContentObserver(it)
-        }
+        provider.getContentResolver().unregisterContentObserver(contentObserver)
+        JLogger.d("TEST:: onCleared!!")
         super.onCleared()
     }
 
     /**
      * Convenience extension method to register a [ContentObserver] given a lambda.
      */
-    private fun ContentResolver.registerObserver(
-        uri: Uri,
-        observer: (selfChange: Boolean) -> Unit
-    ): ContentObserver {
-        val contentObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
-            override fun onChange(selfChange: Boolean) {
-                observer(selfChange)
-            }
-        }
-        registerContentObserver(uri, true, contentObserver)
-        return contentObserver
-    }
+//    private fun ContentResolver.registerObserver(
+//        uri: Uri,
+//        observer: (selfChange: Boolean) -> Unit
+//    ): ContentObserver {
+//        val contentObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
+//            override fun onChange(selfChange: Boolean) {
+//                observer(selfChange)
+//            }
+//        }
+//        registerContentObserver(uri, true, contentObserver)
+//        return contentObserver
+//    }
 }

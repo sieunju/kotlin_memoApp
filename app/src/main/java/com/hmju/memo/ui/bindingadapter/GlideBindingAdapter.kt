@@ -70,7 +70,7 @@ fun bindingImgHeader(
     }
 }
 
-@BindingAdapter("bindImgAlbum")
+@BindingAdapter("bindImgGallery")
 fun bindingImgAlbum(
     imgView: AppCompatImageView,
     imgUrl: String?

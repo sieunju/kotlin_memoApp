@@ -1,9 +1,7 @@
 package com.hmju.memo.utils
 
-import android.app.Activity
 import android.content.Context
 import android.os.Build
-import android.util.DisplayMetrics
 import androidx.core.content.pm.PackageInfoCompat
 
 /**

@@ -17,11 +17,25 @@ class ListMutableLiveData<T> : MutableLiveData<ArrayList<T>>() {
     // NonNull 형
     override fun getValue() = super.getValue()!!
 
-//    fun add(item: T) {
-//        val items = value
-//        items.add(item)
-//        value = items
-//    }
+    fun add(item: T) {
+        value.add(item)
+    }
+
+    fun add(pos: Int, item: T) {
+        value.add(pos, item)
+    }
+
+    fun addAll(itemList: List<T>) {
+        value.addAll(itemList)
+    }
+
+    fun remove(item: T) {
+        value.remove(item)
+    }
+
+    fun remove(pos: Int) {
+        value.removeAt(pos)
+    }
 
     fun postAdd(item: T) {
         val items = value
@@ -29,27 +43,25 @@ class ListMutableLiveData<T> : MutableLiveData<ArrayList<T>>() {
         postValue(items)
     }
 
-    fun add(item: T) {
-        value.add(item)
+    fun postAdd(pos: Int, item: T) {
+        val items = value
+        items.add(pos,item)
+        postValue(items)
     }
 
-    fun add(pos: Int, item: T) {
-        value.add(pos,item)
-    }
-
-    fun addAll(itemList: List<T>) {
+    fun postAddAll(itemList: List<T>) {
         val items = value
         items.addAll(itemList)
         value = items
     }
 
-    fun remove(item: T) {
+    fun postRemove(item: T) {
         val items = value
         items.remove(item)
         value = items
     }
 
-    fun remove(pos: Int) {
+    fun postRemove(pos: Int) {
         val items = value
         items.removeAt(pos)
         value = items
@@ -61,6 +73,10 @@ class ListMutableLiveData<T> : MutableLiveData<ArrayList<T>>() {
 
     fun get(pos: Int): T {
         return value[pos]
+    }
+
+    fun contains(item: T): Boolean {
+        return value.contains(item)
     }
 
     fun clear() {

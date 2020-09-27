@@ -16,7 +16,6 @@ import androidx.core.content.ContextCompat
 import androidx.exifinterface.media.ExifInterface
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okio.IOException
 import java.io.File
 import java.io.FileOutputStream

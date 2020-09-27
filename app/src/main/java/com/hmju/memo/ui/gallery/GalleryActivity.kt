@@ -59,6 +59,14 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
             })
 
             startSubmit.observe(this@GalleryActivity, Observer {
+                if (selectedPhotoList.size() > 0) {
+                    JLogger.d("데이터 가공!")
+                    val intent = Intent()
+                    intent.putStringArrayListExtra(ExtraCode.ALBUM_SELECT_IMAGES, selectedPhotoList.value)
+                    setResult(RESULT_OK, intent)
+                } else {
+                    setResult(RESULT_CANCELED)
+                }
                 finish()
             })
 
@@ -97,20 +105,6 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
     }
 
     override fun finish() {
-        with(viewModel) {
-            if (selectedPhotoList.isNotEmpty()) {
-                JLogger.d("데이터 가공!")
-                val intent = Intent()
-                val list = arrayListOf<String>()
-                selectedPhotoList.forEach {
-                    list.add(it.value)
-                }
-                intent.putStringArrayListExtra(ExtraCode.ALBUM_SELECT_IMAGES, list)
-                setResult(RESULT_OK, intent)
-            } else {
-                setResult(RESULT_CANCELED)
-            }
-            super.finish()
-        }
+        super.finish()
     }
 }

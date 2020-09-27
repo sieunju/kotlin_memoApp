@@ -71,7 +71,6 @@ class GalleryAdapter(
 
             if (holder is PhotoViewHolder) {
                 holder.binding.pos = dataPos
-                holder.binding.isSelected = viewModel.isSelected(dataPos)
                 holder.binding.imgUrl = photoList[dataPos]
             }
 
@@ -126,7 +125,6 @@ class GalleryAdapter(
         BaseViewHolder<ItemGalleryPhotoBinding>(parent, layoutId) {
         init {
             binding.viewModel = viewModel
-            binding.isSelected = false
         }
     }
 }

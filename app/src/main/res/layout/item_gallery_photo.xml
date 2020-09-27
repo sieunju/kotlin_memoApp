@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
 
         <variable
             name="imgUrl"
@@ -14,10 +14,6 @@
         <variable
             name="pos"
             type="Integer" />
-
-        <variable
-            name="isSelected"
-            type="Boolean" />
 
         <variable
             name="viewModel"
@@ -35,7 +31,7 @@
             android:layout_height="0dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            app:bindImgAlbum="@{imgUrl}"
+            app:bindImgGallery="@{imgUrl}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/temp1" />
@@ -46,28 +42,28 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@drawable/bg_selected_album"
-            android:visibility="@{isSelected ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.isSelected(imgUrl) ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/img_thumb"
             app:layout_constraintTop_toTopOf="@+id/img_thumb"
             tools:visibility="visible">
 
-<!--            <androidx.appcompat.widget.AppCompatTextView-->
-<!--                android:layout_width="@dimen/size_20"-->
-<!--                android:layout_height="@dimen/size_20"-->
-<!--                android:layout_marginLeft="@dimen/margin_size_5"-->
-<!--                android:layout_marginTop="@dimen/margin_size_5"-->
-<!--                android:autoSizeMaxTextSize="@dimen/text_size_20"-->
-<!--                android:autoSizeMinTextSize="1dp"-->
-<!--                android:autoSizeTextType="uniform"-->
-<!--                android:background="@drawable/bg_selected_album_cnt"-->
-<!--                android:gravity="center"-->
-<!--                android:paddingLeft="@dimen/padding_size_2"-->
-<!--                android:paddingRight="@dimen/padding_size_2"-->
-<!--                android:textColor="@color/colorWhite"-->
-<!--                android:textSize="@dimen/text_size_14"-->
-<!--                app:layout_constraintLeft_toLeftOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                tools:text="400" />-->
+            <!--            <androidx.appcompat.widget.AppCompatTextView-->
+            <!--                android:layout_width="@dimen/size_20"-->
+            <!--                android:layout_height="@dimen/size_20"-->
+            <!--                android:layout_marginLeft="@dimen/margin_size_5"-->
+            <!--                android:layout_marginTop="@dimen/margin_size_5"-->
+            <!--                android:autoSizeMaxTextSize="@dimen/text_size_20"-->
+            <!--                android:autoSizeMinTextSize="1dp"-->
+            <!--                android:autoSizeTextType="uniform"-->
+            <!--                android:background="@drawable/bg_selected_album_cnt"-->
+            <!--                android:gravity="center"-->
+            <!--                android:paddingLeft="@dimen/padding_size_2"-->
+            <!--                android:paddingRight="@dimen/padding_size_2"-->
+            <!--                android:textColor="@color/colorWhite"-->
+            <!--                android:textSize="@dimen/text_size_14"-->
+            <!--                app:layout_constraintLeft_toLeftOf="parent"-->
+            <!--                app:layout_constraintTop_toTopOf="parent"-->
+            <!--                tools:text="400" />-->
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="wrap_content"

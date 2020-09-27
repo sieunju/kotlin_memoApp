@@ -1,4 +1,4 @@
-package com.hmju.memo.model.memo
+package com.hmju.memo.model.gallery
 
 import com.hmju.memo.utils.JLogger
 
@@ -15,7 +15,6 @@ data class GalleryFilterItem(
 ) {
     override fun equals(other: Any?): Boolean {
         return if (other is GalleryFilterItem) {
-            JLogger.d("TEST:: Equals")
             other.id == id
         } else {
             false
