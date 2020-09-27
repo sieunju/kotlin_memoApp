@@ -264,7 +264,7 @@ class GalleryViewModel(
     }
 
     fun removePhoto(id: String) {
-        _selectedPhotoList.remove(id)
+        _selectedPhotoList.postRemove(id)
     }
 
     override fun onCleared() {
