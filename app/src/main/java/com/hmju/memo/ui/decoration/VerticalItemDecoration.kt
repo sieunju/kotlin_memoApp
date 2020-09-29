@@ -10,7 +10,7 @@ import com.hmju.memo.utils.JLogger
  *
  * Created by juhongmin on 2020/08/30
  */
-class LinearItemDecoration(
+class VerticalItemDecoration(
     private var side: Int = 0,
     private var divider: Int = 0,
     private var bottomSpace: Int = 0

@@ -5,7 +5,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
 /**
- * Description: RecyclerView Horizontal Item Decoration
+ * Description: Horizontal RecyclerView Item Decoration
  *
  * Created by hmju on 2020-09-29
  */
