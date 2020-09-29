@@ -3,24 +3,17 @@ package com.hmju.memo.base
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.View
 import android.view.Window
-import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
-import androidx.lifecycle.ViewModel
 import com.google.android.material.transition.platform.MaterialArcMotion
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import com.hmju.memo.dialog.LoadingDialog
-import com.hmju.memo.utils.JLogger
 
 /**
  * Description: BaseActivity Class
@@ -53,10 +46,10 @@ abstract class BaseActivity<T : ViewDataBinding, VM : BaseViewModel>
         binding.setVariable(bindingVariable, viewModel)
     }
 
-    protected fun setWindowFlag(bits: Int, on : Boolean) {
+    protected fun setWindowFlag(bits: Int, on: Boolean) {
         val win = window ?: return
         val winParams = win.attributes
-        if(on) {
+        if (on) {
             winParams.flags = winParams.flags or bits
         } else {
             winParams.flags = winParams.flags and bits.inv()
@@ -84,11 +77,11 @@ abstract class BaseActivity<T : ViewDataBinding, VM : BaseViewModel>
         window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
         ViewCompat.setTransitionName(findViewById(android.R.id.content), TRANSITIONNAME)
         setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
-        window.sharedElementEnterTransition = CustomMaterialContainerTransform()
-        window.sharedElementReturnTransition = CustomMaterialContainerTransform()
+        window.sharedElementEnterTransition = customMaterialContainerTransform()
+        window.sharedElementReturnTransition = customMaterialContainerTransform()
     }
 
-    internal fun CustomMaterialContainerTransform(): MaterialContainerTransform {
+    private fun customMaterialContainerTransform(): MaterialContainerTransform {
         return MaterialContainerTransform().apply {
             addTarget(android.R.id.content)
             duration = 500
@@ -113,16 +106,16 @@ abstract class BaseActivity<T : ViewDataBinding, VM : BaseViewModel>
     /**
      * 로딩 화면 노출
      */
-    fun showLoadingDialog(){
-        if(isFinishing) {
+    fun showLoadingDialog() {
+        if (isFinishing) {
             return
         }
 
         loadingDialog?.let {
-            if(!it.isShowing) {
+            if (!it.isShowing) {
                 it.show()
             }
-        }?: run {
+        } ?: run {
             loadingDialog = LoadingDialog(this)
             loadingDialog!!.show()
         }
@@ -131,9 +124,9 @@ abstract class BaseActivity<T : ViewDataBinding, VM : BaseViewModel>
     /**
      * 로딩 화면 비노
      */
-    fun dismissLoadingDialog(){
-        loadingDialog?.let{
-            if(it.isShowing) {
+    fun dismissLoadingDialog() {
+        loadingDialog?.let {
+            if (it.isShowing) {
                 it.dismiss()
             }
         }

@@ -7,14 +7,11 @@ import android.os.Build
 import android.text.Html
 import android.view.View
 import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
-import androidx.annotation.IdRes
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.hmju.memo.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.ui.adapter.BottomSheetSelectAdapter
 import com.hmju.memo.ui.bottomsheet.SelectBottomSheet
@@ -137,15 +134,48 @@ fun setImageColorFilter(
     imgView.setColorFilter(colorResId, PorterDuff.Mode.SRC_IN)
 }
 
-@BindingAdapter(value=["selectDialogDataList","selectDialogListener"])
+@BindingAdapter(value = ["selectDialogDataList", "selectDialogListener"])
 fun setSelectBottomSheetAdapter(
     recyclerView: RecyclerView,
-    dataList : List<SelectBottomSheet.BottomSheetSelect>,
+    dataList: List<SelectBottomSheet.BottomSheetSelect>,
     listener: SelectBottomSheet.Listener
-){
+) {
     recyclerView.adapter?.notifyDataSetChanged() ?: run {
-        BottomSheetSelectAdapter(dataList,listener).apply {
+        BottomSheetSelectAdapter(dataList, listener).apply {
             recyclerView.adapter = this
         }
+    }
+}
+
+@BindingAdapter("visibility")
+fun setVisibility(
+    view: View,
+    visible: Boolean
+) {
+    view.visibility = if (visible) View.VISIBLE else View.GONE
+}
+
+@BindingAdapter("recyclerView")
+fun setFloatingButtonListener(
+    view: FloatingActionButton,
+    recyclerView: RecyclerView
+) {
+    view.hide()
+    recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+            JLogger.d("onScrollStateChanged $newState")
+            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                view.show()
+            } else {
+                view.hide()
+            }
+        }
+    })
+
+    view.setOnClickListener {
+        recyclerView.scrollToPosition(0)
+        view.hide()
     }
 }

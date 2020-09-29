@@ -62,7 +62,10 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
                 if (selectedPhotoList.size() > 0) {
                     JLogger.d("데이터 가공!")
                     val intent = Intent()
-                    intent.putStringArrayListExtra(ExtraCode.ALBUM_SELECT_IMAGES, selectedPhotoList.value)
+                    intent.putStringArrayListExtra(
+                        ExtraCode.ALBUM_SELECT_IMAGES,
+                        selectedPhotoList.value
+                    )
                     setResult(RESULT_OK, intent)
                 } else {
                     setResult(RESULT_CANCELED)
@@ -86,7 +89,10 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
                     )
                 }
 
-                selectDialog = SelectBottomSheet.newInstance(list) { pos, id ->
+                selectDialog = SelectBottomSheet.newInstance(
+                    resources.getDimensionPixelOffset(R.dimen.size_200),
+                    list
+                ) { pos, id ->
                     startNetworkState.postValue(NetworkState.LOADING)
                     JLogger.d("Selected $pos $id")
                     resetFilter()
@@ -102,9 +108,5 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
 
             start()
         }
-    }
-
-    override fun finish() {
-        super.finish()
     }
 }

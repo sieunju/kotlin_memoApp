@@ -55,15 +55,12 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoDetailVie
             startNetworkState.observe(this@MemoDetailActivity, Observer {state->
                 when(state) {
                     NetworkState.LOADING -> {
-                        JLogger.d("로딩중우우우우")
                         showLoadingDialog()
                     }
                     NetworkState.ERROR -> {
-                        JLogger.d("에러 입니다아아앙")
                         dismissLoadingDialog()
                     }
                     else -> {
-                        JLogger.d("성공 성공!")
                         dismissLoadingDialog()
                     }
                 }
@@ -91,7 +88,6 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoDetailVie
                     ).subscribe { isGranted ->
                         // 동의 한경우.
                         if (isGranted) {
-                            JLogger.d("TEST Start!!")
                             startActResult<GalleryActivity>(RequestCode.ALBUM) {
                                 putExtra(ExtraCode.ALBUM_MANAGE_NO, manageNo)
                             }

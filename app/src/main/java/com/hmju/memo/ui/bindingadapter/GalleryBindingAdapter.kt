@@ -8,8 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hmju.memo.R
 import com.hmju.memo.ui.adapter.GalleryAdapter
 import com.hmju.memo.ui.adapter.GallerySelectedPhotoAdapter
-import com.hmju.memo.ui.decoration.AlbumItemDecoration
-import com.hmju.memo.utils.JLogger
+import com.hmju.memo.ui.decoration.GalleryItemDecoration
 import com.hmju.memo.viewModels.GalleryViewModel
 
 /**
@@ -36,7 +35,7 @@ fun setGalleryListAdapter(
             view.adapter = this
             view.layoutManager = GridLayoutManager(view.context, 3)
             view.addItemDecoration(
-                AlbumItemDecoration(
+                GalleryItemDecoration(
                     spanCnt = 3,
                     divider = view.context.resources.getDimensionPixelSize(R.dimen.size_1)
                 )

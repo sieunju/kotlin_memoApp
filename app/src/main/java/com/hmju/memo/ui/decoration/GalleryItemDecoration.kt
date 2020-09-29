@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
  *
  * Created by juhongmin on 2020/09/20
  */
-class AlbumItemDecoration(
+class GalleryItemDecoration(
     private var spanCnt: Int,
     private var divider: Int
 ) : RecyclerView.ItemDecoration() {

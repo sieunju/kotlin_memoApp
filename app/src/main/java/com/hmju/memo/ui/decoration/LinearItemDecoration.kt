@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hmju.memo.utils.JLogger
 
 /**
- * Description : RecyclerView ItemDecoration
+ * Description : Vertical RecyclerView ItemDecoration
  *
  * Created by juhongmin on 2020/08/30
  */
@@ -38,7 +38,6 @@ class LinearItemDecoration(
         }
 
         if (pos == cnt - 1 && bottomSpace != 0) {
-            JLogger.d("맨 마지막입니다. $bottomSpace")
             outRect.bottom = bottomSpace
         }
     }

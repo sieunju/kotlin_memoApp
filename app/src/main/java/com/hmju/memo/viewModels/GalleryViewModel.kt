@@ -183,7 +183,7 @@ class GalleryViewModel(
 
                 }
                 .doOnNext {
-                    JLogger.d("onNext $it")
+//                    JLogger.d("onNext $it")
                     _filterList.value.add(it)
                 }
                 .doOnComplete {
@@ -270,7 +270,6 @@ class GalleryViewModel(
     override fun onCleared() {
         // contentObserver 해제.
         provider.getContentResolver().unregisterContentObserver(contentObserver)
-        JLogger.d("TEST:: onCleared!!")
         super.onCleared()
     }
 
