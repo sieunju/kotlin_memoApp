@@ -1,33 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#1976d2</color>
-    <color name="colorPrimaryLight">#63a4ff</color>
-    <color name="colorPrimaryDark">#004ba0</color>
-    <color name="colorAccent">#000000</color>
+    <color name="colorPrimary">#212121</color>
+    <color name="colorPrimaryLight">#484848</color>
+    <color name="colorPrimaryDark">#FFFFFF</color>
+    <color name="colorAccent">#FFFFFF</color>
 
-    <color name="colorSecondary">#7b1fa2</color>
-    <color name="colorSecondaryLight">#ae52d4</color>
-    <color name="colorSecondaryDark">#4a0072</color>
-    <color name="colorWhite">#FFFFFF</color>
-    <color name="colorBlack">#000000</color>
-    <color name="colorCoolGrey">#dddddd</color>
+    <color name="colorStatusBar">#000000</color>
+    <color name="colorBackground">#000000</color>
+    <color name="colorNavigation">#000000</color>
+    <color name="colorResErrBackground">#545E5D5D</color>
+    <color name="colorTextInputLayoutLine">#727578</color>
 
-    <color name="colorPrimaryNegative">#e6892d</color>
-    <color name="colorPrimaryLightNegative">#9c5b00</color>
-    <color name="colorPrimaryDarkNegative">#ffb45f</color>
+    <color name="colorTextPrimary">#FFFFFF</color>
+    <color name="colorTextPrimaryLight">#f5f5f5</color>
+    <color name="colorTextWhite">#FFFFFF</color>
+
+    <color name="colorHeaderOverlay">#19131313</color>
+
+    <color name="colorPrimaryNegative">#3e2723</color>
+    <color name="colorPrimaryLightNegative">#6a4f4b</color>
+    <color name="colorPrimaryDarkNegative">#1b0000</color>
 
     <color name="color_transparent">#00000000</color>
-    <color name="color_tag1">#FF3B30</color>
-    <color name="color_tag2">#FF9500</color>
-    <color name="color_tag3">#FFCC00</color>
-    <color name="color_tag4">#34C759</color>
-    <color name="color_tag5">#007AFF</color>
-    <color name="color_tag6">#AF52DE</color>
-    <color name="color_tag7">#8E8E93</color>
+    <color name="color_tag1">#701A15</color>
+    <color name="color_tag2">#704100</color>
+    <color name="color_tag3">#705A00</color>
+    <color name="color_tag4">#1D7032</color>
+    <color name="color_tag5">#003670</color>
+    <color name="color_tag6">#592A70</color>
+    <color name="color_tag7">#6D6D70</color>
 
-    <color name="colorPlaceHolder_1">#43DABA91</color>
-    <color name="colorPlaceHolder_2">#4291DA9D</color>
-    <color name="colorPlaceHolder_3">#42DA9197</color>
-    <color name="colorPlaceHolder_4">#4291A1DA</color>
+    <color name="colorPlaceHolder_1">#4370604B</color>
+    <color name="colorPlaceHolder_2">#424B7051</color>
+    <color name="colorPlaceHolder_3">#42704B4E</color>
+    <color name="colorPlaceHolder_4">#424B5370</color>
+
+    <color name="colorWhite_50">#80FFFFFF</color>
 
 </resources>

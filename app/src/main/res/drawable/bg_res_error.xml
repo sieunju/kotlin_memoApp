@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <shape android:shape="rectangle">
+
+            <solid android:color="@color/colorResErrBackground" />
+        </shape>
+    </item>
+
+    <item
+        android:bottom="@dimen/size_20"
+        android:drawable="@drawable/ic_error"
+        android:gravity="center"
+        android:left="@dimen/size_20"
+        android:right="@dimen/size_20"
+        android:top="@dimen/size_20">
+    </item>
+
+</layer-list>

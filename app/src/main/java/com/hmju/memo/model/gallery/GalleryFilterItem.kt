@@ -1,7 +1,5 @@
 package com.hmju.memo.model.gallery
 
-import com.hmju.memo.utils.JLogger
-
 /**
  * Description : 갤럴리 필터 데이터 모델 클래스.
  *

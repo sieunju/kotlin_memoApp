@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
 
@@ -19,7 +19,6 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".ui.home.MainActivity"
-            android:configChanges="uiMode"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.Memo">
             <intent-filter>
@@ -40,21 +39,19 @@
         <activity android:name=".ui.intro.IntroActivity" />
         <activity
             android:name=".ui.login.LoginActivity"
-            android:configChanges="uiMode"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.Login"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.memo.MemoDetailActivity"
-            android:configChanges="uiMode"
             android:theme="@style/AppTheme.MemoDetail"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ui.memo.MemoAddActivity" />
 
         <activity
             android:name=".ui.gallery.GalleryActivity"
-            android:configChanges="uiMode"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Gallery"
             android:windowSoftInputMode="adjustPan" />
 
         <!-- [s] 카메라 캡처 관련 -->

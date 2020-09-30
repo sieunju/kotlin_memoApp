@@ -26,7 +26,5 @@ val viewModelModule = module {
         )
     }
 
-    viewModel { (manageNo: Int) ->
-        GalleryViewModel(manageNo, get())
-    }
+    viewModel { GalleryViewModel(get()) }
 }

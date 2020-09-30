@@ -1,6 +1,8 @@
 package com.hmju.memo.ui.gallery
 
+import android.Manifest
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import com.hmju.memo.R
@@ -9,12 +11,18 @@ import com.hmju.memo.base.BaseActivity
 import com.hmju.memo.databinding.ActivityGalleryBinding
 import com.hmju.memo.define.ExtraCode
 import com.hmju.memo.define.NetworkState
+import com.hmju.memo.define.RequestCode
+import com.hmju.memo.define.ResultCode
+import com.hmju.memo.dialog.ConfirmDialog
+import com.hmju.memo.ui.adapter.GalleryAdapter
 import com.hmju.memo.ui.bottomsheet.SelectBottomSheet
 import com.hmju.memo.ui.toast.showToast
 import com.hmju.memo.utils.JLogger
+import com.hmju.memo.utils.moveCameraCapture
 import com.hmju.memo.viewModels.GalleryViewModel
+import com.tbruyelle.rxpermissions2.RxPermissions
+import kotlinx.android.synthetic.main.activity_gallery.*
 import org.koin.android.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 
 /**
  * Description : 앨범 및 카메라 페이지
@@ -24,19 +32,15 @@ import org.koin.core.parameter.parametersOf
 class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>() {
     override val layoutId = R.layout.activity_gallery
 
-    override val viewModel: GalleryViewModel by viewModel {
-        parametersOf(intent.getIntExtra(ExtraCode.ALBUM_MANAGE_NO, -1))
-    }
+    override val viewModel: GalleryViewModel by viewModel()
 
     override val bindingVariable = BR.viewModel
 
     private lateinit var selectDialog: SelectBottomSheet
+    private var photoUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // StatusBar 까지 영역 표시
-//        setFitsWindows()
 
         with(viewModel) {
 
@@ -55,16 +59,32 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
             })
 
             startCamera.observe(this@GalleryActivity, Observer {
-                JLogger.d("카메라 촬영 시작!")
+                with(RxPermissions(this@GalleryActivity)) {
+                    request(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.ACCESS_MEDIA_LOCATION,
+                        Manifest.permission.CAMERA
+                    ).subscribe { isGranted ->
+                        if (isGranted) {
+                            moveCameraCapture { callbackUri ->
+                                photoUri = callbackUri
+                            }
+                        } else {
+                            // 권한 확인 안내 팝업 노출
+                            ConfirmDialog(this@GalleryActivity, R.string.str_permission_denied)
+                        }
+                    }
+                }
+
             })
 
             startSubmit.observe(this@GalleryActivity, Observer {
                 if (selectedPhotoList.size() > 0) {
-                    JLogger.d("데이터 가공!")
                     val intent = Intent()
                     intent.putStringArrayListExtra(
-                        ExtraCode.ALBUM_SELECT_IMAGES,
-                        selectedPhotoList.value
+                        ExtraCode.GALLERY_SELECT_IMAGES,
+                        selectedPhotoList.value.map { it.id }.toList() as ArrayList<String>
                     )
                     setResult(RESULT_OK, intent)
                 } else {
@@ -106,7 +126,34 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
 
             })
 
+            startNotify.observe(this@GalleryActivity, Observer {item->
+                JLogger.d("Notify Item $item")
+                rvContents.adapter?.let{
+                    it.notifyItemChanged(item.pos + 1)
+                }
+            })
+
             start()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            RequestCode.CAMERA_CAPTURE -> {
+                if (resultCode == RESULT_OK) {
+                    val intent = Intent()
+                    intent.putExtra(ExtraCode.CAMERA_CAPTURE_PHOTO_URI, photoUri.toString())
+                    setResult(ResultCode.CAMERA_CAPTURE_OK, intent)
+                    finish()
+                } else {
+                    // Remove Photo
+                    photoUri?.let {
+                        contentResolver.delete(it, null, null)
+                        JLogger.d("취소!")
+                    }
+                }
+            }
         }
     }
 }

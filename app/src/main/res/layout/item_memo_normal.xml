@@ -31,7 +31,8 @@
             android:paddingTop="@dimen/padding_size_10">
 
             <!-- 타이틀 -->
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
+                style="@style/TitleText"
                 android:id="@+id/tv_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -40,13 +41,13 @@
                 android:paddingRight="@dimen/padding_size_10"
                 android:singleLine="true"
                 android:text="@{item.title}"
-                android:textSize="@dimen/text_size_20"
                 android:textStyle="bold"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="타이틀 영역 입니다." />
 
             <!-- 내용 -->
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
+                style="@style/ContentsText"
                 android:id="@+id/tv_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -55,8 +56,6 @@
                 android:maxLines="3"
                 android:paddingLeft="@dimen/padding_size_10"
                 android:paddingRight="@dimen/padding_size_10"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/text_size_14"
                 app:htmlText="@{item.contents}"
                 app:layout_constraintTop_toBottomOf="@+id/tv_title"
                 tools:text="@string/large_text" />

@@ -26,7 +26,7 @@
 
             <!-- 아이디 -->
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/EditTextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/require_id"
@@ -47,7 +47,7 @@
 
             <!-- 비밀번호 -->
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/EditTextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/require_pw"
@@ -73,7 +73,7 @@
                 android:paddingTop="@dimen/padding_size_13"
                 android:paddingBottom="@dimen/padding_size_13"
                 android:text="@string/str_login"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/colorTextWhite"
                 android:textStyle="bold" />
 
             <!-- 비 로그인 버튼 -->
@@ -85,7 +85,7 @@
                 android:paddingTop="@dimen/padding_size_13"
                 android:paddingBottom="@dimen/padding_size_13"
                 android:text="@string/str_non_login"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/colorTextWhite"
                 android:textStyle="bold"
                 app:backgroundTint="@color/colorPrimaryNegative" />
 

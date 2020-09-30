@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorBlack"
+        android:background="@color/colorBackground"
         app:turtleClick="@{()->viewModel.moveCamera()}">
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -21,7 +21,7 @@
             android:layout_height="0dp"
             android:adjustViewBounds="true"
             android:scaleType="center"
-            android:src="@drawable/ic_add_camera_white"
+            android:src="@drawable/ic_add_camera"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toTopOf="parent" />
 

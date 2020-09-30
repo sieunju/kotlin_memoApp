@@ -40,7 +40,7 @@ fun bindingImg(
             .placeholder(placeHolder[ran])
             .thumbnail(0.1F)
             .transform(CenterCrop())
-            .error(R.drawable.ic_profile_default)
+            .error(R.drawable.bg_res_error)
             .into(imgView)
     }
 }
@@ -65,13 +65,13 @@ fun bindingImgHeader(
             .placeholder(placeHolder[ran])
             .dontAnimate()
             .transform(CenterCrop())
-            .error(R.drawable.ic_profile_default)
+            .error(R.drawable.bg_res_error)
             .into(imgView)
     }
 }
 
 @BindingAdapter("bindImgGallery")
-fun bindingImgAlbum(
+fun bindingImgGallery(
     imgView: AppCompatImageView,
     imgUrl: String?
 ) {
@@ -88,6 +88,7 @@ fun bindingImgAlbum(
             .load(it)
             .placeholder(placeHolder[ran])
             .thumbnail(0.1F)
+            .error(R.drawable.bg_res_error)
             .transform(CenterCrop())
 //            .addListener(glideLoggerListener())
             .into(imgView)

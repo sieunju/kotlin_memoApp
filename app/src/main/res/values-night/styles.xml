@@ -4,14 +4,14 @@
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorWhite</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
 
         <item name="android:colorBackground">@color/colorBackground</item>
         <item name="android:windowBackground">@color/colorBackground</item>
 
-<!--        <item name="android:navigationBarColor">@color/colorNavigation</item>-->
+        <item name="android:navigationBarColor">@color/colorNavigation</item>
     </style>
 
     <style name="AppTheme.Memo">
@@ -33,14 +33,22 @@
         <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
     </style>
 
+
+    <style name="EditTextHint" parent="TextAppearance.AppCompat">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorHint">@color/colorTextPrimaryLight</item>
+        <item name="colorControlNormal">@color/colorTextPrimary</item>
+        <item name="colorControlHighlight">@color/colorTextPrimary</item>
+    </style>
+
     <!-- [s] Edit Text Style -->
     <style name="EditText">
         <item name="android:textColor">@color/colorTextPrimary</item>
     </style>
 
     <style name="EditTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="android:colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="boxStrokeColor">@color/colorTextInputLayoutLine</item>
+        <item name="hintTextColor">@color/colorTextInputLayoutLine</item>
     </style>
     <!-- [e] Edit Text Style -->
 

@@ -109,23 +109,6 @@ fun setBottomToolBarClick(
     }
 }
 
-@BindingAdapter(value = ["dayResId", "nightResId"])
-fun bindingImageViewDayNight(
-    imgView: AppCompatImageView,
-    dayResId: Drawable,
-    nightResId: Drawable
-) {
-    val nightMode =
-        imgView.context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-    if (nightMode == Configuration.UI_MODE_NIGHT_NO) {
-//        JLogger.d("모드가 변경되었습니다. 라이트 모드")
-        imgView.setImageDrawable(dayResId)
-    } else {
-//        JLogger.d("모드가 변경되었습니다. 다크 모드")
-        imgView.setImageDrawable(nightResId)
-    }
-}
-
 @BindingAdapter("filterColorId")
 fun setImageColorFilter(
     imgView: AppCompatImageView,
@@ -165,7 +148,6 @@ fun setFloatingButtonListener(
 
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
-            JLogger.d("onScrollStateChanged $newState")
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                 view.show()
             } else {

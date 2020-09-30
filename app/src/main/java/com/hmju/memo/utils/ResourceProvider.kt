@@ -14,6 +14,7 @@ import androidx.annotation.*
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.exifinterface.media.ExifInterface
+import com.hmju.memo.define.Etc
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okio.IOException
@@ -114,7 +115,7 @@ class ResourceProviderImpl(private val ctx: Context) : ResourceProvider {
         }
 
         // Temp File Create
-        val file = File.createTempFile("temp_" + System.currentTimeMillis(), ".png")
+        val file = File.createTempFile("temp_" + System.currentTimeMillis(), Etc.IMG_FILE_EXTENSION)
         var fos: FileOutputStream? = null
         try {
             fos = FileOutputStream(file)
@@ -131,7 +132,7 @@ class ResourceProviderImpl(private val ctx: Context) : ResourceProvider {
         }
 
         // 파일 생성할떄 image/png 로 파일 생성하기 떄문에 콘텐츠 타입 하드로 생
-        return Pair(getMimeType(file.path) ?: "image/png".toMediaType(), file)
+        return Pair(getMimeType(file.path) ?: Etc.IMG_MIME_TYPE_FILE_EXTENSION.toMediaType(), file)
     }
 
     override fun deleteFiles(fileList: List<File>) {

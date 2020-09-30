@@ -2,12 +2,19 @@ package com.hmju.memo.utils
 
 import android.app.Activity
 import android.app.ActivityOptions
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import com.hmju.memo.R
 import com.hmju.memo.base.BaseActivity
+import com.hmju.memo.define.Etc
 import com.hmju.memo.define.ExtraCode
 import com.hmju.memo.define.RequestCode
 import com.hmju.memo.model.memo.MemoItem
@@ -61,4 +68,35 @@ fun Activity.moveMemoDetail(
     intent.putExtras(bundle)
 
     startActivityForResult(intent, RequestCode.MEMO_DETAIL, options.toBundle())
+}
+
+/**
+ * 카메라 캡처 화면 진입
+ */
+fun Activity.moveCameraCapture(photoUriCallback: (Uri?) -> Unit) {
+    // 권한 상태 체크.
+    if (Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()) {
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        intent.resolveActivity(packageManager)?.let {
+            val photoName =
+                "Memo_${System.currentTimeMillis()}${Etc.IMG_FILE_EXTENSION}"
+            val values = ContentValues().apply {
+                put(MediaStore.Images.Media.DISPLAY_NAME, photoName)
+                put(MediaStore.Images.Media.MIME_TYPE, Etc.IMG_MIME_TYPE_FILE_EXTENSION)
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    put(MediaStore.Images.Media.IS_PENDING, 0)
+                }
+            }
+
+            val photoUri =
+                contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+
+            photoUriCallback.invoke(photoUri)
+
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+            startActivityForResult(intent, RequestCode.CAMERA_CAPTURE)
+            overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_top)
+        }
+    }
 }

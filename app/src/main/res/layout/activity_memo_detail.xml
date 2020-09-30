@@ -95,7 +95,7 @@
 
                 <!-- 제목 -->
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    style="@style/EditTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_size_10"
@@ -112,7 +112,6 @@
                         android:imeOptions="actionNext"
                         android:inputType="text"
                         android:maxLength="40"
-                        android:textColor="@color/colorBlack"
                         android:textSize="@dimen/text_size_20"
                         app:editTextListener="@{viewModel}"
                         app:htmlEdit="@={viewModel.changeData.title}"
@@ -122,7 +121,7 @@
 
                 <!-- 내용 -->
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    style="@style/EditTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_size_10"
@@ -141,7 +140,6 @@
                         android:maxLength="400"
                         android:minLines="3"
                         android:scrollbars="vertical"
-                        android:textColor="@color/colorBlack"
                         android:textSize="@dimen/text_size_20"
                         app:editTextListener="@{viewModel}"
                         app:htmlEdit="@={viewModel.changeData.contents}"
@@ -160,23 +158,21 @@
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="@dimen/size_40"
                         android:layout_height="@dimen/size_40"
-                        android:padding="@dimen/padding_size_5"
                         android:layout_marginLeft="@dimen/margin_size_5"
                         android:adjustViewBounds="true"
-                        app:dayResId="@{@drawable/ic_add_photo_black}"
+                        android:padding="@dimen/padding_size_5"
+                        android:src="@drawable/ic_add_photo"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:nightResId="@{@drawable/ic_add_photo_white}"
                         app:turtleClick="@{()->viewModel.moveAlbumAndCamera(viewModel.changeData.manageNo)}"
-                        tools:src="@drawable/ic_add_photo_black" />
+                        tools:src="@drawable/ic_add_photo" />
 
                     <!-- 수정 날짜. -->
                     <com.google.android.material.textview.MaterialTextView
+                        style="@style/ContentsText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/text_size_14"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
@@ -188,6 +184,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/str_change"
+                        android:textColor="@color/colorTextWhite"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent"

@@ -17,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!-- 헤더 영역 -->
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/llHeader"
             android:layout_width="match_parent"
@@ -24,6 +25,7 @@
             android:orientation="vertical"
             app:layout_constraintTop_toTopOf="parent">
 
+            <!-- 필터 및 전송 버튼 영역  -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="?android:actionBarSize">
@@ -43,7 +45,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:text="@{viewModel.selectedFilter.name}"
-                        android:textColor="@color/colorBlack"
+                        android:textColor="@color/colorTextPrimary"
                         android:textSize="@dimen/text_size_20"
                         tools:text="전체 보기" />
 
@@ -63,8 +65,7 @@
                     android:paddingTop="@dimen/padding_size_13"
                     android:paddingBottom="@dimen/padding_size_13"
                     android:text="@string/str_summit"
-                    android:textColor="@color/colorWhite"
-                    android:textStyle="bold"
+                    android:textColor="@color/colorTextWhite"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -72,26 +73,27 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <!-- 선택한 사진 보여주는 영역  -->
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:visibility="@{viewModel.selectedPhotoList.size() > 0 ? View.VISIBLE : View.GONE}">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
-                    android:layout_height="?android:actionBarSize"
+                    android:layout_height="wrap_content"
                     android:splitMotionEvents="false"
-                    app:layout_constraintTop_toTopOf="parent"
                     app:selectedPhotoList="@{viewModel.selectedPhotoList}"
                     app:viewModel="@{viewModel}" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/size_1"
-                    android:background="@color/colorCoolGrey"
-                    app:layout_constraintBottom_toBottomOf="parent" />
+                    android:layout_marginTop="@dimen/size_2"
+                    android:background="@color/colorCoolGrey" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -106,17 +108,18 @@
             app:layout_constraintTop_toBottomOf="@+id/llHeader"
             app:viewModel="@{viewModel}" />
 
+        <!-- 탑버튼  -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_size_10"
             app:backgroundTint="@color/colorWhite_50"
             app:elevation="0dp"
-            app:pressedTranslationZ="0dp"
             app:fabSize="mini"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
+            app:pressedTranslationZ="0dp"
             app:recyclerView="@{rvContents}"
             app:srcCompat="@drawable/ic_arrow_top" />
 

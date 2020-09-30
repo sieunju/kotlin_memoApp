@@ -18,7 +18,7 @@
             type="com.hmju.memo.viewModels.MainViewModel" />
     </data>
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         style="@style/MemoRootStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,10 +36,11 @@
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
                 app:bindImg="@{item.thumbImg()}"
-                tools:src="@drawable/ic_profile_default" />
+                tools:src="@drawable/temp1" />
 
             <!-- 타이틀 -->
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
+                style="@style/TitleText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
@@ -47,12 +48,12 @@
                 android:paddingRight="@dimen/padding_size_10"
                 android:singleLine="true"
                 android:text="@{item.title}"
-                android:textSize="@dimen/text_size_20"
                 android:textStyle="bold"
                 tools:text="타이틀 영역 입니다." />
 
             <!-- 내용 -->
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
+                style="@style/ContentsText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_size_5"
@@ -60,8 +61,6 @@
                 android:maxLines="3"
                 android:paddingLeft="@dimen/padding_size_10"
                 android:paddingRight="@dimen/padding_size_10"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/text_size_14"
                 app:htmlText="@{item.contents}"
                 tools:text="@string/large_text" />
 
@@ -78,6 +77,6 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
 </layout>

@@ -5,6 +5,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import androidx.lifecycle.Observer
@@ -15,6 +16,7 @@ import com.hmju.memo.databinding.ActivityMemoDetailBinding
 import com.hmju.memo.define.ExtraCode
 import com.hmju.memo.define.NetworkState
 import com.hmju.memo.define.RequestCode
+import com.hmju.memo.define.ResultCode
 import com.hmju.memo.dialog.ConfirmDialog
 import com.hmju.memo.ui.gallery.GalleryActivity
 import com.hmju.memo.ui.toast.showToast
@@ -82,15 +84,11 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoDetailVie
                 with(RxPermissions(this@MemoDetailActivity)) {
                     request(
                         Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.ACCESS_MEDIA_LOCATION,
-                        Manifest.permission.CAMERA
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
                     ).subscribe { isGranted ->
                         // 동의 한경우.
                         if (isGranted) {
-                            startActResult<GalleryActivity>(RequestCode.ALBUM) {
-                                putExtra(ExtraCode.ALBUM_MANAGE_NO, manageNo)
-                            }
+                            startActResult<GalleryActivity>(RequestCode.GALLERY) {}
                         } else {
                             // 권한 확인 안내 팝업 노출
                             ConfirmDialog(this@MemoDetailActivity, R.string.str_permission_denied)
@@ -125,26 +123,32 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoDetailVie
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            RequestCode.ALBUM -> {
-                if(resultCode == RESULT_OK) {
-                    JLogger.d("TEST:: 데이터를 전달 받았습니다.")
-                    with(viewModel){
-                        data?.getStringArrayListExtra(ExtraCode.ALBUM_SELECT_IMAGES)?.let{
-                            addFileUpload(it)
+            RequestCode.GALLERY -> {
+                when(resultCode) {
+                    RESULT_OK -> {
+                        // 갤러리에서 사진 가져온 경우.
+                        with(viewModel){
+                            data?.getStringArrayListExtra(ExtraCode.GALLERY_SELECT_IMAGES)?.let{
+                                addFileUpload(it)
+                            }
                         }
                     }
-                } else {
-                    JLogger.d("아무 동작 안함")
+
+                    ResultCode.CAMERA_CAPTURE_OK -> {
+                        // 카메라 캡처에서 사진 가져온 경우.
+                        data?.getStringExtra(ExtraCode.CAMERA_CAPTURE_PHOTO_URI)?.let{
+                            with(viewModel) {
+                                JLogger.d("Photo Uri $it")
+                                addFileUpload(arrayListOf(it))
+                            }
+                        }
+                    }
+                    else -> {
+
+                    }
                 }
 
             }
         }
-    }
-
-    fun doAlbum() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        intent.type = "image/*"
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), RequestCode.ALBUM)
     }
 }

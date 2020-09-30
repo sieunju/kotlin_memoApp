@@ -15,6 +15,7 @@ import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.repository.network.NetworkDataSource
 import com.hmju.memo.repository.network.paging.PagingModel
 import com.hmju.memo.repository.preferences.AccountPref
+import com.hmju.memo.utils.JLogger
 import io.reactivex.BackpressureStrategy
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -70,6 +71,16 @@ class MainViewModel(
                     }
                 })
         }
+    }
+
+    /**
+     * init Data..
+     * 현재는 파라미터만 초기화.
+     */
+    fun initData(){
+        params.pageNo = 1
+        params.keyword = null
+        params.selectTag = null
     }
 
     fun start() {

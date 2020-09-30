@@ -2,6 +2,8 @@ package com.hmju.memo.dialog
 
 import android.content.Context
 import android.content.DialogInterface
+import androidx.annotation.IdRes
+import androidx.annotation.StringRes
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.hmju.memo.R
 
@@ -19,10 +21,10 @@ class ConfirmDialog : MaterialAlertDialogBuilder {
 
     constructor(
         ctx: Context,
-        msg: Int
+        @StringRes msgId: Int
     ) : this(
         ctx = ctx,
-        msgId = msg,
+        msg = ctx.getString(msgId),
         type = Type.ONE
     )
 
@@ -45,28 +47,13 @@ class ConfirmDialog : MaterialAlertDialogBuilder {
 
     constructor(
         ctx: Context,
-        msg: String? = "확인했습니다.",
+        msg: String,
         type: Type,
         leftText: String? = ctx.getString(R.string.str_cancel),
         rightText: String? = ctx.getString(R.string.str_confirm),
         listener: DialogInterface.OnClickListener? = null
     ) : super(ctx) {
-        val right = rightText ?: ctx.getString(R.string.str_confirm)
         setMessage(msg)
-        setNegativeButton(leftText, listener)
-        setPositiveButton(right, listener)
-        show()
-    }
-
-    constructor(
-        ctx: Context,
-        msgId: Int,
-        type: Type,
-        leftText: String? = ctx.getString(R.string.str_cancel),
-        rightText: String? = ctx.getString(R.string.str_confirm),
-        listener: DialogInterface.OnClickListener? = null
-    ) : super(ctx) {
-        setMessage(msgId)
         if (type == Type.TWO) {
             setNegativeButton(leftText, listener)
         }

@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">memo</string>
+    <string name="str_ui_mode_changed_info">화면 스타일이 변경되어 앱 재실행 합니다.</string>
 
     <string name="str_id">아이디</string>
     <string name="require_id">아이디 입력</string>

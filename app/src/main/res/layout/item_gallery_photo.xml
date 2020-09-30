@@ -23,7 +23,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:turtleClick="@{()-> viewModel.onSelect(pos,imgUrl,clSelected)}">
+        app:turtleClick="@{()-> viewModel.onSelect(pos,imgUrl)}">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_thumb"

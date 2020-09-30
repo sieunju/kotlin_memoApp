@@ -1,11 +1,8 @@
 package com.hmju.memo.repository.network
 
-import com.bumptech.glide.load.resource.file.FileResource
 import com.hmju.memo.model.form.MemoListParam
-import com.hmju.memo.model.memo.MemoFileResponse
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.repository.network.paging.PagingModel
-import io.reactivex.Maybe
 
 /**
  * Description : Network 통신후 데이터 처리 관련 클래스

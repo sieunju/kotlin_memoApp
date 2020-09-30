@@ -1,14 +1,18 @@
 package com.hmju.memo.ui.bindingadapter
 
+import android.animation.ObjectAnimator
 import android.database.Cursor
+import android.view.View
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hmju.memo.R
+import com.hmju.memo.model.gallery.GallerySelectedItem
 import com.hmju.memo.ui.adapter.GalleryAdapter
 import com.hmju.memo.ui.adapter.GallerySelectedPhotoAdapter
 import com.hmju.memo.ui.decoration.GalleryItemDecoration
+import com.hmju.memo.ui.decoration.HorizontalItemDecoration
 import com.hmju.memo.viewModels.GalleryViewModel
 
 /**
@@ -52,16 +56,28 @@ fun setGalleryListAdapter(
 fun setSelectedPhotoListAdapter(
     view: RecyclerView,
     viewModel: GalleryViewModel,
-    dataList: ArrayList<String>
+    dataList: ArrayList<GallerySelectedItem>
 ) {
     view.adapter?.let { adapter ->
         if (adapter is GallerySelectedPhotoAdapter) {
             adapter.setDataList(dataList)
+            ObjectAnimator.ofFloat(view, View.ALPHA,0.5F,1F).apply {
+                duration = 500
+                start()
+            }
+            adapter.notifyDataSetChanged()
+
         }
     } ?: run {
         GallerySelectedPhotoAdapter(viewModel).apply {
             view.adapter = this
             view.layoutManager = LinearLayoutManager(view.context, RecyclerView.HORIZONTAL, false)
+            view.addItemDecoration(
+                HorizontalItemDecoration(
+                    side = view.resources.getDimensionPixelSize(R.dimen.size_10),
+                    divider = view.resources.getDimensionPixelSize(R.dimen.size_2)
+                )
+            )
 
         }
     }

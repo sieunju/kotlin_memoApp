@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewHolder
 import com.hmju.memo.databinding.ItemGallerySelectedPhotoBinding
+import com.hmju.memo.model.gallery.GallerySelectedItem
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.GalleryViewModel
 
@@ -16,14 +17,15 @@ import com.hmju.memo.viewModels.GalleryViewModel
 class GallerySelectedPhotoAdapter(private val viewModel: GalleryViewModel) :
     RecyclerView.Adapter<GallerySelectedPhotoAdapter.ItemSelectedPhotoViewHolder>() {
 
-    private val dataList = arrayListOf<String>()
+    private val dataList = arrayListOf<GallerySelectedItem>()
 
-    fun setDataList(list: ArrayList<String>) {
-        JLogger.d("TEST:: Selected Photo ${list.size}")
+    /**
+     * setDataList
+     * @param list -> 선택한 사진 리스트
+     */
+    fun setDataList(list: ArrayList<GallerySelectedItem>) {
         dataList.clear()
         dataList.addAll(list)
-
-        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemSelectedPhotoViewHolder {
@@ -36,7 +38,10 @@ class GallerySelectedPhotoAdapter(private val viewModel: GalleryViewModel) :
 
     override fun onBindViewHolder(holder: ItemSelectedPhotoViewHolder, pos: Int) {
         if (dataList.size > pos) {
-            holder.binding.imgUrl = dataList[pos]
+            dataList[pos].let {
+                holder.binding.imgUrl = it.id
+                holder.binding.pos = it.pos
+            }
         }
     }
 

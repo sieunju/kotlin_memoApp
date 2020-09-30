@@ -80,6 +80,10 @@ class ListMutableLiveData<T> : MutableLiveData<ArrayList<T>>() {
     }
 
     fun clear() {
+        value.clear()
+    }
+
+    fun postClear(){
         val items = value
         items.clear()
         value = items

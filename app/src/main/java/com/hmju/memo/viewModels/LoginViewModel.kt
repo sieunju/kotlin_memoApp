@@ -26,13 +26,18 @@ class LoginViewModel(
     val strPw = MutableLiveData<String>()
 
     val startFinish = SingleLiveEvent<Boolean>()
-    val startLoginFail = SingleLiveEvent<String>()
+    val startErrorDialog = SingleLiveEvent<String>()
 
     /**
      * 로그인 시작.
      */
     fun startLogin() {
         JLogger.d("Id ${strId.value} Pw ${strPw.value}")
+        if(strId.value.isNullOrEmpty() || strPw.value.isNullOrEmpty()) {
+            startErrorDialog.value = "제대로 값을 기입 하십시오."
+            return
+        }
+
         launch {
             apiService.signIn(
                 LoginForm(
@@ -48,7 +53,7 @@ class LoginViewModel(
                     }
                 }, {
                     JLogger.d("로그인에 실패했습니다.")
-                    startLoginFail.value = "로그인 실패!"
+                    startErrorDialog.value = "로그인 실패!"
                 })
         }
     }

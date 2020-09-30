@@ -13,17 +13,19 @@ object ExtraCode {
     const val MEMO_MANAGE_NO = "memo_manage_no"
     const val MEMO_DETAIL = "a"
     const val MEMO_DETAIL_POS = "b"
-    const val ALBUM_MANAGE_NO = "a"
-    const val ALBUM_SELECT_IMAGES = "a"
+    const val GALLERY_SELECT_IMAGES = "a"
+    const val CAMERA_CAPTURE_PHOTO_URI = "a"
 }
 
 object RequestCode {
     const val LOGIN = 100
     const val MEMO_DETAIL = 200
-    const val ALBUM = 300
+    const val GALLERY = 300
+    const val CAMERA_CAPTURE = 400
 }
 
 object ResultCode {
+    const val CAMERA_CAPTURE_OK = 401
 }
 
 object ToolBarDefine {
@@ -48,4 +50,9 @@ enum class TagType(val tag: Int, @ColorRes val color: Int) {
     BLUE(5, R.color.color_tag5),
     PURPLE(6, R.color.color_tag6),
     ETC(7, R.color.color_tag7)
+}
+
+object Etc {
+    const val IMG_MIME_TYPE_FILE_EXTENSION = "image/jpg"
+    const val IMG_FILE_EXTENSION = ".jpg"
 }

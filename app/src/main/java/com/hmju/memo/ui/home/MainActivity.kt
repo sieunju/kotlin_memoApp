@@ -105,7 +105,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                                 it.getSerializableExtra(ExtraCode.MEMO_DETAIL) as MemoItem
                             rvContents.adapter?.let { adapter ->
                                 if (adapter is MemoListAdapter) {
-                                    adapter.setChangedData(clickPos,changedItem)
+                                    adapter.setChangedData(clickPos, changedItem)
                                 }
                             }
                         }

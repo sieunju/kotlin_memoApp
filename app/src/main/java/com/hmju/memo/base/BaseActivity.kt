@@ -7,12 +7,14 @@ import android.view.View
 import android.view.Window
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.google.android.material.transition.platform.MaterialArcMotion
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
+import com.hmju.memo.R
 import com.hmju.memo.dialog.LoadingDialog
 
 /**
@@ -87,8 +89,8 @@ abstract class BaseActivity<T : ViewDataBinding, VM : BaseViewModel>
             duration = 500
             pathMotion = MaterialArcMotion()
             drawingViewId = android.R.id.content
-            containerColor = Color.WHITE
-            scrimColor = Color.WHITE
+            containerColor = ContextCompat.getColor(this@BaseActivity, R.color.colorBackground)
+            scrimColor = ContextCompat.getColor(this@BaseActivity, R.color.colorBackground)
             transitionDirection = MaterialContainerTransform.TRANSITION_DIRECTION_AUTO
             fadeMode = MaterialContainerTransform.FADE_MODE_CROSS
             fitMode = MaterialContainerTransform.FIT_MODE_AUTO

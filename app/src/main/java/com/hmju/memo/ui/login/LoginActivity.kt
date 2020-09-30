@@ -30,7 +30,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding,LoginViewModel> () {
                 finish()
             })
 
-            startLoginFail.observe(this@LoginActivity, Observer {msg ->
+            startErrorDialog.observe(this@LoginActivity, Observer {msg ->
                 ConfirmDialog(this@LoginActivity,msg).show()
             })
         }

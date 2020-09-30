@@ -1,5 +1,6 @@
 package com.hmju.memo.viewModels
 
+import android.annotation.SuppressLint
 import android.database.ContentObserver
 import android.database.Cursor
 import android.os.Handler
@@ -15,6 +16,7 @@ import com.hmju.memo.convenience.SingleLiveEvent
 import com.hmju.memo.convenience.single
 import com.hmju.memo.define.NetworkState
 import com.hmju.memo.model.gallery.GalleryFilterItem
+import com.hmju.memo.model.gallery.GallerySelectedItem
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.ResourceProvider
 import io.reactivex.Observable
@@ -25,14 +27,14 @@ import io.reactivex.Observable
  * Created by hmju on 2020-09-17
  */
 class GalleryViewModel(
-    private val manageNo: Int,
     private val provider: ResourceProvider
 ) : BaseViewModel() {
 
     companion object {
         const val DEFAULT_FILTER_ID = "ALL"
         const val DEFAULT_FILTER_NAME = "최근 항목"
-        const val UPLOAD_FILE_MAX_CNT = 5
+        const val UPLOAD_FILE_MAX_CNT = 10
+        val tmpGallerySelectItem = GallerySelectedItem(id = "", pos = -1)
     }
 
     // 갤러리에서 사진이 추가 / 삭제 되는 경우 갱신 처리.
@@ -45,13 +47,11 @@ class GalleryViewModel(
         }
     }
     val cursor = MutableLiveData<Cursor>()
-    private val _selectedPhotoList = ListMutableLiveData<String>() // 선택한 사진들
-    val selectedPhotoList: ListMutableLiveData<String>
-        get() = _selectedPhotoList
     val startCamera = SingleLiveEvent<Unit>()
     val startSubmit = SingleLiveEvent<Unit>()
     val startToast = SingleLiveEvent<String>()
     val startFilter = SingleLiveEvent<Unit>()
+    val startNotify = SingleLiveEvent<GallerySelectedItem>()
 
     private val _filterList = ListMutableLiveData<GalleryFilterItem>().apply {
         add(GalleryFilterItem(DEFAULT_FILTER_ID, DEFAULT_FILTER_NAME, true))
@@ -65,6 +65,13 @@ class GalleryViewModel(
             isSelected = true
         )
     ) // 선택한 필터
+
+    //    private val _selectedPhotoList = ListMutableLiveData<String>() // 선택한 사진들
+//    val selectedPhotoList: ListMutableLiveData<String>
+//        get() = _selectedPhotoList
+    private val _selectedPhotoList = ListMutableLiveData<GallerySelectedItem>() // 선택한 사진들
+    val selectedPhotoList: ListMutableLiveData<GallerySelectedItem>
+        get() = _selectedPhotoList
 
     fun resetFilter() {
         _filterList.value.map { it.isSelected = false }
@@ -98,6 +105,7 @@ class GalleryViewModel(
      *
      * @author hmju
      */
+    @SuppressLint("Recycle")
     private fun fetchFilter() {
         // 로딩바 노출
         startNetworkState.postValue(NetworkState.LOADING)
@@ -130,9 +138,7 @@ class GalleryViewModel(
                             if (selection.isEmpty()) null else selection.toString(),
                             if (selectionArgs.isEmpty()) null else selectionArgs.toTypedArray(),
                             sort
-                        )
-
-                        if (cursor == null) break@loop
+                        ) ?: break@loop
 
                         if (cursor.moveToLast()) {
                             val id =
@@ -169,7 +175,6 @@ class GalleryViewModel(
                             break@loop
                         }
                     }
-                    JLogger.d("TEST:: 여길 지납니다.")
 
                     it.onComplete()
                 } catch (ex: Exception) {
@@ -200,7 +205,12 @@ class GalleryViewModel(
      * 필터가 걸려있으면 자동으로 처리함.
      */
     fun fetchGallery() {
-        JLogger.d("TEST:: fetchGallery")
+
+        // 선택된 이미지 초기화
+        if(selectedPhotoList.size() > 0) {
+            _selectedPhotoList.postClear()
+        }
+
         val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val projection = arrayOf(
             MediaStore.Images.Media._ID
@@ -236,18 +246,26 @@ class GalleryViewModel(
     }
 
 
-    fun onSelect(pos: Int, id: String, view: View) {
+    /**
+     * 갤러리에서 사진 선택 및 해제시 호출하는 함수.
+     * @param pos -> RecyclerView 기준 포지션
+     * @param id -> 갤러리 콘텐츠 아이디
+     */
+    fun onSelect(pos: Int, id: String) {
         // 선택된 이미지 검사.
-        if (selectedPhotoList.contains(id)) {
-            selectedPhotoList.postRemove(id)
+        val item = GallerySelectedItem(id = id, pos = pos)
+        if(selectedPhotoList.contains(item)) {
+            _selectedPhotoList.postRemove(item)
 
-            view.visibility = View.GONE
+            // RecyclerView 갱신 처리.
+            startNotify.value = item
         } else {
-            // 선택된 이미지가 없는 경우 추가.
+            // 사진 추가.
             if (UPLOAD_FILE_MAX_CNT > selectedPhotoList.size()) {
-                selectedPhotoList.postAdd(id)
+                _selectedPhotoList.postAdd(item)
 
-                view.visibility = View.VISIBLE
+                // RecyclerView 갱신 처리.
+                startNotify.value = item
             } else {
                 // 파일 업로드 최대 개수 제한.
                 startToast.value = provider.getString(R.string.str_info_file_max_cnt)
@@ -255,16 +273,19 @@ class GalleryViewModel(
         }
     }
 
+    /**
+     * 선택한 이미지인지 검사.
+     */
     fun isSelected(id: String): Boolean {
-        return if(selectedPhotoList.size() > 0) {
-            selectedPhotoList.contains(id)
+        return if (selectedPhotoList.size() > 0) {
+            synchronized(tmpGallerySelectItem) {
+                JLogger.d("isSelected $id")
+                tmpGallerySelectItem.id = id
+                return selectedPhotoList.contains(tmpGallerySelectItem)
+            }
         } else {
             false
         }
-    }
-
-    fun removePhoto(id: String) {
-        _selectedPhotoList.postRemove(id)
     }
 
     override fun onCleared() {

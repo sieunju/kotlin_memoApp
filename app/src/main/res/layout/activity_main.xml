@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/size_100"
             app:blurRadius="10dp"
-            app:overlayColor="#19FFFFFF" />
+            app:overlayColor="@color/colorHeaderOverlay" />
 
         <!--        <View-->
         <!--            android:id="@+id/bgHeader"-->
@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Title"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/colorTextPrimary"
             android:textSize="@dimen/text_size_20" />
 
         <!-- 프로필 이미지 뷰 -->
