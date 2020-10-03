@@ -10,12 +10,13 @@ import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.GalleryViewModel
 
 /**
- * Description :
+ * Description : 갤러리 선택한 리스트 관련 Adapter Class
  *
  * Created by juhongmin on 2020/09/28
  */
-class GallerySelectedPhotoAdapter(private val viewModel: GalleryViewModel) :
-    RecyclerView.Adapter<GallerySelectedPhotoAdapter.ItemSelectedPhotoViewHolder>() {
+class GallerySelectedPhotoAdapter(
+    private val viewModel: GalleryViewModel
+) : RecyclerView.Adapter<GallerySelectedPhotoAdapter.ItemSelectedPhotoViewHolder>() {
 
     private val dataList = arrayListOf<GallerySelectedItem>()
 
@@ -46,7 +47,6 @@ class GallerySelectedPhotoAdapter(private val viewModel: GalleryViewModel) :
     }
 
     override fun getItemCount() = dataList.size
-
 
     class ItemSelectedPhotoViewHolder(
         parent: ViewGroup,

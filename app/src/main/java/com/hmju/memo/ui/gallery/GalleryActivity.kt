@@ -14,8 +14,7 @@ import com.hmju.memo.define.NetworkState
 import com.hmju.memo.define.RequestCode
 import com.hmju.memo.define.ResultCode
 import com.hmju.memo.dialog.ConfirmDialog
-import com.hmju.memo.ui.adapter.GalleryAdapter
-import com.hmju.memo.ui.bottomsheet.SelectBottomSheet
+import com.hmju.memo.ui.bottomsheet.CheckableBottomSheet
 import com.hmju.memo.ui.toast.showToast
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.moveCameraCapture
@@ -23,6 +22,7 @@ import com.hmju.memo.viewModels.GalleryViewModel
 import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.activity_gallery.*
 import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 /**
  * Description : 앨범 및 카메라 페이지
@@ -32,11 +32,13 @@ import org.koin.android.viewmodel.ext.android.viewModel
 class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>() {
     override val layoutId = R.layout.activity_gallery
 
-    override val viewModel: GalleryViewModel by viewModel()
+    override val viewModel: GalleryViewModel by viewModel {
+        parametersOf(intent.getIntExtra(ExtraCode.GALLERY_IMG_LIMIT, 0))
+    }
 
     override val bindingVariable = BR.viewModel
 
-    private lateinit var selectDialog: SelectBottomSheet
+    private lateinit var selectDialog: CheckableBottomSheet
     private var photoUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,9 +84,12 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
             startSubmit.observe(this@GalleryActivity, Observer {
                 if (selectedPhotoList.size() > 0) {
                     val intent = Intent()
+                    val list = selectedPhotoList.value.map { it.id }.toList()
+                    val arrayList = arrayListOf<String>()
+                    arrayList.addAll(list)
                     intent.putStringArrayListExtra(
                         ExtraCode.GALLERY_SELECT_IMAGES,
-                        selectedPhotoList.value.map { it.id }.toList() as ArrayList<String>
+                        arrayList
                     )
                     setResult(RESULT_OK, intent)
                 } else {
@@ -98,10 +103,10 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
             })
 
             startFilter.observe(this@GalleryActivity, Observer {
-                val list = arrayListOf<SelectBottomSheet.BottomSheetSelect>()
+                val list = arrayListOf<CheckableBottomSheet.CheckableBottomSheetItem>()
                 filterList.value.forEach {
                     list.add(
-                        SelectBottomSheet.BottomSheetSelect(
+                        CheckableBottomSheet.CheckableBottomSheetItem(
                             id = it.id,
                             name = it.name,
                             isSelected = it.isSelected
@@ -109,7 +114,7 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
                     )
                 }
 
-                selectDialog = SelectBottomSheet.newInstance(
+                selectDialog = CheckableBottomSheet.newInstance(
                     resources.getDimensionPixelOffset(R.dimen.size_200),
                     list
                 ) { pos, id ->
@@ -126,9 +131,9 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
 
             })
 
-            startNotify.observe(this@GalleryActivity, Observer {item->
+            startNotify.observe(this@GalleryActivity, Observer { item ->
                 JLogger.d("Notify Item $item")
-                rvContents.adapter?.let{
+                rvContents.adapter?.let {
                     it.notifyItemChanged(item.pos + 1)
                 }
             })

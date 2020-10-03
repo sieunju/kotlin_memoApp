@@ -14,84 +14,52 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        tools:background="@color/colorBackground">
+
+        <!-- 선택한 우선 순위. -->
+        <View
+            android:id="@+id/vSelectedTag"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_10"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/vSelectedTag">
 
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/llContents"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- Tag Color -->
-                <View
-                    android:id="@+id/vSelectedTag"
-                    android:layout_width="match_parent"
-                    android:layout_height="?android:actionBarSize" />
-
-                <!-- 이미지  -->
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/viewPager"
+                <!-- 이미지 레이아웃 영역  -->
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:fileList="@{viewModel.changeData.fileList}"
-                    tools:visibility="gone" />
+                    android:visibility="@{viewModel.fileSize > 0 ? View.VISIBLE : View.GONE}">
 
-                <RadioGroup
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal"
-                    app:bgView="@{vSelectedTag}"
-                    app:selectTag="@{viewModel.changeData}">
+                    <!-- 콘텐츠 사진 영역 -->
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:fileList="@{viewModel.fileList}"
+                        app:indicatorView="@{indicator}"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                    <com.google.android.material.radiobutton.MaterialRadioButton
-                        android:id="@+id/tag_1"
+                    <!-- ViewPager Indicator 영역  -->
+                    <com.hmju.memo.widget.viewpagerIndicator.IndicatorView
+                        android:id="@+id/indicator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:buttonTint="@color/color_tag1" />
+                        android:layout_marginBottom="@dimen/margin_size_10"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent" />
 
-                    <com.google.android.material.radiobutton.MaterialRadioButton
-                        android:id="@+id/tag_2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="@color/color_tag2" />
-
-                    <com.google.android.material.radiobutton.MaterialRadioButton
-                        android:id="@+id/tag_3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="@color/color_tag3" />
-
-                    <com.google.android.material.radiobutton.MaterialRadioButton
-                        android:id="@+id/tag_4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="@color/color_tag4" />
-
-                    <com.google.android.material.radiobutton.MaterialRadioButton
-                        android:id="@+id/tag_5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="@color/color_tag5" />
-
-                    <com.google.android.material.radiobutton.MaterialRadioButton
-                        android:id="@+id/tag_6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="@color/color_tag6" />
-
-                    <com.google.android.material.radiobutton.MaterialRadioButton
-                        android:id="@+id/tag_7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="@color/color_tag7" />
-
-                </RadioGroup>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <!-- 제목 -->
                 <com.google.android.material.textfield.TextInputLayout
@@ -112,9 +80,9 @@
                         android:imeOptions="actionNext"
                         android:inputType="text"
                         android:maxLength="40"
+                        android:text="@={viewModel.title}"
                         android:textSize="@dimen/text_size_20"
                         app:editTextListener="@{viewModel}"
-                        app:htmlEdit="@={viewModel.changeData.title}"
                         tools:text="안녕하세요" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -138,11 +106,10 @@
                         android:imeOptions="actionGo"
                         android:inputType="textMultiLine"
                         android:maxLength="400"
-                        android:minLines="3"
                         android:scrollbars="vertical"
+                        android:text="@={viewModel.contents}"
                         android:textSize="@dimen/text_size_20"
                         app:editTextListener="@{viewModel}"
-                        app:htmlEdit="@={viewModel.changeData.contents}"
                         tools:text="@string/large_text" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -152,27 +119,30 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_size_10"
                     android:layout_marginTop="@dimen/margin_size_10"
-                    android:layout_marginRight="@dimen/margin_size_10">
+                    android:layout_marginRight="@dimen/margin_size_10"
+                    android:layout_marginBottom="@dimen/margin_size_10">
 
-                    <!-- 사진 추가 버튼 -->
+                    <!-- 더보기 버튼 -->
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="@dimen/size_40"
                         android:layout_height="@dimen/size_40"
+                        android:layout_marginStart="@dimen/margin_size_5"
                         android:layout_marginLeft="@dimen/margin_size_5"
                         android:adjustViewBounds="true"
                         android:padding="@dimen/padding_size_5"
-                        android:src="@drawable/ic_add_photo"
+                        android:src="@drawable/ic_more_vertical"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:turtleClick="@{()->viewModel.moveAlbumAndCamera(viewModel.changeData.manageNo)}"
-                        tools:src="@drawable/ic_add_photo" />
+                        app:turtleClick="@{()->viewModel.moveMoreDialog()}"
+                        tools:src="@drawable/ic_more_vertical" />
 
                     <!-- 수정 날짜. -->
                     <com.google.android.material.textview.MaterialTextView
                         style="@style/ContentsText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="@{viewModel.regDtm}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
@@ -193,8 +163,6 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
-
         </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </layout>

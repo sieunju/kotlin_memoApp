@@ -48,7 +48,6 @@ class GalleryAdapter(
     override fun onBindViewHolder(holder: BaseViewHolder<*>, pos: Int) {
         // 사진 ViewHolder
         if(pos != 0) {
-
             val dataPos = pos - 1
             if (lastPos < dataPos) {
                 lastPos = dataPos
@@ -78,17 +77,6 @@ class GalleryAdapter(
                 photoCursor?.close()
             }
         }
-//        else {
-//            // 카메라 ViewHolder
-//        }
-    }
-
-    override fun onBindViewHolder(
-        holder: BaseViewHolder<*>,
-        position: Int,
-        payloads: MutableList<Any>
-    ) {
-        super.onBindViewHolder(holder, position, payloads)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
@@ -117,7 +105,11 @@ class GalleryAdapter(
     }
 
     override fun getItemCount(): Int {
-        return size + 1
+        return if(size == 0) {
+            0
+        } else {
+            size + 1
+        }
     }
 
     class CameraCaptureViewHolder(parent: ViewGroup, layoutId: Int, viewModel: GalleryViewModel) :

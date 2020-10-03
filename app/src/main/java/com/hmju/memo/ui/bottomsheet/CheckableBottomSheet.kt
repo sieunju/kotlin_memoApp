@@ -9,29 +9,28 @@ import android.widget.FrameLayout
 import androidx.databinding.DataBindingUtil
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.hmju.memo.R
-import com.hmju.memo.databinding.DialogSelectBottomSheetBinding
+import com.hmju.memo.databinding.DialogCheckableBottomSheetBinding
 
 /**
- * Description :
+ * Description : 타이틀 및 체크 기능 UI 를 가진 BottomSheet Dialog Class
  *
  * Created by juhongmin on 2020/09/21
  */
-class SelectBottomSheet : RoundedBottomSheet() {
+class CheckableBottomSheet : RoundedBottomSheet() {
 
     interface Listener {
         fun onItemSelected(pos: Int, name: String)
     }
 
-    data class BottomSheetSelect(
+    data class CheckableBottomSheetItem(
         val id: String? = null,
         val name: String,
-        val isSelected: Boolean,
-        val data: Any? = null
+        val isSelected: Boolean
     )
 
-    private lateinit var dataList: List<BottomSheetSelect>
+    private lateinit var dataList: List<CheckableBottomSheetItem>
     private lateinit var callback: (Int, String) -> Unit
-    lateinit var binding: DialogSelectBottomSheetBinding
+    lateinit var binding: DialogCheckableBottomSheetBinding
     private var peekHeight = -1
 
     private val listener: Listener = object : Listener {
@@ -45,9 +44,9 @@ class SelectBottomSheet : RoundedBottomSheet() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return DataBindingUtil.inflate<DialogSelectBottomSheetBinding>(
+        return DataBindingUtil.inflate<DialogCheckableBottomSheetBinding>(
             inflater,
-            R.layout.dialog_select_bottom_sheet,
+            R.layout.dialog_checkable_bottom_sheet,
             container,
             false
         ).apply {
@@ -76,20 +75,20 @@ class SelectBottomSheet : RoundedBottomSheet() {
 
     companion object {
         fun newInstance(
-            tmpDataList: List<BottomSheetSelect>,
+            tmpDataList: List<CheckableBottomSheetItem>,
             tmpCallback: (Int, String) -> Unit
-        ): SelectBottomSheet =
-            SelectBottomSheet().apply {
+        ): CheckableBottomSheet =
+            CheckableBottomSheet().apply {
                 dataList = tmpDataList
                 callback = tmpCallback
             }
 
         fun newInstance(
             tmpPeekHeight: Int,
-            tmpDataList: List<BottomSheetSelect>,
+            tmpDataList: List<CheckableBottomSheetItem>,
             tmpCallback: (Int, String) -> Unit
-        ): SelectBottomSheet =
-            SelectBottomSheet().apply {
+        ): CheckableBottomSheet =
+            CheckableBottomSheet().apply {
                 dataList = tmpDataList
                 callback = tmpCallback
                 peekHeight = tmpPeekHeight

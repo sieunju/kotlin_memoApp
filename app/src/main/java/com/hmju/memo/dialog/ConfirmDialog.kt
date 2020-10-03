@@ -48,6 +48,23 @@ class ConfirmDialog : MaterialAlertDialogBuilder {
     constructor(
         ctx: Context,
         msg: String,
+        leftText: String,
+        rightText: String,
+        listener: DialogInterface.OnClickListener
+    ) :
+            this(
+                ctx = ctx,
+                msg = msg,
+                type = Type.TWO,
+                leftText = leftText,
+                rightText = rightText,
+                listener = listener
+            )
+
+
+    constructor(
+        ctx: Context,
+        msg: String,
         type: Type,
         leftText: String? = ctx.getString(R.string.str_cancel),
         rightText: String? = ctx.getString(R.string.str_confirm),

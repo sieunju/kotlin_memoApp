@@ -1,6 +1,6 @@
 package com.hmju.memo
 
-import com.hmju.memo.model.memo.bindingTest
+import com.google.gson.GsonBuilder
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.util.*
@@ -20,6 +20,18 @@ class ExampleUnitTest {
     @Test
     fun memoImagesBinding() {
         bindingTest("[\"IMG_1595897676051afk1j1b40cc.jpeg\",\"IMG_15946450230737kkbsc1gw6f.jpeg\",\"IMG_1594645115336nywr85bdph.jpeg\"]")
+    }
+
+    fun bindingTest(images: String?) {
+        images?.let { imgs ->
+            try {
+                val array = GsonBuilder().create().fromJson(imgs, ArrayList<String>()::class.java)
+                println("Array ${array[0]}")
+            } catch (e: Exception) {
+                println(e.message)
+            }
+
+        }
     }
 
     @Test

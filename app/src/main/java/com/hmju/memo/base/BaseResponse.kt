@@ -9,5 +9,6 @@ import com.google.gson.annotations.SerializedName
  */
 open class BaseResponse(
     @SerializedName("status") val code: Boolean,
-    @SerializedName("errMsg") val errMsg : String? = null
+    @SerializedName("msg") val msg: String? = null,
+    @SerializedName("errMsg") val errMsg: String? = null
 )

@@ -6,7 +6,7 @@
 
         <variable
             name="listener"
-            type="com.hmju.memo.ui.bottomsheet.SelectBottomSheet.Listener" />
+            type="com.hmju.memo.ui.bottomsheet.CheckableBottomSheet.Listener" />
 
         <variable
             name="pos"
@@ -14,7 +14,7 @@
 
         <variable
             name="item"
-            type="com.hmju.memo.ui.bottomsheet.SelectBottomSheet.BottomSheetSelect" />
+            type="com.hmju.memo.ui.bottomsheet.CheckableBottomSheet.CheckableBottomSheetItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

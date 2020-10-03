@@ -13,19 +13,17 @@ import com.hmju.memo.model.memo.FileItem
  * Created by juhongmin on 2020/09/06
  */
 class MemoImagePagerAdapter(private val itemList: ArrayList<FileItem>) :
-    RecyclerView.Adapter<BaseViewHolder<*>>() {
+    RecyclerView.Adapter<MemoImagePagerAdapter.MemoDetailImageViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemoDetailImageViewHolder {
         return MemoDetailImageViewHolder(
             parent = parent,
             layoutId = R.layout.item_memo_detail_image
         )
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder<*>, pos: Int) {
-        if (holder is MemoDetailImageViewHolder) {
-            holder.binding.item = itemList[pos]
-        }
+    override fun onBindViewHolder(holder: MemoDetailImageViewHolder, pos: Int) {
+        holder.binding.item = itemList[pos]
     }
 
     override fun getItemCount(): Int {

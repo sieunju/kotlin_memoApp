@@ -4,24 +4,23 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewHolder
-import com.hmju.memo.databinding.ItemBottomSheetSelectBinding
-import com.hmju.memo.ui.bottomsheet.SelectBottomSheet
+import com.hmju.memo.databinding.ItemBottomSheetCheckableBinding
+import com.hmju.memo.ui.bottomsheet.CheckableBottomSheet
 
 /**
- * Description : BottomSheetDialog 기반 Select Adapter  Class
+ * Description : CheckableBottomSheet 기반 Select Adapter  Class
  *
  * Created by juhongmin on 2020/09/21
  */
-class BottomSheetSelectAdapter(
-    private val dataList: List<SelectBottomSheet.BottomSheetSelect>,
-    val listener: SelectBottomSheet.Listener
-) :
-    RecyclerView.Adapter<BottomSheetSelectAdapter.SelectItemViewHolder>() {
+class BottomSheetCheckableAdapter(
+    private val dataList: List<CheckableBottomSheet.CheckableBottomSheetItem>,
+    val listener: CheckableBottomSheet.Listener
+) : RecyclerView.Adapter<BottomSheetCheckableAdapter.SelectItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectItemViewHolder {
         return SelectItemViewHolder(
             parent = parent,
-            layoutId = R.layout.item_bottom_sheet_select,
+            layoutId = R.layout.item_bottom_sheet_checkable,
             listener = listener
         )
     }
@@ -37,9 +36,8 @@ class BottomSheetSelectAdapter(
     class SelectItemViewHolder(
         parent: ViewGroup,
         layoutId: Int,
-        listener: SelectBottomSheet.Listener
-    ) :
-        BaseViewHolder<ItemBottomSheetSelectBinding>(parent, layoutId) {
+        listener: CheckableBottomSheet.Listener
+    ) : BaseViewHolder<ItemBottomSheetCheckableBinding>(parent, layoutId) {
         init {
             binding.listener = listener
         }

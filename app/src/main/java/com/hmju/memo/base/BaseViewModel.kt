@@ -16,6 +16,8 @@ import kotlin.coroutines.coroutineContext
 open class BaseViewModel : ViewModel() {
 
     val startNetworkState = SingleLiveEvent<NetworkState>()
+    val startToast = SingleLiveEvent<String>()
+    val startDialog = SingleLiveEvent<String>()
 
     // 코루틴은 잠시 접어둠.. 롤리팝에서 이슈가 있음.
 //    /**

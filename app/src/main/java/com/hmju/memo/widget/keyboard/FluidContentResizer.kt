@@ -5,6 +5,7 @@ import android.animation.ValueAnimator
 import android.app.Activity
 import android.view.View
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import com.hmju.memo.utils.JLogger
 
 object FluidContentResize {
 
@@ -14,9 +15,11 @@ object FluidContentResize {
         val viewHolder = ActivityViewHolder.createFrom(activity)
 
         KeyboardVisibilityDetector.listen(viewHolder) {
+            JLogger.d("키보드가 올라옵니다.")
             animateHeight(viewHolder, it)
         }
         viewHolder.onDetach {
+            JLogger.d("화면 꺼짐!!!!! ")
             heightAnimator.cancel()
             heightAnimator.removeAllUpdateListeners()
         }

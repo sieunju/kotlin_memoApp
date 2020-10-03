@@ -26,5 +26,10 @@ val viewModelModule = module {
         )
     }
 
-    viewModel { GalleryViewModel(get()) }
+    viewModel { (limitSize: Int) ->
+        GalleryViewModel(
+            limitImageSize = limitSize,
+            provider = get()
+        )
+    }
 }

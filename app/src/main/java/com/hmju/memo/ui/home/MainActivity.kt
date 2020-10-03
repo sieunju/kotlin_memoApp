@@ -101,13 +101,27 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                     data?.let {
                         val clickPos = it.getIntExtra(ExtraCode.MEMO_DETAIL_POS, -1)
                         if (clickPos != -1) {
-                            val changedItem =
-                                it.getSerializableExtra(ExtraCode.MEMO_DETAIL) as MemoItem
-                            rvContents.adapter?.let { adapter ->
-                                if (adapter is MemoListAdapter) {
-                                    adapter.setChangedData(clickPos, changedItem)
+                            // 해당 메모장이 삭제 되었다면.
+                            if (it.getBooleanExtra(ExtraCode.MEMO_DETAIL_DELETE, false)) {
+                                rvContents.adapter?.let { adapter ->
+                                    if (adapter is MemoListAdapter) {
+                                        JLogger.d("데이터 삭제!")
+                                        adapter.removeData(
+                                            clickPos,
+                                            it.getIntExtra(ExtraCode.MEMO_DETAIL_MANAGE_NO, -1)
+                                        )
+                                    }
+                                }
+                            } else {
+                                val changedItem =
+                                    it.getSerializableExtra(ExtraCode.MEMO_DETAIL) as MemoItem
+                                rvContents.adapter?.let { adapter ->
+                                    if (adapter is MemoListAdapter) {
+                                        adapter.setChangedData(clickPos, changedItem)
+                                    }
                                 }
                             }
+
                         }
                     }
                 }

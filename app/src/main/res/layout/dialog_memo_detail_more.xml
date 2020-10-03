@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="java.util.ArrayList" />
+
+        <import type="com.hmju.memo.ui.bottomsheet.MemoDetailMoreDialog.MemoDetailMoreDialogItem" />
+
+        <variable
+            name="viewModel"
+            type="com.hmju.memo.viewModels.MemoDetailViewModel" />
+
+        <variable
+            name="listener"
+            type="com.hmju.memo.ui.bottomsheet.MemoDetailMoreDialog.Listener" />
+
+        <variable
+            name="dataList"
+            type="ArrayList&lt;MemoDetailMoreDialogItem>" />
+
+    </data>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_size_20"
+            android:splitMotionEvents="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toTopOf="parent"
+            app:listener="@{listener}"
+            app:memoDetailMoreDataList="@{dataList}" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_size_5">
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal"
+                app:viewModel="@{viewModel}">
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/tag_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/color_tag1" />
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/tag_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/color_tag2" />
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/tag_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/color_tag3" />
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/tag_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/color_tag4" />
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/tag_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/color_tag5" />
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/tag_6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/color_tag6" />
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/tag_7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/color_tag7" />
+
+            </RadioGroup>
+        </HorizontalScrollView>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</layout>

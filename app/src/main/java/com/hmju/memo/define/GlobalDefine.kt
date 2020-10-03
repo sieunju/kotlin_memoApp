@@ -13,6 +13,9 @@ object ExtraCode {
     const val MEMO_MANAGE_NO = "memo_manage_no"
     const val MEMO_DETAIL = "a"
     const val MEMO_DETAIL_POS = "b"
+    const val MEMO_DETAIL_DELETE = "c"
+    const val MEMO_DETAIL_MANAGE_NO = "d"
+    const val GALLERY_IMG_LIMIT = "a"
     const val GALLERY_SELECT_IMAGES = "a"
     const val CAMERA_CAPTURE_PHOTO_URI = "a"
 }
@@ -55,4 +58,5 @@ enum class TagType(val tag: Int, @ColorRes val color: Int) {
 object Etc {
     const val IMG_MIME_TYPE_FILE_EXTENSION = "image/jpg"
     const val IMG_FILE_EXTENSION = ".jpg"
+    const val IMG_FILE_LIMIT : Int = 5
 }

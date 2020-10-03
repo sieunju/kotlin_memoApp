@@ -37,4 +37,7 @@
 
     <color name="colorWhite_50">#80FFFFFF</color>
 
+    <color name="colorNormalIndicator">#6A6969</color>
+    <color name="colorCheckedIndicator">#EAE4E4</color>
+
 </resources>

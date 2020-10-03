@@ -1,20 +1,19 @@
 package com.hmju.memo.ui.bindingadapter
 
-import android.content.res.Configuration
 import android.graphics.PorterDuff
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.text.Html
 import android.view.View
 import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.hmju.memo.base.BaseViewModel
-import com.hmju.memo.ui.adapter.BottomSheetSelectAdapter
-import com.hmju.memo.ui.bottomsheet.SelectBottomSheet
+import com.hmju.memo.ui.adapter.BottomSheetCheckableAdapter
+import com.hmju.memo.ui.bottomsheet.CheckableBottomSheet
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.MainViewModel
 import com.hmju.memo.widget.bottomToolbar.BottomToolbar
@@ -117,14 +116,14 @@ fun setImageColorFilter(
     imgView.setColorFilter(colorResId, PorterDuff.Mode.SRC_IN)
 }
 
-@BindingAdapter(value = ["selectDialogDataList", "selectDialogListener"])
+@BindingAdapter(value = ["checkableDialogDataList", "listener"])
 fun setSelectBottomSheetAdapter(
     recyclerView: RecyclerView,
-    dataList: List<SelectBottomSheet.BottomSheetSelect>,
-    listener: SelectBottomSheet.Listener
+    dataList: List<CheckableBottomSheet.CheckableBottomSheetItem>,
+    listener: CheckableBottomSheet.Listener
 ) {
     recyclerView.adapter?.notifyDataSetChanged() ?: run {
-        BottomSheetSelectAdapter(dataList, listener).apply {
+        BottomSheetCheckableAdapter(dataList, listener).apply {
             recyclerView.adapter = this
         }
     }
@@ -160,4 +159,28 @@ fun setFloatingButtonListener(
         recyclerView.scrollToPosition(0)
         view.hide()
     }
+}
+
+@BindingAdapter("visibilityDataList")
+fun setDataListVisibility(
+    view: View,
+    dataList: ArrayList<*>?
+) {
+    dataList?.let {
+        if (it.size > 0) {
+            view.visibility = View.VISIBLE
+        } else {
+            view.visibility = View.GONE
+        }
+    } ?: {
+        view.visibility = View.GONE
+    }()
+}
+
+@BindingAdapter("drawableId")
+fun bindingResourceDrawable(
+    view: AppCompatImageView,
+    @DrawableRes drawableId : Int
+) {
+    view.setImageResource(drawableId)
 }

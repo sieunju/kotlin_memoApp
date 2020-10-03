@@ -1,6 +1,7 @@
 package com.hmju.memo.ui.adapter
 
 import android.content.Context
+import android.content.LocusId
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
@@ -12,6 +13,7 @@ import com.hmju.memo.databinding.ItemHorizontalLoadingBinding
 import com.hmju.memo.databinding.ItemMemoImgBinding
 import com.hmju.memo.databinding.ItemMemoNormalBinding
 import com.hmju.memo.model.memo.MemoItem
+import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.MainViewModel
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -81,9 +83,26 @@ class MemoListAdapter(
             if (it.tag == tmpItem.tag) {
                 it.title = tmpItem.title
                 it.contents = tmpItem.contents
+                it.fileList = tmpItem.fileList
                 notifyItemChanged(pos)
             }
-        }
+       }
+    }
+
+    /**
+     * 데이터 삭제
+     * @param pos 삭제하고 싶은 위치값
+     */
+    fun removeData(pos: Int, memoId: Int) {
+        JLogger.d("removeData $pos")
+        // 지우는거 처리 해야할듯...
+//        currentList?.remove(
+//            MemoItem(
+//                manageNo = memoId,
+//                tag = -1
+//            )
+//        )
+        notifyItemRemoved(pos)
     }
 
     /**

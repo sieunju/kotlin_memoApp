@@ -64,5 +64,9 @@
 
     <string name="str_clipboard_copy">복사 완료했습니다.</string>
     <string name="str_back_press_info">\'뒤로\'버튼을 한번 더 누르시면 종료됩니다.</string>
+    <string name="str_guid_limit_img_file_over">이미지 파일을 더는 추가 할 수 없습니다.\n추가된 이미지를 삭제하시길 바랍니다.</string>
+    <string name="memo_detail_more_add_photo">사진 추가</string>
+    <string name="memo_detail_more_delete">메모 삭제</string>
+    <string name="memo_delete_guide">정말 삭제 하시겠습니까?</string>
 
 </resources>

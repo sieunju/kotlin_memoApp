@@ -104,7 +104,7 @@ class MainApplication : MultiDexApplication() {
     private val activityLifecycleCallbacks = object : ActivityLifecycleCallbacks {
         var currentActivity: WeakReference<Activity>? = null
         override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-            JLogger.d("onActivityCreated $activity")
+//            JLogger.d("onActivityCreated $activity")
             currentActivity?.clear()
             currentActivity = WeakReference(activity)
         }
@@ -125,13 +125,13 @@ class MainApplication : MultiDexApplication() {
         }
 
         override fun onActivityDestroyed(activity: Activity) {
-            JLogger.d("onActivityDestroyed $activity")
+//            JLogger.d("onActivityDestroyed $activity")
         }
     }
 
     private val componentCallbacks = object : ComponentCallbacks2 {
         override fun onConfigurationChanged(newConfig: Configuration) {
-            JLogger.d("onConfigurationChanged $newConfig")
+//            JLogger.d("onConfigurationChanged $newConfig")
             // 화면 스타일 변경시 앱 재시작.
             activityLifecycleCallbacks.currentActivity?.get()?.let{
                 it.showToast(R.string.str_ui_mode_changed_info, Toast.LENGTH_LONG)
@@ -140,11 +140,11 @@ class MainApplication : MultiDexApplication() {
         }
 
         override fun onLowMemory() {
-            JLogger.d("onLowMemory")
+//            JLogger.d("onLowMemory")
         }
 
         override fun onTrimMemory(level: Int) {
-            JLogger.d("onTrimMemory $level")
+//            JLogger.d("onTrimMemory $level")
         }
     }
 

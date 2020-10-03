@@ -27,13 +27,13 @@ import io.reactivex.Observable
  * Created by hmju on 2020-09-17
  */
 class GalleryViewModel(
+    private val limitImageSize: Int,
     private val provider: ResourceProvider
 ) : BaseViewModel() {
 
     companion object {
         const val DEFAULT_FILTER_ID = "ALL"
         const val DEFAULT_FILTER_NAME = "최근 항목"
-        const val UPLOAD_FILE_MAX_CNT = 10
         val tmpGallerySelectItem = GallerySelectedItem(id = "", pos = -1)
     }
 
@@ -49,7 +49,6 @@ class GalleryViewModel(
     val cursor = MutableLiveData<Cursor>()
     val startCamera = SingleLiveEvent<Unit>()
     val startSubmit = SingleLiveEvent<Unit>()
-    val startToast = SingleLiveEvent<String>()
     val startFilter = SingleLiveEvent<Unit>()
     val startNotify = SingleLiveEvent<GallerySelectedItem>()
 
@@ -66,9 +65,6 @@ class GalleryViewModel(
         )
     ) // 선택한 필터
 
-    //    private val _selectedPhotoList = ListMutableLiveData<String>() // 선택한 사진들
-//    val selectedPhotoList: ListMutableLiveData<String>
-//        get() = _selectedPhotoList
     private val _selectedPhotoList = ListMutableLiveData<GallerySelectedItem>() // 선택한 사진들
     val selectedPhotoList: ListMutableLiveData<GallerySelectedItem>
         get() = _selectedPhotoList
@@ -261,7 +257,7 @@ class GalleryViewModel(
             startNotify.value = item
         } else {
             // 사진 추가.
-            if (UPLOAD_FILE_MAX_CNT > selectedPhotoList.size()) {
+            if (limitImageSize > selectedPhotoList.size()) {
                 _selectedPhotoList.postAdd(item)
 
                 // RecyclerView 갱신 처리.

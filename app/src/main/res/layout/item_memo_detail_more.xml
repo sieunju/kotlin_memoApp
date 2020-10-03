@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="listener"
+            type="com.hmju.memo.ui.bottomsheet.MemoDetailMoreDialog.Listener" />
+
+        <variable
+            name="pos"
+            type="Integer" />
+
+        <variable
+            name="item"
+            type="com.hmju.memo.ui.bottomsheet.MemoDetailMoreDialog.MemoDetailMoreDialogItem" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:turtleClick="@{()->listener.onItemSelected(pos)}">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgIcon"
+            android:layout_width="@dimen/size_30"
+            android:layout_height="@dimen/size_30"
+            android:layout_margin="@dimen/margin_size_5"
+            android:adjustViewBounds="true"
+            app:drawableId="@{item.iconId}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_add_photo" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_size_10"
+            android:text="@{item.title}"
+            tools:text="사진 추가"
+            android:textColor="@color/colorTextPrimaryLight"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/imgIcon"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

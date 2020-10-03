@@ -6,15 +6,15 @@
 
         <import type="java.util.List" />
 
-        <import type="com.hmju.memo.ui.bottomsheet.SelectBottomSheet" />
+        <import type="com.hmju.memo.ui.bottomsheet.CheckableBottomSheet.CheckableBottomSheetItem" />
 
         <variable
             name="listener"
-            type="com.hmju.memo.ui.bottomsheet.SelectBottomSheet.Listener" />
+            type="com.hmju.memo.ui.bottomsheet.CheckableBottomSheet.Listener" />
 
         <variable
             name="dataList"
-            type="List&lt;SelectBottomSheet.BottomSheetSelect>" />
+            type="List&lt;CheckableBottomSheetItem>" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,8 +28,8 @@
             android:splitMotionEvents="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toTopOf="parent"
-            app:selectDialogDataList="@{dataList}"
-            app:selectDialogListener="@{listener}" />
+            app:checkableDialogDataList="@{dataList}"
+            app:listener="@{listener}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

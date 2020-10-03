@@ -4,6 +4,7 @@ import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subscribers.DisposableSubscriber
 import java.util.concurrent.TimeUnit
@@ -33,9 +34,15 @@ fun <T> Maybe<T>.single() = subscribeOn(io()).observeOn(AndroidSchedulers.mainTh
 fun <T> Observable<T>.single() = subscribeOn(io()).observeOn(AndroidSchedulers.mainThread())
 
 // 여러개의 API 를 한꺼번에 보내는 경우
-fun <T> Flowable<T>.multi() = subscribeOn(io())
+fun <T> Maybe<T>.multi() = subscribeOn(io())
 
-fun <T> Observable<T>.multi() = subscribeOn(io())
+fun <T> Flowable<T>.to() = subscribeOn(io())
+fun <T> Flowable<T>.multiWith() = subscribeOn(io()).observeOn(AndroidSchedulers.mainThread())
+
+fun <T> Observable<T>.to() = subscribeOn(io())
+fun <T> Observable<T>.toDelay(_delay: Int) = subscribeOn(io()).delay(_delay.toLong(),TimeUnit.SECONDS)
+fun <T> Observable<T>.multiWith() = subscribeOn(io()).observeOn(AndroidSchedulers.mainThread())
+fun <T> Observable<T>.multiWithDelay() = subscribeOn(io()).observeOn(AndroidSchedulers.mainThread())
 
 // 여러개의 API를 한꺼번에 보내는 경우 Delay 타입.
 fun <T> Flowable<T>.multiDelay(_delay: Int) = subscribeOn(io()).delay(_delay.toLong(),TimeUnit.SECONDS)

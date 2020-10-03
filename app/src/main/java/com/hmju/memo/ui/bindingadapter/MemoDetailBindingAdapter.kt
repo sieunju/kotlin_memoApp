@@ -14,14 +14,19 @@ import androidx.databinding.InverseBindingListener
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.hmju.memo.R
 import com.hmju.memo.convenience.NonNullMutableLiveData
 import com.hmju.memo.define.TagType
 import com.hmju.memo.model.memo.FileItem
 import com.hmju.memo.model.memo.MemoItem
+import com.hmju.memo.ui.adapter.MemoDetailMoreAdapter
 import com.hmju.memo.ui.adapter.MemoImagePagerAdapter
+import com.hmju.memo.ui.bottomsheet.MemoDetailMoreDialog
 import com.hmju.memo.utils.JLogger
+import com.hmju.memo.viewModels.MemoDetailViewModel
+import com.hmju.memo.widget.viewpagerIndicator.IndicatorView
 
 /**
  * Description : 메모장 자세히 보기 Binding Adapter
@@ -29,34 +34,57 @@ import com.hmju.memo.utils.JLogger
  * Created by juhongmin on 2020/09/16
  */
 
-@BindingAdapter("fileList")
-fun bindingMemoDetailViewPager(
+@BindingAdapter(value = ["indicatorView", "fileList"], requireAll = false)
+fun setMemoDetailImgAdapter(
     viewPager: ViewPager2,
+    indicator: IndicatorView,
     dataList: ArrayList<FileItem>?
 ) {
     dataList?.let {
         viewPager.visibility = View.VISIBLE
+        indicator.visibility = View.VISIBLE
+
         viewPager.adapter?.let {
+            JLogger.d("갱신 처리 합니다.!! ${dataList.size}")
             it.notifyDataSetChanged()
+            indicator.pageSize = dataList.size
         } ?: run {
-            val adapter = MemoImagePagerAdapter(dataList)
-            viewPager.adapter = adapter
+
+            // init View..
+            MemoImagePagerAdapter(dataList).apply {
+                viewPager.adapter = this
+            }
+
+            indicator.apply {
+                setViewPager(viewPager)
+                pageSize = dataList.size
+            }
         }
     } ?: {
+        JLogger.d("여길 지나나!!!!??")
         viewPager.visibility = View.GONE
+        indicator.visibility = View.GONE
     }()
 }
 
-/**
- * 메모 상세 테그 선택 관련 Binding 처리.
- */
-@BindingAdapter(value = ["bgView", "selectTag"], requireAll = false)
-fun bindingSelectTag(
-    radioGroup: RadioGroup,
-    selectedView: View,
-    item: NonNullMutableLiveData<MemoItem>
+@BindingAdapter(value = ["memoDetailMoreDataList", "listener"])
+fun setMemoDetailMoreAdapter(
+    recyclerView: RecyclerView,
+    dataList: ArrayList<MemoDetailMoreDialog.MemoDetailMoreDialogItem>,
+    listener: MemoDetailMoreDialog.Listener
 ) {
+    recyclerView.adapter?.notifyDataSetChanged() ?: run {
+        MemoDetailMoreAdapter(dataList, listener).apply {
+            recyclerView.adapter = this
+        }
+    }
+}
 
+@BindingAdapter("viewModel")
+fun setMemoDetailTagAdapter(
+    radioGroup: RadioGroup,
+    viewModel: MemoDetailViewModel
+) {
     radioGroup.setOnCheckedChangeListener { _, checkedId ->
         val tagType: TagType
         when (checkedId) {
@@ -83,39 +111,28 @@ fun bindingSelectTag(
             }
         }
 
-        selectedView.setBackgroundColor(ContextCompat.getColor(selectedView.context, tagType.color))
-        ObjectAnimator.ofFloat(selectedView,View.ALPHA,0.25F,1.0F).apply {
-            duration = 500
-            start()
-        }
-        item.value.tag = tagType.tag
+        viewModel.setSelectedTag(tagType)
     }
 
-    // Binding View
-    when (item.value.tag) {
+    // Binding RadioButton
+    when(viewModel.selectTag.value){
         TagType.RED.tag -> {
             radioGroup.check(R.id.tag_1)
         }
         TagType.ORANGE.tag -> {
             radioGroup.check(R.id.tag_2)
-
         }
         TagType.YELLOW.tag -> {
-            radioGroup.tag = TagType.YELLOW.tag
             radioGroup.check(R.id.tag_3)
-
         }
         TagType.GREEN.tag -> {
             radioGroup.check(R.id.tag_4)
-
         }
         TagType.BLUE.tag -> {
             radioGroup.check(R.id.tag_5)
-
         }
         TagType.PURPLE.tag -> {
             radioGroup.check(R.id.tag_6)
-
         }
         else -> {
             radioGroup.check(R.id.tag_7)
@@ -165,4 +182,5 @@ fun bindingSelectTag(
 //        radioChanged.onChange()
 //    }
 //}
+
 

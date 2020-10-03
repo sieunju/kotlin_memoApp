@@ -1,12 +1,16 @@
 package com.hmju.memo.repository.network
 
 import com.hmju.memo.base.BaseResponse
+import com.hmju.memo.model.form.DeleteMemoItem
 import com.hmju.memo.model.form.LoginForm
 import com.hmju.memo.model.form.MemoItemForm
 import com.hmju.memo.model.login.LoginResponse
+import com.hmju.memo.model.memo.FileItem
 import com.hmju.memo.model.memo.MemoFileResponse
 import com.hmju.memo.model.memo.MemoResponse
+import io.reactivex.Flowable
 import io.reactivex.Maybe
+import io.reactivex.Observable
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -67,6 +71,11 @@ interface ApiService {
         @Body body: MemoItemForm
     ): Maybe<BaseResponse>
 
+    @DELETE("/api/memo")
+    fun deleteMemo(
+        @Query("memo_id") memoId: Int
+    ): Maybe<BaseResponse>
+
     /**
      * 메모장 파일 추가 API
      * Multipart {
@@ -89,6 +98,7 @@ interface ApiService {
      */
     @DELETE("/api/uploads")
     fun deleteFile(
-        @Body body: String
+        @Query("manageNoList") manageNoList: List<Int>,
+        @Query("pathList") pathList: List<String>
     ): Maybe<BaseResponse>
 }

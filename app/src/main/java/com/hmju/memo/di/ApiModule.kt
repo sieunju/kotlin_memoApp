@@ -3,7 +3,6 @@ package com.hmju.memo.di
 import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.repository.network.NetworkDataSource
 import com.hmju.memo.repository.network.NetworkDataSourceImpl
-import com.hmju.memo.repository.network.TestApiService
 import com.hmju.memo.utils.createOkHttpClient
 import com.hmju.memo.utils.createRetrofit
 import com.hmju.memo.utils.headerInterceptor
@@ -37,9 +36,5 @@ val apiModule = module {
         NetworkDataSourceImpl(
             get(), get(), get()
         )
-    }
-
-    single<TestApiService> {
-        createRetrofit(get())
     }
 }

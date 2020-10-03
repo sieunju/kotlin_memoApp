@@ -24,7 +24,7 @@
     </style>
 
     <style name="AppTheme.MemoDetail">
-        <item name="android:statusBarColor" tools:ignore="NewApi">@color/colorStatusBar</item>
+        <item name="android:statusBarColor" tools:ignore="NewApi">@color/colorBackground</item>
         <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
     </style>
 
@@ -39,7 +39,7 @@
     </style>
 
     <style name="EditTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="android:colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     </style>
     <!-- [e] Edit Text Style -->
