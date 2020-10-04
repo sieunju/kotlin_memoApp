@@ -33,7 +33,6 @@ class MainViewModel(
 ) : BaseViewModel() {
 
     val startLogin = SingleLiveEvent<Unit>()
-    val startAlert = SingleLiveEvent<Unit>()
     val startToolBarAction = SingleLiveEvent<Int>()
     val startMemoDetail = SingleLiveEvent<Triple<View, MemoItem, Int>>()
     val finish = SingleLiveEvent<Boolean>()
@@ -76,7 +75,7 @@ class MainViewModel(
      * init Data..
      * 현재는 파라미터만 초기화.
      */
-    fun initData(){
+    private fun initData(){
         params.pageNo = 1
         params.keyword = null
         params.selectTag = null
@@ -96,6 +95,7 @@ class MainViewModel(
     }
 
     fun refresh(){
+        startNetworkState.value = NetworkState.LOADING
         initData()
         start()
     }

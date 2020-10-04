@@ -7,7 +7,7 @@
 
         <variable
             name="listener"
-            type="com.hmju.memo.ui.bottomsheet.MemoDetailMoreDialog.Listener" />
+            type="com.hmju.memo.ui.bottomsheet.MemoMoreDialog.Listener" />
 
         <variable
             name="pos"
@@ -15,7 +15,7 @@
 
         <variable
             name="item"
-            type="com.hmju.memo.ui.bottomsheet.MemoDetailMoreDialog.MemoDetailMoreDialogItem" />
+            type="com.hmju.memo.ui.bottomsheet.MemoMoreDialog.MemoDetailMoreDialogItem" />
 
     </data>
 

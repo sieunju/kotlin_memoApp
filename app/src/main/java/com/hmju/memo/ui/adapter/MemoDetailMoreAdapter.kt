@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewHolder
 import com.hmju.memo.databinding.ItemMemoDetailMoreBinding
-import com.hmju.memo.ui.bottomsheet.MemoDetailMoreDialog
+import com.hmju.memo.ui.bottomsheet.MemoMoreDialog
 
 /**
  * Description : 메모 상세 더보기 Adapter Class
@@ -13,8 +13,8 @@ import com.hmju.memo.ui.bottomsheet.MemoDetailMoreDialog
  * Created by juhongmin on 2020/10/03
  */
 class MemoDetailMoreAdapter(
-    private val dataList: ArrayList<MemoDetailMoreDialog.MemoDetailMoreDialogItem>,
-    val listener: MemoDetailMoreDialog.Listener
+    private val dataList: ArrayList<MemoMoreDialog.MemoDetailMoreDialogItem>,
+    val listener: MemoMoreDialog.Listener
 ) : RecyclerView.Adapter<MemoDetailMoreAdapter.MemoDetailMoreItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemoDetailMoreItemViewHolder {
@@ -35,7 +35,7 @@ class MemoDetailMoreAdapter(
     class MemoDetailMoreItemViewHolder(
         parent: ViewGroup,
         layoutId: Int,
-        listener: MemoDetailMoreDialog.Listener
+        listener: MemoMoreDialog.Listener
     ) : BaseViewHolder<ItemMemoDetailMoreBinding>(parent, layoutId) {
         init {
             binding.listener = listener

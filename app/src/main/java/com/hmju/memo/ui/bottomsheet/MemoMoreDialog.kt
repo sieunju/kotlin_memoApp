@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.databinding.DataBindingUtil
 import com.hmju.memo.R
+import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.convenience.ListMutableLiveData
 import com.hmju.memo.databinding.DialogMemoDetailMoreBinding
 import com.hmju.memo.utils.ResourceProvider
-import com.hmju.memo.viewModels.MemoDetailViewModel
 import org.koin.android.ext.android.inject
 import org.koin.core.KoinComponent
 
@@ -18,7 +18,7 @@ import org.koin.core.KoinComponent
  * Description : 메모 상세 더보기 Dialog Class
  * Created by juhongmin on 2020/10/03
  */
-class MemoDetailMoreDialog : RoundedBottomSheet(), KoinComponent {
+class MemoMoreDialog : RoundedBottomSheet(), KoinComponent {
 
     interface Listener {
         fun onItemSelected(pos: Int)
@@ -53,7 +53,7 @@ class MemoDetailMoreDialog : RoundedBottomSheet(), KoinComponent {
     }
 
     private lateinit var callback: (Int, Int) -> Unit
-    lateinit var viewModel: MemoDetailViewModel
+    lateinit var viewModel: BaseViewModel
     lateinit var binding: DialogMemoDetailMoreBinding
 
     private val listener: Listener = object : Listener {
@@ -86,10 +86,10 @@ class MemoDetailMoreDialog : RoundedBottomSheet(), KoinComponent {
 
     companion object {
         fun newInstance(
-            tmpViewModel: MemoDetailViewModel,
+            tmpViewModel: BaseViewModel,
             tmpCallback: (Int, Int) -> Unit
-        ): MemoDetailMoreDialog =
-            MemoDetailMoreDialog().apply {
+        ): MemoMoreDialog =
+            MemoMoreDialog().apply {
                 callback = tmpCallback
                 viewModel = tmpViewModel
             }

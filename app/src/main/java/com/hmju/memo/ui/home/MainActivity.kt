@@ -10,11 +10,14 @@ import com.hmju.memo.R
 import com.hmju.memo.base.BaseActivity
 import com.hmju.memo.databinding.ActivityMainBinding
 import com.hmju.memo.define.ExtraCode
+import com.hmju.memo.define.NetworkState
 import com.hmju.memo.define.RequestCode
+import com.hmju.memo.define.ToolBarDefine.POS_ADD
 import com.hmju.memo.define.ToolBarDefine.POS_HOME
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.ui.adapter.MemoListAdapter
 import com.hmju.memo.ui.login.LoginActivity
+import com.hmju.memo.ui.memo.MemoAddActivity
 import com.hmju.memo.ui.toast.showToast
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.moveMemoDetail
@@ -47,7 +50,28 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), SwipeRe
                 startActResult<LoginActivity>(RequestCode.LOGIN) {}
             })
 
-            startAlert.observe(this@MainActivity, Observer {
+            startNetworkState.observe(this@MainActivity, Observer { state ->
+                when (state) {
+                    NetworkState.LOADING -> {
+                        showLoadingDialog()
+                    }
+                    NetworkState.ERROR -> {
+                        dismissLoadingDialog()
+                    }
+                    else -> {
+                        dismissLoadingDialog()
+                    }
+                }
+            })
+
+            networkState.observe(this@MainActivity, Observer {state->
+                JLogger.d("PagedNetwork State $state")
+                when(state) {
+                    NetworkState.SUCCESS -> {
+                        // 전체 로딩 Dismiss
+                        dismissLoadingDialog()
+                    }
+                }
             })
 
             startToolBarAction.observe(this@MainActivity, Observer { toolBarPos ->
@@ -58,6 +82,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), SwipeRe
                         rvContents.scrollToPosition(0)
                         motionRootLayout.post {
                             motionRootLayout.progress = 0.0F
+                        }
+                    }
+                    POS_ADD -> {
+                        // 메모 추가 페이지 진입
+                        startActResult<MemoAddActivity>(RequestCode.MEMO_ADD) {
+
                         }
                     }
 
@@ -106,15 +136,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), SwipeRe
                         if (clickPos != -1) {
                             // 해당 메모장이 삭제 되었다면.
                             if (it.getBooleanExtra(ExtraCode.MEMO_DETAIL_DELETE, false)) {
-                                rvContents.adapter?.let { adapter ->
-                                    if (adapter is MemoListAdapter) {
-                                        JLogger.d("데이터 삭제!")
-                                        adapter.removeData(
-                                            clickPos,
-                                            it.getIntExtra(ExtraCode.MEMO_DETAIL_MANAGE_NO, -1)
-                                        )
-                                    }
-                                }
+                                // 갱신 처리.
+                                onRefresh()
                             } else {
                                 val changedItem =
                                     it.getSerializableExtra(ExtraCode.MEMO_DETAIL) as MemoItem
@@ -135,6 +158,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), SwipeRe
     override fun onRefresh() {
         JLogger.d("onRefresh!!")
         with(viewModel) {
+            rvContents.scrollToPosition(0)
             refresh()
             refresh.isRefreshing = false
         }

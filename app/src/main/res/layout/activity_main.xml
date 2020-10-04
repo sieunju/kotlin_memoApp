@@ -35,7 +35,6 @@
                 app:memoList="@{viewModel.memoList}"
                 app:viewModel="@{viewModel}" />
 
-
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <!-- Header 영역 -->

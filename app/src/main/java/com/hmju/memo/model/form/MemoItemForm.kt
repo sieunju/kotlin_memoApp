@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName
  * @param 메모장 내용
  */
 data class MemoItemForm(
-    @SerializedName("memo_id") val manageNo: Int,
+    @SerializedName("memo_id") val manageNo: Int? = null,
     @SerializedName("tag") val tag: Int,
     @SerializedName("title") val title: String,
     @SerializedName("contents") val contents: String

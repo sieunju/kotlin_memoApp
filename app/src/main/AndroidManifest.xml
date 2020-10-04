@@ -42,12 +42,16 @@
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.Login"
             android:windowSoftInputMode="adjustResize" />
+        
         <activity
             android:name=".ui.memo.MemoDetailActivity"
             android:theme="@style/AppTheme.MemoDetail"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity android:name=".ui.memo.MemoAddActivity" />
+        <activity
+            android:name=".ui.memo.MemoAddActivity"
+            android:theme="@style/AppTheme.MemoDetail"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.gallery.GalleryActivity"

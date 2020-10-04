@@ -23,7 +23,6 @@ class MemoListDataSourceFactory(
     val sourceLiveData = MutableLiveData<MemoListPageDataSource>()
 
     override fun create(): DataSource<Int, MemoItem> {
-        JLogger.d("onCreate!!")
         val source =
             MemoListPageDataSource(
                 actPref = actPref,

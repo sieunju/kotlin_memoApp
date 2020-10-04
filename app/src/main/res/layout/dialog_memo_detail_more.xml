@@ -6,15 +6,15 @@
 
         <import type="java.util.ArrayList" />
 
-        <import type="com.hmju.memo.ui.bottomsheet.MemoDetailMoreDialog.MemoDetailMoreDialogItem" />
+        <import type="com.hmju.memo.ui.bottomsheet.MemoMoreDialog.MemoDetailMoreDialogItem" />
 
         <variable
             name="viewModel"
-            type="com.hmju.memo.viewModels.MemoDetailViewModel" />
+            type="com.hmju.memo.base.BaseViewModel" />
 
         <variable
             name="listener"
-            type="com.hmju.memo.ui.bottomsheet.MemoDetailMoreDialog.Listener" />
+            type="com.hmju.memo.ui.bottomsheet.MemoMoreDialog.Listener" />
 
         <variable
             name="dataList"

@@ -80,9 +80,9 @@
                         android:imeOptions="actionNext"
                         android:inputType="text"
                         android:maxLength="40"
-                        android:text="@={viewModel.title}"
                         android:textSize="@dimen/text_size_20"
                         app:editTextListener="@{viewModel}"
+                        app:htmlEdit="@={viewModel.title}"
                         tools:text="안녕하세요" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -107,9 +107,9 @@
                         android:inputType="textMultiLine"
                         android:maxLength="400"
                         android:scrollbars="vertical"
-                        android:text="@={viewModel.contents}"
                         android:textSize="@dimen/text_size_20"
                         app:editTextListener="@{viewModel}"
+                        app:htmlEdit="@={viewModel.contents}"
                         tools:text="@string/large_text" />
 
                 </com.google.android.material.textfield.TextInputLayout>

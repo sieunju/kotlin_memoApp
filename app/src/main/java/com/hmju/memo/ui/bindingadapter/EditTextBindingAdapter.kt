@@ -33,27 +33,35 @@ import com.hmju.memo.viewModels.MemoDetailViewModel
 @Suppress("DEPRECATION")
 @BindingAdapter("htmlEdit")
 fun setHtmlEdit(
-    view: EditText,
+    view: TextView,
     text: String?
 ) {
-    text?.let {
+    text?.let { newText ->
+        val oldText = view.text.toString()
+
+        // 변경점이 없는 경우. 리턴
+        if (newText == oldText) {
+            return
+        }
+
+        // 버전 별로 분기 처리.
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            view.setText(Html.fromHtml(it), TextView.BufferType.EDITABLE)
+            view.setText(Html.fromHtml(newText), TextView.BufferType.EDITABLE)
         } else {
             view.setText(
-                Html.fromHtml(it, Html.FROM_HTML_MODE_LEGACY),
+                Html.fromHtml(newText, Html.FROM_HTML_MODE_LEGACY),
                 TextView.BufferType.EDITABLE
             )
         }
     }
 }
 
-@InverseBindingAdapter(attribute = "htmlEdit", event = "textAttrChanged")
-fun getHtmlText(view: EditText): String {
+@InverseBindingAdapter(attribute = "htmlEdit", event = "android:textAttrChanged")
+fun getHtmlTextString(view: TextView): String {
     return view.text.toString()
 }
 
-@BindingAdapter("textAttrChanged", requireAll = false)
+@BindingAdapter("android:textAttrChanged", requireAll = false)
 fun setEditTextChanged(
     view: TextView,
     textChanged: InverseBindingListener
@@ -81,11 +89,11 @@ fun setEditTextListener(
     viewModel: BaseViewModel
 ) {
 
-    when(viewModel) {
+    when (viewModel) {
         is LoginViewModel -> {
             // Ket Action Listener
             editText.setOnEditorActionListener { v, actionId, event ->
-                if(event?.keyCode == KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_DONE) {
+                if (event?.keyCode == KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_DONE) {
                     viewModel.startLogin()
                 }
                 return@setOnEditorActionListener false

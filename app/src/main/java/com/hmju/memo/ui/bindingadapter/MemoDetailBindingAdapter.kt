@@ -1,30 +1,19 @@
 package com.hmju.memo.ui.bindingadapter
 
-import android.animation.ObjectAnimator
-import android.graphics.Color
 import android.view.View
 import android.widget.RadioGroup
-import androidx.annotation.IdRes
-import androidx.core.animation.doOnEnd
-import androidx.core.animation.doOnStart
-import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
-import androidx.databinding.InverseBindingAdapter
-import androidx.databinding.InverseBindingListener
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.hmju.memo.R
-import com.hmju.memo.convenience.NonNullMutableLiveData
+import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.define.TagType
 import com.hmju.memo.model.memo.FileItem
-import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.ui.adapter.MemoDetailMoreAdapter
 import com.hmju.memo.ui.adapter.MemoImagePagerAdapter
-import com.hmju.memo.ui.bottomsheet.MemoDetailMoreDialog
+import com.hmju.memo.ui.bottomsheet.MemoMoreDialog
 import com.hmju.memo.utils.JLogger
+import com.hmju.memo.viewModels.MemoAddViewModel
 import com.hmju.memo.viewModels.MemoDetailViewModel
 import com.hmju.memo.widget.viewpagerIndicator.IndicatorView
 
@@ -70,8 +59,8 @@ fun setMemoDetailImgAdapter(
 @BindingAdapter(value = ["memoDetailMoreDataList", "listener"])
 fun setMemoDetailMoreAdapter(
     recyclerView: RecyclerView,
-    dataList: ArrayList<MemoDetailMoreDialog.MemoDetailMoreDialogItem>,
-    listener: MemoDetailMoreDialog.Listener
+    dataList: ArrayList<MemoMoreDialog.MemoDetailMoreDialogItem>,
+    listener: MemoMoreDialog.Listener
 ) {
     recyclerView.adapter?.notifyDataSetChanged() ?: run {
         MemoDetailMoreAdapter(dataList, listener).apply {
@@ -83,7 +72,7 @@ fun setMemoDetailMoreAdapter(
 @BindingAdapter("viewModel")
 fun setMemoDetailTagAdapter(
     radioGroup: RadioGroup,
-    viewModel: MemoDetailViewModel
+    viewModel: BaseViewModel
 ) {
     radioGroup.setOnCheckedChangeListener { _, checkedId ->
         val tagType: TagType
@@ -111,31 +100,62 @@ fun setMemoDetailTagAdapter(
             }
         }
 
-        viewModel.setSelectedTag(tagType)
+        if (viewModel is MemoDetailViewModel) {
+            viewModel.setSelectedTag(tagType)
+        } else if (viewModel is MemoAddViewModel) {
+            viewModel.setSelectedTag(tagType)
+        }
     }
 
-    // Binding RadioButton
-    when(viewModel.selectTag.value){
-        TagType.RED.tag -> {
-            radioGroup.check(R.id.tag_1)
+    if (viewModel is MemoDetailViewModel) {
+        // Binding RadioButton
+        when (viewModel.selectTag.value) {
+            TagType.RED.tag -> {
+                radioGroup.check(R.id.tag_1)
+            }
+            TagType.ORANGE.tag -> {
+                radioGroup.check(R.id.tag_2)
+            }
+            TagType.YELLOW.tag -> {
+                radioGroup.check(R.id.tag_3)
+            }
+            TagType.GREEN.tag -> {
+                radioGroup.check(R.id.tag_4)
+            }
+            TagType.BLUE.tag -> {
+                radioGroup.check(R.id.tag_5)
+            }
+            TagType.PURPLE.tag -> {
+                radioGroup.check(R.id.tag_6)
+            }
+            else -> {
+                radioGroup.check(R.id.tag_7)
+            }
         }
-        TagType.ORANGE.tag -> {
-            radioGroup.check(R.id.tag_2)
-        }
-        TagType.YELLOW.tag -> {
-            radioGroup.check(R.id.tag_3)
-        }
-        TagType.GREEN.tag -> {
-            radioGroup.check(R.id.tag_4)
-        }
-        TagType.BLUE.tag -> {
-            radioGroup.check(R.id.tag_5)
-        }
-        TagType.PURPLE.tag -> {
-            radioGroup.check(R.id.tag_6)
-        }
-        else -> {
-            radioGroup.check(R.id.tag_7)
+    } else if (viewModel is MemoAddViewModel) {
+        // Binding RadioButton
+        when (viewModel.selectTag.value) {
+            TagType.RED.tag -> {
+                radioGroup.check(R.id.tag_1)
+            }
+            TagType.ORANGE.tag -> {
+                radioGroup.check(R.id.tag_2)
+            }
+            TagType.YELLOW.tag -> {
+                radioGroup.check(R.id.tag_3)
+            }
+            TagType.GREEN.tag -> {
+                radioGroup.check(R.id.tag_4)
+            }
+            TagType.BLUE.tag -> {
+                radioGroup.check(R.id.tag_5)
+            }
+            TagType.PURPLE.tag -> {
+                radioGroup.check(R.id.tag_6)
+            }
+            else -> {
+                radioGroup.check(R.id.tag_7)
+            }
         }
     }
 }

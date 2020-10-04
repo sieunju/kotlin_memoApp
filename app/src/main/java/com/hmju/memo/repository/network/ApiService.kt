@@ -1,16 +1,13 @@
 package com.hmju.memo.repository.network
 
 import com.hmju.memo.base.BaseResponse
-import com.hmju.memo.model.form.DeleteMemoItem
 import com.hmju.memo.model.form.LoginForm
 import com.hmju.memo.model.form.MemoItemForm
 import com.hmju.memo.model.login.LoginResponse
-import com.hmju.memo.model.memo.FileItem
 import com.hmju.memo.model.memo.MemoFileResponse
+import com.hmju.memo.model.memo.MemoListResponse
 import com.hmju.memo.model.memo.MemoResponse
-import io.reactivex.Flowable
 import io.reactivex.Maybe
-import io.reactivex.Observable
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -43,18 +40,31 @@ interface ApiService {
     @GET("/api/memo")
     fun fetchMemoList(
         @Query("pageNo") pageNo: Int
-    ): Call<MemoResponse>
+    ): Call<MemoListResponse>
 
     @GET("/api/memo")
     fun fetchMemoList(
         @Query("pageNo") pageNo: Int,
         @Query("filterTag") filterTag: Int
-    ): Maybe<MemoResponse>
+    ): Maybe<MemoListResponse>
 
     @GET("/api/memo")
     fun retrieveSearch(
         @Query("pageNo") pageNo: Int,
         @Query("keyWord") keyWord: String
+    ): Maybe<MemoListResponse>
+
+    /**
+     * 메모 추가 API
+     * body {
+     *  tag         : Memo Tag,
+     *  title       : Memo Title
+     *  contents    : Memo Contents
+     * }
+     */
+    @POST("/api/memo")
+    fun addMemo(
+        @Body body: MemoItemForm
     ): Maybe<MemoResponse>
 
     /**
@@ -71,6 +81,10 @@ interface ApiService {
         @Body body: MemoItemForm
     ): Maybe<BaseResponse>
 
+    /**
+     * 메모장 삭제 API
+     * @query memo_id -> 메모장 관리자 번호
+     */
     @DELETE("/api/memo")
     fun deleteMemo(
         @Query("memo_id") memoId: Int

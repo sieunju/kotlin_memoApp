@@ -5,18 +5,153 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.hmju.memo.viewModels.MemoAddViewModel" />
     </data>
 
-    <com.hmju.memo.base.HeaderView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:header_type="title">
+        tools:background="@color/colorBackground">
 
+        <!-- 선택한 우선 순위. -->
+        <View
+            android:id="@+id/vSelectedTag"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_10"
+            app:layout_constraintTop_toTopOf="parent" />
 
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/vSelectedTag">
 
-    </com.hmju.memo.base.HeaderView>
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- 이미지 레이아웃 영역  -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{viewModel.fileSize > 0 ? View.VISIBLE : View.GONE}">
+
+                    <!-- 콘텐츠 사진 영역 -->
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:fileList="@{viewModel.fileList}"
+                        app:indicatorView="@{indicator}"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <!-- ViewPager Indicator 영역  -->
+                    <com.hmju.memo.widget.viewpagerIndicator.IndicatorView
+                        android:id="@+id/indicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_size_10"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!-- 제목 -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/EditTextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_size_10"
+                    android:layout_marginTop="@dimen/margin_size_10"
+                    android:layout_marginRight="@dimen/margin_size_10"
+                    android:hint="@string/str_title"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="40">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:maxLength="40"
+                        android:text="@={viewModel.title}"
+                        android:textSize="@dimen/text_size_20"
+                        app:editTextListener="@{viewModel}"
+                        tools:text="안녕하세요" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- 내용 -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/EditTextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_size_10"
+                    android:layout_marginTop="@dimen/margin_size_5"
+                    android:layout_marginRight="@dimen/margin_size_10"
+                    android:hint="@string/str_contents"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="400">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etContents"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionGo"
+                        android:inputType="textMultiLine"
+                        android:maxLength="400"
+                        android:scrollbars="vertical"
+                        android:text="@={viewModel.contents}"
+                        android:textSize="@dimen/text_size_20"
+                        app:editTextListener="@{viewModel}"
+                        tools:text="@string/large_text" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_size_10"
+                    android:layout_marginTop="@dimen/margin_size_10"
+                    android:layout_marginRight="@dimen/margin_size_10"
+                    android:layout_marginBottom="@dimen/margin_size_10">
+
+                    <!-- 더보기 버튼 -->
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="@dimen/size_40"
+                        android:layout_height="@dimen/size_40"
+                        android:layout_marginStart="@dimen/margin_size_5"
+                        android:layout_marginLeft="@dimen/margin_size_5"
+                        android:adjustViewBounds="true"
+                        android:padding="@dimen/padding_size_5"
+                        android:src="@drawable/ic_more_vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:turtleClick="@{()->viewModel.moveMoreDialog()}"
+                        tools:src="@drawable/ic_more_vertical" />
+
+                    <!--  버튼 -->
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/str_add"
+                        android:textColor="@color/colorTextWhite"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:turtleClick="@{()->viewModel.addMemo()}" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

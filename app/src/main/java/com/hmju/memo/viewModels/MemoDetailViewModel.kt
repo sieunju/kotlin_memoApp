@@ -262,7 +262,6 @@ class MemoDetailViewModel(
      */
     private fun addImageFileList(tmpList: ArrayList<FileItem>?) {
         tmpList?.let { filePathList ->
-            JLogger.d("TEST:: FileList $filePathList")
             _fileList.postAddAll(filePathList)
         }
     }

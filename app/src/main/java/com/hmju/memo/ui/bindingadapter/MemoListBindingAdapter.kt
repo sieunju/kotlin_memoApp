@@ -10,6 +10,7 @@ import com.hmju.memo.define.TagType
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.ui.adapter.MemoListAdapter
 import com.hmju.memo.ui.decoration.VerticalItemDecoration
+import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.MainViewModel
 
 /**
@@ -27,7 +28,12 @@ fun setMemoListAdapter(
     view.adapter?.let { adapter ->
 
         if (adapter is MemoListAdapter) {
-            adapter.submitList(memoList)
+            memoList?.let{pagedList->
+                if(adapter.itemCount > pagedList.loadedCount) {
+                    adapter.notifyItemRangeRemoved(0,adapter.itemCount)
+                }
+                adapter.submitList(pagedList)
+            }
         }
     } ?: run {
         MemoListAdapter(viewModel).apply {

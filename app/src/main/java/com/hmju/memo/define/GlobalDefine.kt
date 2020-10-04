@@ -23,6 +23,7 @@ object ExtraCode {
 object RequestCode {
     const val LOGIN = 100
     const val MEMO_DETAIL = 200
+    const val MEMO_ADD = 201
     const val GALLERY = 300
     const val CAMERA_CAPTURE = 400
 }

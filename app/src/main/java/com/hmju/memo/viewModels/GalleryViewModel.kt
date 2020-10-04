@@ -275,7 +275,6 @@ class GalleryViewModel(
     fun isSelected(id: String): Boolean {
         return if (selectedPhotoList.size() > 0) {
             synchronized(tmpGallerySelectItem) {
-                JLogger.d("isSelected $id")
                 tmpGallerySelectItem.id = id
                 return selectedPhotoList.contains(tmpGallerySelectItem)
             }

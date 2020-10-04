@@ -5,7 +5,6 @@ import android.animation.ObjectAnimator
 import android.content.*
 import android.os.Bundle
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.hmju.memo.BR
 import com.hmju.memo.R
@@ -14,8 +13,7 @@ import com.hmju.memo.databinding.ActivityMemoDetailBinding
 import com.hmju.memo.define.*
 import com.hmju.memo.dialog.ConfirmDialog
 import com.hmju.memo.model.memo.MemoItem
-import com.hmju.memo.ui.bottomsheet.CheckableBottomSheet
-import com.hmju.memo.ui.bottomsheet.MemoDetailMoreDialog
+import com.hmju.memo.ui.bottomsheet.MemoMoreDialog
 import com.hmju.memo.ui.gallery.GalleryActivity
 import com.hmju.memo.ui.toast.showToast
 import com.hmju.memo.utils.JLogger
@@ -44,7 +42,7 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoDetailVie
     }
 
     override val bindingVariable = BR.viewModel
-    private lateinit var moreDialog: MemoDetailMoreDialog
+    private lateinit var moreDialog: MemoMoreDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         onTransFormationEndContainer()
@@ -91,9 +89,9 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoDetailVie
             })
 
             startMoreDialog.observe(this@MemoDetailActivity, Observer {
-                moreDialog = MemoDetailMoreDialog.newInstance(viewModel) { type, pos ->
+                moreDialog = MemoMoreDialog.newInstance(viewModel) { type, pos ->
                     // 일반 선택
-                    if (type == MemoDetailMoreDialog.Type.NORMAL.type) {
+                    if (type == MemoMoreDialog.Type.NORMAL.type) {
                         when (pos) {
                             0 -> {
                                 // 사진 추가.

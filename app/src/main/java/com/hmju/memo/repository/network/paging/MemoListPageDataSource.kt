@@ -5,7 +5,7 @@ import androidx.paging.PageKeyedDataSource
 import com.hmju.memo.define.NetworkState
 import com.hmju.memo.model.form.MemoListParam
 import com.hmju.memo.model.memo.MemoItem
-import com.hmju.memo.model.memo.MemoResponse
+import com.hmju.memo.model.memo.MemoListResponse
 import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.repository.preferences.AccountPref
 import com.hmju.memo.utils.JLogger
@@ -38,11 +38,11 @@ class MemoListPageDataSource(
         networkState.postValue(NetworkState.LOADING)
         apiService.fetchMemoList(
             pageNo = memoParams.pageNo
-        ).enqueue(object : Callback<MemoResponse> {
+        ).enqueue(object : Callback<MemoListResponse> {
 
-            override fun onResponse(call: Call<MemoResponse>, response: Response<MemoResponse>) {
-                if (response.isSuccessful) {
-                    response.body()?.let {
+            override fun onResponse(call: Call<MemoListResponse>, listResponse: Response<MemoListResponse>) {
+                if (listResponse.isSuccessful) {
+                    listResponse.body()?.let {
                         memoParams.pageNo++
 
                         callback.onResult(it.dataList, null, memoParams.pageNo)
@@ -64,7 +64,7 @@ class MemoListPageDataSource(
                 }
             }
 
-            override fun onFailure(call: Call<MemoResponse>, t: Throwable) {
+            override fun onFailure(call: Call<MemoListResponse>, t: Throwable) {
                 JLogger.d("onFailure\t${t.message}")
                 networkState.postValue(NetworkState.ERROR)
             }
@@ -77,11 +77,11 @@ class MemoListPageDataSource(
         networkState.postValue(NetworkState.LOADING)
         apiService.fetchMemoList(
             pageNo = memoParams.pageNo
-        ).enqueue(object : Callback<MemoResponse> {
+        ).enqueue(object : Callback<MemoListResponse> {
 
-            override fun onResponse(call: Call<MemoResponse>, response: Response<MemoResponse>) {
-                if (response.isSuccessful) {
-                    response.body()?.let {
+            override fun onResponse(call: Call<MemoListResponse>, listResponse: Response<MemoListResponse>) {
+                if (listResponse.isSuccessful) {
+                    listResponse.body()?.let {
                         memoParams.pageNo++
 
                         callback.onResult(it.dataList, memoParams.pageNo)
@@ -96,7 +96,7 @@ class MemoListPageDataSource(
                 }
             }
 
-            override fun onFailure(call: Call<MemoResponse>, t: Throwable) {
+            override fun onFailure(call: Call<MemoListResponse>, t: Throwable) {
                 JLogger.d("onFailure\t${t.message}")
                 networkState.postValue(NetworkState.ERROR)
             }
