@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.hmju.memo.BR
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseActivity
@@ -27,7 +28,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
  *
  * Created by hmju on 2020-05-10
  */
-class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
+class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), SwipeRefreshLayout.OnRefreshListener {
 
     override val layoutId = R.layout.activity_main
     override val viewModel: MainViewModel by viewModel()
@@ -75,6 +76,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                     showToast(R.string.str_back_press_info)
                 }
             })
+
+            refresh.setOnRefreshListener(this@MainActivity)
 
             // API 호출.
             start()
@@ -126,6 +129,14 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                     }
                 }
             }
+        }
+    } // onActivityResult
+
+    override fun onRefresh() {
+        JLogger.d("onRefresh!!")
+        with(viewModel) {
+            refresh()
+            refresh.isRefreshing = false
         }
     }
 }

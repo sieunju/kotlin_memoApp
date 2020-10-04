@@ -9,7 +9,7 @@
 
         <OnSwipe
             motion:dragDirection="dragUp"
-            motion:touchAnchorId="@id/rvContents"
+            motion:touchAnchorId="@id/refresh"
             motion:touchAnchorSide="top" />
 
     </Transition>
@@ -69,7 +69,7 @@
 
         <!-- Contents 영역 -->
         <Constraint
-            android:id="@+id/rvContents"
+            android:id="@+id/refresh"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             motion:layout_constraintBottom_toTopOf="@+id/bottomToolBar"
@@ -134,7 +134,7 @@
 
         <!-- Contents 영역 -->
         <Constraint
-            android:id="@+id/rvContents"
+            android:id="@+id/refresh"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             motion:layout_constraintBottom_toTopOf="@+id/bottomToolBar"

@@ -158,6 +158,9 @@ dependencies {
     implementation "androidx.navigation:navigation-runtime:$rootProject.navVersion"
 
     // Loading Lib
-    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
+    implementation "com.github.ybq:Android-SpinKit:$rootProject.loadingLayoutVersion"
+
+    // Refresh Lib
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$rootProject.refreshLayoutVersion"
 
 }

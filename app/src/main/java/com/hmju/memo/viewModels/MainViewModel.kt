@@ -33,7 +33,6 @@ class MainViewModel(
 ) : BaseViewModel() {
 
     val startLogin = SingleLiveEvent<Unit>()
-    val startMemoTop = SingleLiveEvent<Unit>()
     val startAlert = SingleLiveEvent<Unit>()
     val startToolBarAction = SingleLiveEvent<Int>()
     val startMemoDetail = SingleLiveEvent<Triple<View, MemoItem, Int>>()
@@ -94,6 +93,11 @@ class MainViewModel(
 
     fun memoDetail(view: View, item: MemoItem, pos: Int) {
         startMemoDetail.value = Triple(view, item, pos)
+    }
+
+    fun refresh(){
+        initData()
+        start()
     }
 }
 

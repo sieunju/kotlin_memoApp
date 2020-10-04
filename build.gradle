@@ -58,6 +58,13 @@ buildscript {
 
         // Navigation Architecture Component
         navVersion = '2.3.0'
+
+        // Loading Layout
+        loadingLayoutVersion = '1.4.0'
+
+        // Refresh Layout
+        refreshLayoutVersion = '1.1.0'
+
     }
     repositories {
         google()
