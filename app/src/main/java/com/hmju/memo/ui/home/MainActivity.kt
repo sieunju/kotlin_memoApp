@@ -3,6 +3,7 @@ package com.hmju.memo.ui.home
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.hmju.memo.BR
@@ -23,6 +24,7 @@ import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.moveMemoDetail
 import com.hmju.memo.utils.startActResult
 import com.hmju.memo.viewModels.MainViewModel
+import com.hmju.memo.widget.bottomToolbar.BottomToolbar
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -31,7 +33,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
  *
  * Created by hmju on 2020-05-10
  */
-class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), SwipeRefreshLayout.OnRefreshListener {
+class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), SwipeRefreshLayout.OnRefreshListener, LifecycleObserver {
 
     override val layoutId = R.layout.activity_main
     override val viewModel: MainViewModel by viewModel()
@@ -107,6 +109,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), SwipeRe
                 }
             })
 
+            // ToolBar Setting
+            bottomToolBar.lifeCycle = lifecycle
             refresh.setOnRefreshListener(this@MainActivity)
 
             // API 호출.

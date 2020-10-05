@@ -2,6 +2,7 @@ package com.hmju.memo.ui.gallery
 
 import android.Manifest
 import android.content.Intent
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Bundle
 import androidx.lifecycle.Observer
@@ -65,7 +66,6 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
                     request(
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.ACCESS_MEDIA_LOCATION,
                         Manifest.permission.CAMERA
                     ).subscribe { isGranted ->
                         if (isGranted) {
@@ -119,20 +119,18 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
                     list
                 ) { pos, id ->
                     startNetworkState.postValue(NetworkState.LOADING)
-                    JLogger.d("Selected $pos $id")
                     resetFilter()
                     selectedFilter(id)
 
                     fetchGallery()
                     selectDialog.dismiss()
                 }.also {
-                    it.show(supportFragmentManager, "")
+                    it.show(supportFragmentManager, "filterDialog")
                 }
 
             })
 
             startNotify.observe(this@GalleryActivity, Observer { item ->
-                JLogger.d("Notify Item $item")
                 rvContents.adapter?.let {
                     it.notifyItemChanged(item.pos + 1)
                 }
@@ -147,6 +145,7 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
         when (requestCode) {
             RequestCode.CAMERA_CAPTURE -> {
                 if (resultCode == RESULT_OK) {
+                    savePicture()
                     val intent = Intent()
                     intent.putExtra(ExtraCode.CAMERA_CAPTURE_PHOTO_URI, photoUri.toString())
                     setResult(ResultCode.CAMERA_CAPTURE_OK, intent)
@@ -159,6 +158,19 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
                     }
                 }
             }
+        }
+    }
+
+    private fun savePicture(){
+        try {
+            MediaScannerConnection.scanFile(this,
+                arrayOf(photoUri.toString()),
+                null
+            ) { path, uri ->
+                JLogger.d("Path $path Uri $uri")
+            }
+        } catch (ex: Exception) {
+
         }
     }
 }

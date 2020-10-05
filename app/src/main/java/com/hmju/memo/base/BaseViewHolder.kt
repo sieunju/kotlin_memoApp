@@ -1,16 +1,11 @@
 package com.hmju.memo.base
 
-import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
-import com.hmju.memo.model.memo.MemoItem
-import com.hmju.memo.ui.login.LoginActivity
-import com.hmju.memo.utils.JLogger
-import com.hmju.memo.utils.startAct
 
 /**
  * Description: BaseViewHolder

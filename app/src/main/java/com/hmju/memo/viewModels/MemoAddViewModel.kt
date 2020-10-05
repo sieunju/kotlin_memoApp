@@ -14,7 +14,6 @@ import com.hmju.memo.define.TagType
 import com.hmju.memo.model.form.MemoItemForm
 import com.hmju.memo.model.memo.FileItem
 import com.hmju.memo.repository.network.ApiService
-import com.hmju.memo.repository.preferences.AccountPref
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.ResourceProvider
 import io.reactivex.Observable
@@ -35,6 +34,9 @@ class MemoAddViewModel(
     private val _manageNo = NonNullMutableLiveData(-1)
     val manageNo: NonNullMutableLiveData<Int>
         get() = _manageNo // 메모 관리자 번호
+    val isAddMemo: LiveData<Boolean> = Transformations.map(manageNo) { it != -1 }
+    // 메모 추가를 완료했는지 유무
+
     private val _selectTag = NonNullMutableLiveData(TagType.ETC.tag)
     val selectTag: NonNullMutableLiveData<Int>
         get() = _selectTag // 선택한 우선 순위
@@ -53,27 +55,9 @@ class MemoAddViewModel(
     val startGallery = SingleLiveEvent<Unit>()
     val startSelectedTagColor = SingleLiveEvent<Int>()
 
+
     init {
         setSelectedTag(TagType.ETC)
-    }
-
-    fun addMemo() {
-        launch {
-            apiService.addMemo(
-                MemoItemForm(
-                    tag = selectTag.value,
-                    title = title.value,
-                    contents = contents.value
-                )
-            ).single()
-                .doOnSubscribe { startNetworkState.value = NetworkState.LOADING }
-                .subscribe({
-                    _manageNo.value = it.manageNo
-                    startNetworkState.value = NetworkState.SUCCESS
-                }, {
-                    startNetworkState.value = NetworkState.ERROR
-                })
-        }
     }
 
     fun moveMoreDialog() {
@@ -98,34 +82,76 @@ class MemoAddViewModel(
         }
     }
 
-    private fun addTempMemo(filePathList: List<String>) {
-        launch {
-            apiService.addMemo(
-                MemoItemForm(
-                    tag = selectTag.value,
-                    title = title.value,
-                    contents = contents.value
-                )
-            ).single()
-                .subscribe({
-                    JLogger.d("TEST Response $it")
-                    _manageNo.value = it.manageNo
-                    addFileUpload(filePathList)
-                }, {
-                    JLogger.d("TEST:: Error ${it.message}")
-                    startNetworkState.value = NetworkState.ERROR
-                })
+    fun addMemo() {
+        addMemo { null }
+    }
+
+    private fun addMemo(callBack: (Boolean) -> Unit?) {
+
+        if (isAddMemo.value!!) {
+            JLogger.d("이미 메모가 추가된 상태입니다.")
+            launch {
+                apiService.updateMemo(
+                    MemoItemForm(
+                        manageNo = manageNo.value,
+                        tag = selectTag.value,
+                        title = title.value,
+                        contents = contents.value
+                    )
+                ).single()
+                    .doOnSubscribe { onLoading() }
+                    .subscribe(
+                        {
+                            JLogger.d("Success $it")
+                            onSuccess()
+                        }, {
+                            JLogger.d("Error ${it.message}")
+                            onError()
+                        })
+            }
+        } else {
+            JLogger.d("아닙니다!")
+            launch {
+                apiService.addMemo(
+                    MemoItemForm(
+                        tag = selectTag.value,
+                        title = title.value,
+                        contents = contents.value
+                    )
+                ).single()
+                    .doOnSubscribe { onLoading() }
+                    .subscribe(
+                        {
+                            JLogger.d("Success $it")
+                            if (it.manageNo != -1) {
+                                _manageNo.value = it.manageNo
+                                onSuccess()
+                                callBack.invoke(true)
+                            } else {
+                                JLogger.d("Error 입니다.")
+                                onError()
+                                callBack.invoke(false)
+                            }
+                        }, {
+                            JLogger.d("Error ${it.message}")
+                            onError()
+                            callBack.invoke(false)
+                        })
+            }
         }
     }
 
     /**
      * 파일 업로드 함수.
-     * @param filePathList -> 파일 경로 리스
+     * @param filePathList -> 파일 경로 리스트
      */
     fun addFileUpload(filePathList: List<String>) {
-        startNetworkState.value = NetworkState.LOADING
         if (manageNo.value == -1) {
-            addTempMemo(filePathList)
+            addMemo { isSuccess ->
+                if (isSuccess) {
+                    addFileUpload(filePathList)
+                }
+            }
             return
         }
 
@@ -133,42 +159,44 @@ class MemoAddViewModel(
         // 업로드 완료후 템프 파일 삭제하도록 처리.
         val tmpFileList = arrayListOf<File>()
 
-
         launch {
+            onLoading()
             // File Path -> File Converter
-            Observable.fromIterable(filePathList).flatMap { path ->
-                Observable.just(provider.getImageFileContents(path))
-            }.flatMap { fileInfo ->
-                tmpFileList.add(fileInfo.second)
-                val body = fileInfo.second.asRequestBody(fileInfo.first)
-                Observable.just(
-                    MultipartBody.Part.createFormData(
-                        name = "files",
-                        filename = fileInfo.second.name,
-                        body = body
+            Observable.fromIterable(filePathList)
+                .flatMap { path ->
+                    Observable.just(provider.getImageFileContents(path))
+                }.flatMap { fileInfo ->
+                    tmpFileList.add(fileInfo.second)
+                    val body = fileInfo.second.asRequestBody(fileInfo.first)
+                    Observable.just(
+                        MultipartBody.Part.createFormData(
+                            name = "files",
+                            filename = fileInfo.second.name,
+                            body = body
+                        )
                     )
-                )
-            }.single()
+                }.single()
                 .toList()
-                .subscribe({ list ->
-                    apiService.addFile(
-                        memoId = manageNo.value,
-                        files = list
-                    ).single()
-                        .subscribe({
-                            // 업로드 완료된 파일들 추가 및 갠신 처리.
-                            addImageFileList(it.pathList)
+                .subscribe(
+                    { list ->
+                        apiService.addFile(
+                            memoId = manageNo.value,
+                            files = list
+                        ).single()
+                            .subscribe({
+                                // 업로드 완료된 파일들 추가 및 갠신 처리.
+                                addImageFileList(it.pathList)
 
-                            provider.deleteFiles(tmpFileList)
-                            startNetworkState.value = NetworkState.SUCCESS
-                        }, {
-                            provider.deleteFiles(tmpFileList)
-                            startNetworkState.value = NetworkState.ERROR
-                        })
-                }, {
-                    provider.deleteFiles(tmpFileList)
-                    startNetworkState.value = NetworkState.ERROR
-                })
+                                provider.deleteFiles(tmpFileList)
+                                onSuccess()
+                            }, {
+                                provider.deleteFiles(tmpFileList)
+                                onError()
+                            })
+                    }, {
+                        provider.deleteFiles(tmpFileList)
+                        onError()
+                    })
         }
     }
 

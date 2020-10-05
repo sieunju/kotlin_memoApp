@@ -42,9 +42,38 @@ open class BaseViewModel : ViewModel() {
 
     private val disposable: CompositeDisposable = CompositeDisposable()
 
-    fun launch(job: () -> Disposable){
+    fun launch(job: () -> Disposable) {
         disposable.add(job())
     }
+
+    protected fun onLoading() {
+        startNetworkState.postValue(NetworkState.LOADING)
+//        if (startNetworkState.value != NetworkState.LOADING) {
+//            startNetworkState.value = NetworkState.LOADING
+//        }
+    }
+
+    protected fun onSuccess() {
+        startNetworkState.postValue(NetworkState.SUCCESS)
+//        if (startNetworkState.value != NetworkState.SUCCESS) {
+//            startNetworkState.value = NetworkState.SUCCESS
+//        }
+    }
+
+    protected fun onError() {
+        startNetworkState.postValue(NetworkState.ERROR)
+//        if (startNetworkState.value != NetworkState.ERROR) {
+//            startNetworkState.value = NetworkState.ERROR
+//        }
+    }
+
+    protected fun onResultEmpty() {
+        startNetworkState.postValue(NetworkState.RESULT_EMPTY)
+//        if (startNetworkState.value != NetworkState.RESULT_EMPTY) {
+//            startNetworkState.value = NetworkState.RESULT_EMPTY
+//        }
+    }
+
 
     override fun onCleared() {
         super.onCleared()

@@ -17,6 +17,7 @@ import com.google.android.material.transition.platform.MaterialContainerTransfor
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import com.hmju.memo.R
 import com.hmju.memo.dialog.LoadingDialog
+import com.hmju.memo.utils.JLogger
 
 /**
  * Description: BaseActivity Class

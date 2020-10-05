@@ -53,6 +53,7 @@ class MemoAddActivity : BaseActivity<ActivityMemoAddBinding, MemoAddViewModel>()
             })
 
             startNetworkState.observe(this@MemoAddActivity, Observer { state ->
+                JLogger.d("Network State $state")
                 when (state) {
                     NetworkState.LOADING -> {
                         showLoadingDialog()
@@ -104,15 +105,15 @@ class MemoAddActivity : BaseActivity<ActivityMemoAddBinding, MemoAddViewModel>()
             startGallery.observe(this@MemoAddActivity, Observer {
                 with(RxPermissions(this@MemoAddActivity)) {
                     request(
-                        android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
                     ).subscribe { isGranted ->
                         // 동의 한경우.
                         if (isGranted) {
                             startActResult<GalleryActivity>(com.hmju.memo.define.RequestCode.GALLERY) {
                                 putExtra(
                                     com.hmju.memo.define.ExtraCode.GALLERY_IMG_LIMIT,
-                                    0.coerceAtLeast(com.hmju.memo.define.Etc.IMG_FILE_LIMIT - fileSize.value!!)
+                                    0.coerceAtLeast(Etc.IMG_FILE_LIMIT - fileSize.value!!)
                                 )
                             }
                         } else {

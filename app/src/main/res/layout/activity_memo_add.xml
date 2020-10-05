@@ -141,7 +141,7 @@
                     <com.google.android.material.button.MaterialButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/str_add"
+                        android:text="@{viewModel.isAddMemo ? @string/str_change : @string/str_add}"
                         android:textColor="@color/colorTextWhite"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
