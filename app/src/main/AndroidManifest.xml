@@ -42,22 +42,24 @@
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.Login"
             android:windowSoftInputMode="adjustResize" />
-        
         <activity
             android:name=".ui.memo.MemoDetailActivity"
             android:theme="@style/AppTheme.MemoDetail"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".ui.memo.MemoAddActivity"
             android:theme="@style/AppTheme.MemoDetail"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".ui.gallery.GalleryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Gallery"
             android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".ui.imageEdit.ImageEditActivity"
+            android:theme="@style/AppTheme.Gallery"
+            android:windowSoftInputMode="adjustPan"/>
 
         <!-- [s] 카메라 캡처 관련 -->
         <provider
@@ -69,8 +71,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-        <!-- [e] 카메라 캡처 관련 -->
-
     </application>
 
 </manifest>

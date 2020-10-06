@@ -32,4 +32,11 @@ val viewModelModule = module {
             provider = get()
         )
     }
+
+    viewModel { (photoUri: String) ->
+        ImageEditViewModel(
+            photoUri = photoUri,
+            provider = get()
+        )
+    }
 }

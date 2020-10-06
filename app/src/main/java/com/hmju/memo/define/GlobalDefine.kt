@@ -18,6 +18,7 @@ object ExtraCode {
     const val GALLERY_IMG_LIMIT = "a"
     const val GALLERY_SELECT_IMAGES = "a"
     const val CAMERA_CAPTURE_PHOTO_URI = "a"
+    const val IMAGE_EDIT_PHOTO_URI = "a"
 }
 
 object RequestCode {

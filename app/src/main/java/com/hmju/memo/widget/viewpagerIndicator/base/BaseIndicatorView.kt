@@ -16,7 +16,7 @@ import com.hmju.memo.widget.viewpagerIndicator.option.IndicatorOptions
  *
  * Created by juhongmin on 2020/10/02
  */
-open class BaseIndicatorView @JvmOverloads constructor(
+open class BaseIndicatorView constructor(
     context: Context,
     attrs: AttributeSet?,
     defStyleAttr: Int

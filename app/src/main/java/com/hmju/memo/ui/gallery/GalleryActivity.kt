@@ -16,9 +16,11 @@ import com.hmju.memo.define.RequestCode
 import com.hmju.memo.define.ResultCode
 import com.hmju.memo.dialog.ConfirmDialog
 import com.hmju.memo.ui.bottomsheet.CheckableBottomSheet
+import com.hmju.memo.ui.imageEdit.ImageEditActivity
 import com.hmju.memo.ui.toast.showToast
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.moveCameraCapture
+import com.hmju.memo.utils.startAct
 import com.hmju.memo.viewModels.GalleryViewModel
 import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.activity_gallery.*
@@ -127,7 +129,12 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
                 }.also {
                     it.show(supportFragmentManager, "filterDialog")
                 }
+            })
 
+            startImageEdit.observe(this@GalleryActivity, Observer { uri ->
+                startAct<ImageEditActivity> {
+                    putExtra(ExtraCode.IMAGE_EDIT_PHOTO_URI, uri)
+                }
             })
 
             startNotify.observe(this@GalleryActivity, Observer { item ->
@@ -161,9 +168,10 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
         }
     }
 
-    private fun savePicture(){
+    private fun savePicture() {
         try {
-            MediaScannerConnection.scanFile(this,
+            MediaScannerConnection.scanFile(
+                this,
                 arrayOf(photoUri.toString()),
                 null
             ) { path, uri ->

@@ -50,6 +50,7 @@ class GalleryViewModel(
     val startCamera = SingleLiveEvent<Unit>()
     val startSubmit = SingleLiveEvent<Unit>()
     val startFilter = SingleLiveEvent<Unit>()
+    val startImageEdit = SingleLiveEvent<String>()
     val startNotify = SingleLiveEvent<GallerySelectedItem>()
 
     private val _filterList = ListMutableLiveData<GalleryFilterItem>().apply {
@@ -267,6 +268,14 @@ class GalleryViewModel(
                 startToast.value = provider.getString(R.string.str_info_file_max_cnt)
             }
         }
+    }
+
+    /**
+     * Test 를 위한 함수.
+     * 이미지 편집 페이지 진입 함수.
+     */
+    fun moveImageEdit(id : String) {
+        startImageEdit.value = id
     }
 
     /**

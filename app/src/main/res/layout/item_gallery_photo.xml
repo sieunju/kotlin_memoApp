@@ -36,6 +36,16 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/temp1" />
 
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#904C0000"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="w,0.5:1"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:turtleClick="@{()->viewModel.moveImageEdit(imgUrl)}" />
+
         <!-- 선택할떄 나타내는 영역 -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clSelected"
