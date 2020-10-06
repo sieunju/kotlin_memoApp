@@ -13,14 +13,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!-- 사진 영역 -->
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:weightSum="2">
+            android:weightSum="2"
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/clTop"
+                android:id="@+id/clBefore"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1">
@@ -29,30 +31,34 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
-                    app:bindImgGallery="@{viewModel.photoUri}"
-                    app:targetView="@{clTop}"
+                    app:bindImgGallery="@{viewModel.beforePhotoPath}"
+                    app:targetView="@{clBefore}"
                     app:viewModel="@{viewModel}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/cropImgView"
+            <!-- 구분선 -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_1"
+                android:background="#e4e4e4" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clAfter"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:adjustViewBounds="true" />
+                android:layout_weight="1">
 
+                <com.hmju.memo.widget.flexibleImageView.FlexibleImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    app:bindImgGallery="@{viewModel.afterPhotoPath}"
+                    app:targetView="@{clAfter}"
+                    app:viewModel="@{viewModel}" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <com.hmju.memo.widget.flexibleImageView.FlexibleImageView
-            android:id="@+id/copyImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:onlyMove="true" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clBottom"
@@ -65,7 +71,7 @@
                 android:layout_height="match_parent"
                 android:text="이미지 자르기"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:turtleClick="@{()->viewModel.cropImage(clTop)}" />
+                app:turtleClick="@{()->viewModel.cropImage(clBefore)}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

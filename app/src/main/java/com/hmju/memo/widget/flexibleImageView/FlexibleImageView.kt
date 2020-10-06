@@ -12,6 +12,7 @@ import android.view.MotionEvent.PointerProperties
 import android.view.ScaleGestureDetector
 import androidx.appcompat.widget.AppCompatImageView
 import com.hmju.memo.R
+import com.hmju.memo.utils.JLogger
 import com.hmju.memo.widget.flexibleImageView.gesture.MoveGestureDetector
 import com.hmju.memo.widget.flexibleImageView.gesture.RotateGestureDetector
 import kotlin.math.*
@@ -124,6 +125,8 @@ class FlexibleImageView(private val ctx: Context, private val attrs: AttributeSe
         if (!isEnabled) {
             return false
         }
+
+        JLogger.d("onTouchEvent!!!!!")
 
         // compute trans from
         val prop = arrayOfNulls<PointerProperties>(ev.pointerCount)

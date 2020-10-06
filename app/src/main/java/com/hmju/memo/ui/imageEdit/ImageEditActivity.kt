@@ -26,7 +26,7 @@ class ImageEditActivity : BaseActivity<ActivityImageEditBinding, ImageEditViewMo
 
     override val layoutId = R.layout.activity_image_edit
     override val viewModel: ImageEditViewModel by viewModel {
-        parametersOf(intent.getStringExtra(ExtraCode.IMAGE_EDIT_PHOTO_URI))
+        parametersOf(intent.getStringArrayListExtra(ExtraCode.IMAGE_EDIT_PHOTO_URIS))
     }
 
     override val bindingVariable = BR.viewModel
@@ -50,36 +50,10 @@ class ImageEditActivity : BaseActivity<ActivityImageEditBinding, ImageEditViewMo
 
             startCropImage.observe(this@ImageEditActivity, Observer {
                 JLogger.d("Crop Image Bitmap Size ${it.byteCount} Width ${it.width} Height ${it.height}")
-                cropImgView.setImageBitmap(it)
+                
             })
 
             startCopyImage.observe(this@ImageEditActivity, Observer {
-                clTop.visibility = View.GONE
-                copyImage.visibility = View.GONE
-                copyImage.setImageBitmap(it)
-                ObjectAnimator.ofFloat(clBottom,View.ALPHA,0.25F,1F).apply {
-                    duration = 2000
-                    addListener(object : Animator.AnimatorListener {
-                        override fun onAnimationStart(animation: Animator?) {
-                            copyImage.visibility = View.VISIBLE
-                        }
-
-                        override fun onAnimationEnd(animation: Animator?) {
-
-                        }
-
-                        override fun onAnimationCancel(animation: Animator?) {
-
-                        }
-
-
-                        override fun onAnimationRepeat(animation: Animator?) {
-
-                        }
-                    })
-                    start()
-                }
-
 
             })
         }

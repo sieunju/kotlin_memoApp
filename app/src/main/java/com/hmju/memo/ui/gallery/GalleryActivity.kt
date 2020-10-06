@@ -43,6 +43,7 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
 
     private lateinit var selectDialog: CheckableBottomSheet
     private var photoUri: Uri? = null
+    private val imgEditListTest = arrayListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,10 +132,17 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
                 }
             })
 
+            // TEST 를 위한 코드.
             startImageEdit.observe(this@GalleryActivity, Observer { uri ->
-                startAct<ImageEditActivity> {
-                    putExtra(ExtraCode.IMAGE_EDIT_PHOTO_URI, uri)
+                imgEditListTest.add(uri)
+                // 데이터가 2개 쌓였을때 실행.
+                if(imgEditListTest.size == 2) {
+                    startAct<ImageEditActivity> {
+                        putStringArrayListExtra(ExtraCode.IMAGE_EDIT_PHOTO_URIS,imgEditListTest)
+                    }
+                    imgEditListTest.clear()
                 }
+
             })
 
             startNotify.observe(this@GalleryActivity, Observer { item ->

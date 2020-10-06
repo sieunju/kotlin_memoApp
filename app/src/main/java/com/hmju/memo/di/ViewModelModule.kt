@@ -33,9 +33,9 @@ val viewModelModule = module {
         )
     }
 
-    viewModel { (photoUri: String) ->
+    viewModel { (list: ArrayList<String>) ->
         ImageEditViewModel(
-            photoUri = photoUri,
+            photoList = list,
             provider = get()
         )
     }

@@ -15,10 +15,8 @@ import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.ui.adapter.BottomSheetCheckableAdapter
 import com.hmju.memo.ui.bottomsheet.CheckableBottomSheet
 import com.hmju.memo.utils.JLogger
-import com.hmju.memo.viewModels.ImageEditViewModel
 import com.hmju.memo.viewModels.MainViewModel
 import com.hmju.memo.widget.bottomToolbar.BottomToolbar
-import com.hmju.memo.widget.flexibleImageView.FlexibleImageView
 
 /**
  * Description : 공통 Binding Adapter
@@ -185,18 +183,4 @@ fun bindingResourceDrawable(
     @DrawableRes drawableId: Int
 ) {
     view.setImageResource(drawableId)
-}
-
-@BindingAdapter(value = ["viewModel", "targetView"])
-fun setFlexibleLongClickListener(
-    view: FlexibleImageView,
-    viewModel: BaseViewModel
-) {
-    view.setOnLongClickListener {
-        JLogger.d("Long Click!")
-        if (viewModel is ImageEditViewModel) {
-            viewModel.longClickTest(view)
-        }
-        return@setOnLongClickListener true
-    }
 }
