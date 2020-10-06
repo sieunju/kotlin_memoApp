@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -14,30 +13,46 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/clTop"
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="w,1:1"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="2">
 
-            <com.hmju.memo.widget.pitchZoomImageView.FlexibleImageView
-                android:id="@+id/pitchZoomImg"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clTop"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:adjustViewBounds="true"
-                app:bindImgGallery="@{viewModel.photoUri}" />
+                android:layout_height="0dp"
+                android:layout_weight="1">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <com.hmju.memo.widget.flexibleImageView.FlexibleImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    app:bindImgGallery="@{viewModel.photoUri}"
+                    app:targetView="@{clTop}"
+                    app:viewModel="@{viewModel}" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/cropImgView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/cropImgView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <com.hmju.memo.widget.flexibleImageView.FlexibleImageView
+            android:id="@+id/copyImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="w,1:1"
-            app:layout_constraintTop_toBottomOf="@+id/clTop" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:onlyMove="true" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clBottom"
@@ -53,8 +68,6 @@
                 app:turtleClick="@{()->viewModel.cropImage(clTop)}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

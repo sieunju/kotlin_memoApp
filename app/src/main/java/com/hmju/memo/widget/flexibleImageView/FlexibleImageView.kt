@@ -1,7 +1,8 @@
-package com.hmju.memo.widget.pitchZoomImageView
+package com.hmju.memo.widget.flexibleImageView
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.PointF
 import android.util.AttributeSet
@@ -10,21 +11,18 @@ import android.view.MotionEvent.PointerCoords
 import android.view.MotionEvent.PointerProperties
 import android.view.ScaleGestureDetector
 import androidx.appcompat.widget.AppCompatImageView
-import com.hmju.memo.utils.JLogger
-import com.hmju.memo.widget.pitchZoomImageView.gesture.MoveGestureDetector
-import com.hmju.memo.widget.pitchZoomImageView.gesture.RotateGestureDetector
+import com.hmju.memo.R
+import com.hmju.memo.widget.flexibleImageView.gesture.MoveGestureDetector
+import com.hmju.memo.widget.flexibleImageView.gesture.RotateGestureDetector
 import kotlin.math.*
 
 /**
- * Description : Pitch To Zoom ImageView Class
+ * Description : Scale, Move, Rotate 가능한 ImageView Class
  *
  * Created by juhongmin on 2020/10/05
  */
 class FlexibleImageView(private val ctx: Context, private val attrs: AttributeSet?) :
     AppCompatImageView(ctx, attrs) {
-    enum class FlipDirection {
-        NONE, VERTICAL, HORIZONTAL
-    }
 
     companion object {
         const val MAX_SCALE_FACTOR = 10.0F
@@ -49,50 +47,33 @@ class FlexibleImageView(private val ctx: Context, private val attrs: AttributeSe
     private var focusX = 0F
     private var focusY = 0F
     private var rotationDegree = 0F
-    private var flipDirection = FlipDirection.NONE
     private var flipX = 1F
     private var flipY = 1F
 
     private var isMultiTouch: Boolean = false
     private var moveDistance: Double = 0.0
     private var touchPoint = PointF()
+    private var isMoveOnly: Boolean = false // Scale Disable, Rotate Disable
 
-    fun setFlip(direction: FlipDirection) {
-        when (direction) {
-            FlipDirection.HORIZONTAL -> {
-                flipX *= -1
-            }
-            FlipDirection.VERTICAL -> {
-                flipY *= -1
-            }
-            else -> {
-                flipX = 1F
-                flipY = 1F
-            }
+    init {
+        if (isInEditMode) throw IllegalArgumentException("isInEditMode true...!!")
+
+        // 속성 값 세팅
+        attrs?.let {
+            val attr: TypedArray = ctx.obtainStyledAttributes(it, R.styleable.FlexibleImageView)
+
+            // 타입 값 세팅
+            isMoveOnly = attr.getBoolean(R.styleable.FlexibleImageView_onlyMove, false)
+            attr.recycle()
         }
-
-        if (flipX > 1F && flipY > 1F) {
-            flipDirection = FlipDirection.NONE
-        } else if (flipX > 1F && flipY < 1F) {
-            flipDirection = FlipDirection.VERTICAL
-        } else if (flipX < 1F && flipY > 1F) {
-            flipDirection = FlipDirection.HORIZONTAL
-        }
-
-        invalidate()
     }
-
-    fun getFlipDirection() = flipDirection
-    fun getFlipX() = flipX
-    fun getFlipY() = flipY
-    fun getScaleFactor() = scaleFactor
 
     fun setScaleFactor(scale: Float) {
         scaleFactor = scale
         invalidate()
     }
 
-    fun setFocus(x: Float, y: Float) {
+    private fun setFocus(x: Float, y: Float) {
         focusX = x
         focusY = y
         invalidate()
@@ -144,16 +125,14 @@ class FlexibleImageView(private val ctx: Context, private val attrs: AttributeSe
             return false
         }
 
-        // compute transfrom
+        // compute trans from
         val prop = arrayOfNulls<PointerProperties>(ev.pointerCount)
         val cords = arrayOfNulls<PointerCoords>(ev.pointerCount)
 
-        val firstCoords = PointerCoords()
-        ev.getPointerCoords(0, firstCoords)
+        // get First Coords
+        ev.getPointerCoords(0, PointerCoords())
 
-        val n = ev.pointerCount
-        JLogger.d("onTouchEvent PointerCount $n")
-        for (i in 0 until n) {
+        for (i in 0 until ev.pointerCount) {
             val properties = PointerProperties()
             ev.getPointerProperties(i, properties)
             prop[i] = properties
@@ -168,7 +147,7 @@ class FlexibleImageView(private val ctx: Context, private val attrs: AttributeSe
             cords[i] = cod
         }
 
-        val screenBaseMotionEvent = MotionEvent.obtain(
+        val baseMotionEvent = MotionEvent.obtain(
             ev.downTime,
             ev.eventTime,
             ev.action,
@@ -185,13 +164,17 @@ class FlexibleImageView(private val ctx: Context, private val attrs: AttributeSe
             ev.flags
         )
 
-        scaleGestureDetector.onTouchEvent(screenBaseMotionEvent)
-        rotateGestureDetector.onTouchEvent(screenBaseMotionEvent)
-        moveGestureDetector.onTouchEvent(screenBaseMotionEvent)
+        if (!isMoveOnly) {
+            scaleGestureDetector.onTouchEvent(baseMotionEvent)
+            rotateGestureDetector.onTouchEvent(baseMotionEvent)
+        }
+
+        moveGestureDetector.onTouchEvent(baseMotionEvent)
 
         computeClickEvent(ev)
         super.onTouchEvent(ev)
 
+        // Canvas Draw
         invalidate()
         return true
     }
@@ -241,7 +224,6 @@ class FlexibleImageView(private val ctx: Context, private val attrs: AttributeSe
             }
 
             // 최대 최소값 범위내로 처리.
-
             scaleFactor = mergedScaleFactor
             scaleFactor = MIN_SCALE_FACTOR.coerceAtLeast(scaleFactor)
             scaleFactor = MAX_SCALE_FACTOR.coerceAtMost(scaleFactor)

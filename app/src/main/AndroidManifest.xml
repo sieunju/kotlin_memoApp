@@ -20,7 +20,8 @@
         <activity
             android:name=".ui.home.MainActivity"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.Memo">
+            android:theme="@style/AppTheme.Memo"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -58,8 +59,8 @@
 
         <activity
             android:name=".ui.imageEdit.ImageEditActivity"
-            android:theme="@style/AppTheme.Gallery"
-            android:windowSoftInputMode="adjustPan"/>
+            android:theme="@style/AppTheme.Memo"
+            android:windowSoftInputMode="adjustPan" />
 
         <!-- [s] 카메라 캡처 관련 -->
         <provider

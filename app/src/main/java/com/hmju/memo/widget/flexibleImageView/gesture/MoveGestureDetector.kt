@@ -1,10 +1,10 @@
-package com.hmju.memo.widget.pitchZoomImageView.gesture
+package com.hmju.memo.widget.flexibleImageView.gesture
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PointF
 import android.view.MotionEvent
-import com.hmju.memo.widget.pitchZoomImageView.base.BaseGestureDetector
+import com.hmju.memo.widget.flexibleImageView.base.BaseGestureDetector
 
 /**
  * Description:

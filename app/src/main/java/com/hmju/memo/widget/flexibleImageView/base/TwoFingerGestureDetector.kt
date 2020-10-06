@@ -1,4 +1,4 @@
-package com.hmju.memo.widget.pitchZoomImageView.base
+package com.hmju.memo.widget.flexibleImageView.base
 
 import android.content.Context
 import android.view.MotionEvent

@@ -1,6 +1,9 @@
 package com.hmju.memo.ui.imageEdit
 
+import android.animation.Animator
+import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.Observer
 import com.hmju.memo.BR
 import com.hmju.memo.R
@@ -10,7 +13,6 @@ import com.hmju.memo.define.ExtraCode
 import com.hmju.memo.define.NetworkState
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.ImageEditViewModel
-import com.hmju.memo.widget.pitchZoomImageView.FlexibleImageView
 import kotlinx.android.synthetic.main.activity_image_edit.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -31,6 +33,7 @@ class ImageEditActivity : BaseActivity<ActivityImageEditBinding, ImageEditViewMo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setFitsWindows()
 
         with(viewModel) {
 
@@ -48,6 +51,36 @@ class ImageEditActivity : BaseActivity<ActivityImageEditBinding, ImageEditViewMo
             startCropImage.observe(this@ImageEditActivity, Observer {
                 JLogger.d("Crop Image Bitmap Size ${it.byteCount} Width ${it.width} Height ${it.height}")
                 cropImgView.setImageBitmap(it)
+            })
+
+            startCopyImage.observe(this@ImageEditActivity, Observer {
+                clTop.visibility = View.GONE
+                copyImage.visibility = View.GONE
+                copyImage.setImageBitmap(it)
+                ObjectAnimator.ofFloat(clBottom,View.ALPHA,0.25F,1F).apply {
+                    duration = 2000
+                    addListener(object : Animator.AnimatorListener {
+                        override fun onAnimationStart(animation: Animator?) {
+                            copyImage.visibility = View.VISIBLE
+                        }
+
+                        override fun onAnimationEnd(animation: Animator?) {
+
+                        }
+
+                        override fun onAnimationCancel(animation: Animator?) {
+
+                        }
+
+
+                        override fun onAnimationRepeat(animation: Animator?) {
+
+                        }
+                    })
+                    start()
+                }
+
+
             })
         }
     }
