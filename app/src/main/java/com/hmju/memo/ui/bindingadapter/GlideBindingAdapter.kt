@@ -1,6 +1,7 @@
 package com.hmju.memo.ui.bindingadapter
 
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
@@ -93,6 +94,39 @@ fun bindingImgGallery(
 //            .addListener(glideLoggerListener())
             .into(imgView)
     }
+}
+
+@BindingAdapter("bindUri")
+fun bindingImgSrc(
+    imgView: AppCompatImageView,
+    imgUri: String?
+) {
+    val placeHolder = listOf<Int>(
+        R.color.colorPlaceHolder_1,
+        R.color.colorPlaceHolder_2,
+        R.color.colorPlaceHolder_3,
+        R.color.colorPlaceHolder_4
+    )
+    val ran = Random().nextInt(placeHolder.size)
+
+    imgUri?.let{
+        Glide.with(imgView)
+            .load(it)
+            .placeholder(placeHolder[ran])
+            .thumbnail(0.1F)
+            .error(R.drawable.bg_res_error)
+            .fitCenter()
+            .into(imgView)
+    }
+
+//    imgUri?.let{
+//        try {
+//            val uri = Uri.parse(it)
+//            imgView.setImageURI(uri)
+//        } catch (ex: Exception) {
+//
+//        }
+//    }
 }
 
 /**

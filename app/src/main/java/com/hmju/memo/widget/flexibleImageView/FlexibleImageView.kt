@@ -69,6 +69,20 @@ class FlexibleImageView(private val ctx: Context, private val attrs: AttributeSe
         }
     }
 
+    fun resetView(){
+        scaleFactor = 1.0F
+        focusX = 0F
+        focusY = 0F
+        rotationDegree = 0F
+        flipX = 1F
+        flipY = 1F
+        isMultiTouch = false
+        moveDistance = 0.0
+        touchPoint = PointF()
+        alpha = 1F
+        invalidate()
+    }
+
     fun setScaleFactor(scale: Float) {
         scaleFactor = scale
         invalidate()
@@ -84,13 +98,13 @@ class FlexibleImageView(private val ctx: Context, private val attrs: AttributeSe
         setFocus(x = focusX + x, y = focusY + y)
     }
 
-    override fun performClick(): Boolean {
-        return if (isMultiTouch || moveDistance > MAX_LONG_CLICK_DISTANCE) {
-            false
-        } else {
-            super.performLongClick()
-        }
-    }
+//    override fun performClick(): Boolean {
+//        return if (isMultiTouch || moveDistance > MAX_LONG_CLICK_DISTANCE) {
+//            false
+//        } else {
+//            super.performLongClick()
+//        }
+//    }
 
     override fun performLongClick(): Boolean {
         return if (isMultiTouch || moveDistance > MAX_LONG_CLICK_DISTANCE) {
@@ -126,7 +140,7 @@ class FlexibleImageView(private val ctx: Context, private val attrs: AttributeSe
             return false
         }
 
-        JLogger.d("onTouchEvent!!!!!")
+//        JLogger.d("onTouchEvent!!!!!")
 
         // compute trans from
         val prop = arrayOfNulls<PointerProperties>(ev.pointerCount)

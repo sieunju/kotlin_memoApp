@@ -33,7 +33,6 @@ class ImageEditActivity : BaseActivity<ActivityImageEditBinding, ImageEditViewMo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setFitsWindows()
 
         with(viewModel) {
 
@@ -48,12 +47,22 @@ class ImageEditActivity : BaseActivity<ActivityImageEditBinding, ImageEditViewMo
                 }
             })
 
-            startCropImage.observe(this@ImageEditActivity, Observer {
-                JLogger.d("Crop Image Bitmap Size ${it.byteCount} Width ${it.width} Height ${it.height}")
-                
+            startResetImage.observe(this@ImageEditActivity, Observer {
+                imgLeft.resetView()
+                imgRight.resetView()
             })
 
-            startCopyImage.observe(this@ImageEditActivity, Observer {
+            startSwitchImage.observe(this@ImageEditActivity, Observer {
+                imgLeft.setImageBitmap(it.first)
+                imgRight.setImageBitmap(it.second)
+                ObjectAnimator.ofFloat(clLeft,View.ALPHA,0.25F,1F).apply {
+                    duration = 1000
+                    start()
+                }
+                ObjectAnimator.ofFloat(clRight,View.ALPHA,0.25F,1F).apply {
+                    duration = 1000
+                    start()
+                }
 
             })
         }

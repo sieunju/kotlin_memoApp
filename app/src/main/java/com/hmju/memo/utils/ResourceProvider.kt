@@ -37,6 +37,7 @@ interface ResourceProvider {
     fun getContentResolver(): ContentResolver
     fun getImageFileContents(path: String): Pair<MediaType, File>?
     fun deleteFiles(fileList: List<File>)
+    fun getFile(bitmap: Bitmap): File?
 }
 
 class ResourceProviderImpl(private val ctx: Context) : ResourceProvider {
@@ -137,6 +138,23 @@ class ResourceProviderImpl(private val ctx: Context) : ResourceProvider {
 
     override fun deleteFiles(fileList: List<File>) {
         fileList.forEach { it.delete() }
+    }
+
+    override fun getFile(bitmap: Bitmap): File? {
+        // Temp File Create
+        val file = File.createTempFile("temp_${System.currentTimeMillis()}", Etc.IMG_FILE_EXTENSION)
+        var fos: FileOutputStream? = null
+        try {
+            fos = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+        } catch (ex: IOException) {
+            JLogger.d("File IOException ${ex.message}")
+            return null
+        } finally {
+            fos?.flush()
+            fos?.close()
+        }
+        return file
     }
 
     private fun getMimeType(path: String): MediaType? {
