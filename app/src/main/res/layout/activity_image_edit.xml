@@ -77,6 +77,16 @@
                     app:viewModel="@{viewModel}"
                     tools:src="@drawable/temp2" />
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/margin_size_10"
+                    android:layout_marginBottom="@dimen/margin_size_10"
+                    android:text="LEFT"
+                    android:textSize="@dimen/text_size_20"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- 구분선 -->
@@ -105,28 +115,68 @@
                     app:viewModel="@{viewModel}"
                     tools:src="@drawable/temp1" />
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/margin_size_10"
+                    android:layout_marginBottom="@dimen/margin_size_10"
+                    android:text="RIGHT"
+                    android:textSize="@dimen/text_size_20"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="?android:actionBarSize"
-            android:orientation="horizontal"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent">
 
-            <com.google.android.material.button.MaterialButton
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="이미지 합치기"
-                app:turtleClick="@{()->viewModel.mergeImage(llContents)}" />
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="?android:actionBarSize"
+                android:gravity="right"
+                android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/margin_size_5"
-                android:text="원래대로"
-                app:turtleClick="@{()->viewModel.resetPhoto()}" />
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/margin_size_5"
+                    android:text="원본 그대로 바꾸기"
+                    app:turtleClick="@{()->viewModel.switchingOrigin()}" />
 
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/margin_size_5"
+                    android:text="현재 이미지 상태로 바꾸기"
+                    app:turtleClick="@{()->viewModel.switching()}" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="?android:actionBarSize"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/margin_size_5"
+                    android:text="이미지 합치기"
+                    app:turtleClick="@{()->viewModel.mergeImage(llContents)}" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/margin_size_5"
+                    android:text="원래대로"
+                    app:turtleClick="@{()->viewModel.resetPhoto()}" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

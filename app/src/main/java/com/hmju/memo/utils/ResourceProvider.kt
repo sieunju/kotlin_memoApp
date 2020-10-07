@@ -142,11 +142,11 @@ class ResourceProviderImpl(private val ctx: Context) : ResourceProvider {
 
     override fun getFile(bitmap: Bitmap): File? {
         // Temp File Create
-        val file = File.createTempFile("temp_${System.currentTimeMillis()}", Etc.IMG_FILE_EXTENSION)
+        val file = File.createTempFile("temp_${System.currentTimeMillis()}", ".png")
         var fos: FileOutputStream? = null
         try {
             fos = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
         } catch (ex: IOException) {
             JLogger.d("File IOException ${ex.message}")
             return null

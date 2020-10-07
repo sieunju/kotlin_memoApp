@@ -71,7 +71,6 @@
 
     <!-- [s] FlexibleImageView Attrs -->
     <declare-styleable name="FlexibleImageView">
-        <attr name="onlyMove" format="boolean" />
     </declare-styleable>
     <!-- [e] FlexibleImageView Attrs -->
 

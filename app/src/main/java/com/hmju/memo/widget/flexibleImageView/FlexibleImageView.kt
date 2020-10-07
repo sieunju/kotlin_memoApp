@@ -54,7 +54,6 @@ class FlexibleImageView(private val ctx: Context, private val attrs: AttributeSe
     private var isMultiTouch: Boolean = false
     private var moveDistance: Double = 0.0
     private var touchPoint = PointF()
-    private var isMoveOnly: Boolean = false // Scale Disable, Rotate Disable
 
     init {
         if (isInEditMode) throw IllegalArgumentException("isInEditMode true...!!")
@@ -62,14 +61,11 @@ class FlexibleImageView(private val ctx: Context, private val attrs: AttributeSe
         // 속성 값 세팅
         attrs?.let {
             val attr: TypedArray = ctx.obtainStyledAttributes(it, R.styleable.FlexibleImageView)
-
-            // 타입 값 세팅
-            isMoveOnly = attr.getBoolean(R.styleable.FlexibleImageView_onlyMove, false)
             attr.recycle()
         }
     }
 
-    fun resetView(){
+    fun resetView() {
         scaleFactor = 1.0F
         focusX = 0F
         focusY = 0F
@@ -181,11 +177,8 @@ class FlexibleImageView(private val ctx: Context, private val attrs: AttributeSe
             ev.flags
         )
 
-        if (!isMoveOnly) {
-            scaleGestureDetector.onTouchEvent(baseMotionEvent)
-            rotateGestureDetector.onTouchEvent(baseMotionEvent)
-        }
-
+        scaleGestureDetector.onTouchEvent(baseMotionEvent)
+        rotateGestureDetector.onTouchEvent(baseMotionEvent)
         moveGestureDetector.onTouchEvent(baseMotionEvent)
 
         computeClickEvent(ev)

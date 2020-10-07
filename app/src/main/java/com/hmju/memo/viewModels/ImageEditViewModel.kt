@@ -93,6 +93,14 @@ class ImageEditViewModel(
         startResetImage.call()
     }
 
+    fun switching() {
+
+    }
+
+    fun switchingOrigin(){
+
+    }
+
     /**
      * 이미지 원래대로 돌리는 함수.
      */

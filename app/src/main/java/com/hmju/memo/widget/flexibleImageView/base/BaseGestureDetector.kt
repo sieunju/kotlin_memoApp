@@ -5,7 +5,7 @@ import android.view.MotionEvent
 
 
 /**
- * Description:
+ * Description: BaseGestureDetector Class
  *
  * Created by hmju on 2020-10-06
  */
