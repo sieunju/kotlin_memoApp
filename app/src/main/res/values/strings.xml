@@ -70,9 +70,9 @@
     <string name="memo_detail_more_delete">메모 삭제</string>
     <string name="memo_delete_guide">정말 삭제 하시겠습니까?</string>
 
-    <string name="str_before_tag">위 이미지</string>
-    <string name="str_before_root_tag">위 레이아웃</string>
-    <string name="str_after_tag">아래 이미지</string>
-    <string name="str_after_root_tag">아래 레이아웃</string>
+    <string name="str_left_tag">왼쪽 이미지</string>
+    <string name="str_left_root_tag">왼쪽 레이아웃</string>
+    <string name="str_right_tag">오른쪽 이미지</string>
+    <string name="str_right_root_tag">오른쪽 레이아웃</string>
 
 </resources>

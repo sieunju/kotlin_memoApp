@@ -41,7 +41,6 @@ class GalleryViewModel(
     private val contentObserver: ContentObserver by lazy {
         return@lazy object : ContentObserver(Handler(Looper.getMainLooper())) {
             override fun onChange(selfChange: Boolean) {
-                JLogger.d("onChange $selfChange")
                 super.onChange(selfChange)
             }
         }

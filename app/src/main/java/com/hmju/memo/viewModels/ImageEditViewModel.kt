@@ -7,6 +7,7 @@ import androidx.core.view.drawToBitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.convenience.NonNullMutableLiveData
 import com.hmju.memo.convenience.SingleLiveEvent
@@ -14,7 +15,9 @@ import com.hmju.memo.convenience.single
 import com.hmju.memo.convenience.to
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.ResourceProvider
+import com.hmju.memo.widget.flexibleImageView.FlexibleImageView
 import io.reactivex.Observable
+import kotlinx.android.synthetic.main.activity_image_edit.view.*
 import java.io.File
 
 /**
@@ -23,16 +26,17 @@ import java.io.File
  * Created by hmju on 2020-10-06
  */
 class ImageEditViewModel(
-    private val photoList: ArrayList<String>,
+    photoList: ArrayList<String>,
     private val provider: ResourceProvider
 ) : BaseViewModel() {
 
     val leftPhotoPath = NonNullMutableLiveData(photoList[0])
     val rightPhotoPath = NonNullMutableLiveData(photoList[1])
     val startResetImage = SingleLiveEvent<Unit>()
-    val startSwitchImage = SingleLiveEvent<Pair<Bitmap, Bitmap>>()
+    val startSwitchImage = SingleLiveEvent<Unit>()
+    val startContentAni = SingleLiveEvent<Boolean>()
 
-    var isStartLeft = false // LongClick 분기 처리를 위한 변수.
+    var isStartLeft = false // 드래그를 왼쪽에서 시작 했는지 유무 변수
 
     /**
      * 이미지 영역 합치는 함수.
@@ -70,35 +74,50 @@ class ImageEditViewModel(
         }
     }
 
-    fun swipeImage(currentView: View, otherView: View) {
-        val currentBitmap = Bitmap.createBitmap(
-            currentView.measuredWidth,
-            currentView.measuredHeight,
-            Bitmap.Config.ARGB_8888
-        )
-        currentView.draw(Canvas(currentBitmap))
-        val otherBitmap = Bitmap.createBitmap(
-            otherView.measuredWidth,
-            otherView.measuredHeight,
-            Bitmap.Config.ARGB_8888
-        )
-        otherView.draw(Canvas(otherBitmap))
+    /**
+     * Start Drag
+     * @param view 드래그 할 View
+     */
+    fun startDragAndDrop(view: View) {
+        isStartLeft = view.id == R.id.imgLeft
+        startContentAni.value = false
+    }
 
-        // 왼쪽에서 시작 했으면 CurrentView -> leftView
-        if (isStartLeft) {
-            startSwitchImage.value = Pair(currentBitmap, otherBitmap)
-        } else {
-            startSwitchImage.value = Pair(otherBitmap, currentBitmap)
+    /**
+     * onDrag And Drop
+     * @param view Drop 한 위치 View
+     */
+    fun onDragAndDrop(view: View) {
+        // Drag And Drop 한 위치가 왼쪽인 경우.
+        if (view.id == R.id.clLeft) {
+            // Switch Success
+            if (!isStartLeft) {
+                switchImage()
+            }
+        } else if (view.id == R.id.clRight) {
+            // Drag And Drop 한 위치가 오른쪽인 경우.
+
+            // Switch Success
+            if (isStartLeft) {
+                switchImage()
+            }
         }
-        startResetImage.call()
+
+        // Start Ani
+        startContentAni.value = true
     }
 
-    fun switching() {
-
+    fun onDragNothing() {
+        // Start Ani
+        startContentAni.value = true
     }
 
-    fun switchingOrigin(){
-
+    /**
+     * 좌 / 우 이미지 전환
+     *
+     */
+    fun switchImage() {
+        startSwitchImage.call()
     }
 
     /**

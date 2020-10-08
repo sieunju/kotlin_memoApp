@@ -3,14 +3,12 @@ package com.hmju.memo.utils
 import android.app.Activity
 import android.app.ActivityOptions
 import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import android.view.View
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseActivity
@@ -19,6 +17,7 @@ import com.hmju.memo.define.ExtraCode
 import com.hmju.memo.define.RequestCode
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.ui.memo.MemoDetailActivity
+import org.koin.android.ext.android.inject
 
 inline fun <reified T : Activity> Activity.startAct() {
     val intent = Intent(this, T::class.java)
@@ -78,14 +77,18 @@ fun Activity.moveCameraCapture(photoUriCallback: (Uri?) -> Unit) {
     if (Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()) {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         intent.resolveActivity(packageManager)?.let {
+
+
             val photoName =
                 "Memo_${System.currentTimeMillis()}${Etc.IMG_FILE_EXTENSION}"
             val values = ContentValues().apply {
+                put(MediaStore.Images.Media.TITLE,"내영!?")
                 put(MediaStore.Images.Media.DISPLAY_NAME, photoName)
                 put(MediaStore.Images.Media.MIME_TYPE, Etc.IMG_MIME_TYPE_FILE_EXTENSION)
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     put(MediaStore.Images.Media.IS_PENDING, 0)
+                    put(MediaStore.Images.Media.RELATIVE_PATH,Environment.DIRECTORY_PICTURES)
                 }
             }
 

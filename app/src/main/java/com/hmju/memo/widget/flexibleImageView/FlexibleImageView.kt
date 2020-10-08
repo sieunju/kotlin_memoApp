@@ -12,7 +12,7 @@ import android.view.MotionEvent.PointerProperties
 import android.view.ScaleGestureDetector
 import androidx.appcompat.widget.AppCompatImageView
 import com.hmju.memo.R
-import com.hmju.memo.utils.JLogger
+import com.hmju.memo.widget.flexibleImageView.base.FlexibleStateItem
 import com.hmju.memo.widget.flexibleImageView.gesture.MoveGestureDetector
 import com.hmju.memo.widget.flexibleImageView.gesture.RotateGestureDetector
 import kotlin.math.*
@@ -22,7 +22,7 @@ import kotlin.math.*
  *
  * Created by juhongmin on 2020/10/05
  */
-class FlexibleImageView(private val ctx: Context, private val attrs: AttributeSet?) :
+class FlexibleImageView(private val ctx: Context, attrs: AttributeSet?) :
     AppCompatImageView(ctx, attrs) {
 
     companion object {
@@ -44,12 +44,21 @@ class FlexibleImageView(private val ctx: Context, private val attrs: AttributeSe
         RotateGestureDetector(ctx, RotateListener())
     }
 
-    private var scaleFactor = 1.0F
-    private var focusX = 0F
-    private var focusY = 0F
-    private var rotationDegree = 0F
-    private var flipX = 1F
-    private var flipY = 1F
+    var stateItem = FlexibleStateItem(
+        scale = 1.0F,
+        focusX = 0F,
+        focusY = 0F,
+        rotationDegree = 0F,
+        flipX = 1F,
+        flipY = 1F
+    )
+
+//    private var scaleFactor = 1.0F
+//    private var focusX = 0F
+//    private var focusY = 0F
+//    private var rotationDegree = 0F
+//    private var flipX = 1F
+//    private var flipY = 1F
 
     private var isMultiTouch: Boolean = false
     private var moveDistance: Double = 0.0
@@ -66,12 +75,7 @@ class FlexibleImageView(private val ctx: Context, private val attrs: AttributeSe
     }
 
     fun resetView() {
-        scaleFactor = 1.0F
-        focusX = 0F
-        focusY = 0F
-        rotationDegree = 0F
-        flipX = 1F
-        flipY = 1F
+        stateItem.reset()
         isMultiTouch = false
         moveDistance = 0.0
         touchPoint = PointF()
@@ -79,19 +83,28 @@ class FlexibleImageView(private val ctx: Context, private val attrs: AttributeSe
         invalidate()
     }
 
+    /**
+     * Scale, Focus, Rotate 상태값 전환후 다시 그리는 함수.
+     * @param tmpStateItem 전환할 State Item.
+     */
+    fun switchingState(tmpStateItem : FlexibleStateItem) {
+        stateItem = tmpStateItem
+        invalidate()
+    }
+
     fun setScaleFactor(scale: Float) {
-        scaleFactor = scale
+        stateItem.scale = scale
         invalidate()
     }
 
     private fun setFocus(x: Float, y: Float) {
-        focusX = x
-        focusY = y
+        stateItem.focusX = x
+        stateItem.focusY = y
         invalidate()
     }
 
     fun moveFocus(x: Float, y: Float) {
-        setFocus(x = focusX + x, y = focusY + y)
+        setFocus(x = stateItem.focusX + x, y = stateItem.focusY + y)
     }
 
 //    override fun performClick(): Boolean {
@@ -217,26 +230,25 @@ class FlexibleImageView(private val ctx: Context, private val attrs: AttributeSe
     }
 
     override fun onDraw(canvas: Canvas?) {
-        translationX = focusX
-        translationY = focusY
-        scaleY = scaleFactor * flipX
-        scaleX = scaleFactor * flipY
-        rotation = rotationDegree
+        translationX = stateItem.focusX
+        translationY = stateItem.focusY
+        scaleY = stateItem.scaleX
+        scaleX = stateItem.scaleY
+        rotation = stateItem.rotationDegree
 
         super.onDraw(canvas)
     }
 
     inner class ScaleListener : ScaleGestureDetector.SimpleOnScaleGestureListener() {
         override fun onScale(detector: ScaleGestureDetector): Boolean {
-            val mergedScaleFactor = scaleFactor * detector.scaleFactor
-            if (mergedScaleFactor > MAX_SCALE_FACTOR || mergedScaleFactor < MIN_SCALE_FACTOR) {
+            val mergedScaleFactor = stateItem.scale * detector.scaleFactor
+
+            // 범위 를 넘어 가는 경우 false 리턴.
+            if (mergedScaleFactor <= MIN_SCALE_FACTOR || mergedScaleFactor >= MAX_SCALE_FACTOR) {
                 return false
             }
 
-            // 최대 최소값 범위내로 처리.
-            scaleFactor = mergedScaleFactor
-            scaleFactor = MIN_SCALE_FACTOR.coerceAtLeast(scaleFactor)
-            scaleFactor = MAX_SCALE_FACTOR.coerceAtMost(scaleFactor)
+            stateItem.scale = mergedScaleFactor
 
             return true
         }
@@ -245,8 +257,8 @@ class FlexibleImageView(private val ctx: Context, private val attrs: AttributeSe
     inner class MoveListener : MoveGestureDetector.Companion.SimpleOnMoveGestureListener() {
         override fun onMove(detector: MoveGestureDetector): Boolean {
             val delta = detector.focusDelta
-            focusX += delta.x
-            focusY += delta.y
+            stateItem.focusX += delta.x
+            stateItem.focusY += delta.y
 
             return true
         }
@@ -254,7 +266,7 @@ class FlexibleImageView(private val ctx: Context, private val attrs: AttributeSe
 
     inner class RotateListener : RotateGestureDetector.Companion.SimpleOnRotateGestureListener() {
         override fun onRotate(detector: RotateGestureDetector): Boolean {
-            rotationDegree -= detector.rotationsDegreesDelta
+            stateItem.rotationDegree -= detector.rotationsDegreesDelta
             return true
         }
     }

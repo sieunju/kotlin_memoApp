@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.hmju.memo"
-        minSdkVersion 21
+        minSdkVersion 16
         targetSdkVersion 29
         versionCode 1
         versionName "1.0.0"
@@ -48,7 +48,7 @@ android {
 
         dev {
             dimension "config"
-            applicationIdSuffix  ".dev"
+//            applicationIdSuffix  ".dev"
             versionCode 1
             versionName "0.0.1"
             manifestPlaceholders = [appLabel: "DevApp",testOnly: "true"]
@@ -57,7 +57,7 @@ android {
 
         study {
             dimension "config"
-            applicationIdSuffix  ".study"
+//            applicationIdSuffix  ".study"
             versionCode 1
             versionName "0.0.1"
             manifestPlaceholders = [appLabel: "StudyApp", testOnly: "false"]

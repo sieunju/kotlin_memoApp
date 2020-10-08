@@ -2,8 +2,10 @@ package com.hmju.memo.ui.imageEdit
 
 import android.animation.Animator
 import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.lifecycle.Observer
 import com.hmju.memo.BR
 import com.hmju.memo.R
@@ -52,18 +54,38 @@ class ImageEditActivity : BaseActivity<ActivityImageEditBinding, ImageEditViewMo
                 imgRight.resetView()
             })
 
-            startSwitchImage.observe(this@ImageEditActivity, Observer {
-                imgLeft.setImageBitmap(it.first)
-                imgRight.setImageBitmap(it.second)
-                ObjectAnimator.ofFloat(clLeft,View.ALPHA,0.25F,1F).apply {
-                    duration = 1000
-                    start()
-                }
-                ObjectAnimator.ofFloat(clRight,View.ALPHA,0.25F,1F).apply {
-                    duration = 1000
-                    start()
+            startContentAni.observe(this@ImageEditActivity, Observer { isVisible ->
+                val fromAlpha: Float
+                val toAlpha: Float
+                // 화면 보이게
+                if (isVisible) {
+                    fromAlpha = 0.25F
+                    toAlpha = 1.0F
+                } else {
+                    // 점차 사라지게.
+                    fromAlpha = 1.0F
+                    toAlpha = 0.25F
                 }
 
+                // Animation 처리.
+                ObjectAnimator.ofFloat(llContents, View.ALPHA, fromAlpha, toAlpha).apply {
+                    duration = 500
+                    interpolator = AccelerateDecelerateInterpolator()
+                    start()
+                }
+            })
+
+            startSwitchImage.observe(this@ImageEditActivity, Observer {
+                val leftPath = leftPhotoPath.value
+                val leftState = imgLeft.stateItem
+                val rightPath = rightPhotoPath.value
+                val rightState = imgRight.stateItem
+
+                leftPhotoPath.postValue(rightPath)
+                rightPhotoPath.postValue(leftPath)
+
+                imgLeft.switchingState(rightState)
+                imgRight.switchingState(leftState)
             })
         }
     }

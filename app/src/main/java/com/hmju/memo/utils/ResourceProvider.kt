@@ -1,6 +1,9 @@
 package com.hmju.memo.utils
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ContentResolver
+import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -9,10 +12,13 @@ import android.graphics.Matrix
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
 import android.webkit.MimeTypeMap
 import androidx.annotation.*
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.exifinterface.media.ExifInterface
 import com.hmju.memo.define.Etc
 import okhttp3.MediaType
@@ -20,10 +26,12 @@ import okhttp3.MediaType.Companion.toMediaType
 import okio.IOException
 import java.io.File
 import java.io.FileOutputStream
+import java.text.SimpleDateFormat
 import java.util.*
 
 /**
  * Description : ResourceProvider
+ * 추루 Category 별로 나눠야 할듯.
  *
  * Created by juhongmin on 2020/09/05
  */
@@ -38,6 +46,7 @@ interface ResourceProvider {
     fun getImageFileContents(path: String): Pair<MediaType, File>?
     fun deleteFiles(fileList: List<File>)
     fun getFile(bitmap: Bitmap): File?
+    fun getTempImageFile(): Uri?
 }
 
 class ResourceProviderImpl(private val ctx: Context) : ResourceProvider {
@@ -155,6 +164,23 @@ class ResourceProviderImpl(private val ctx: Context) : ResourceProvider {
             fos?.close()
         }
         return file
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    override fun getTempImageFile(): Uri? {
+        val fileName = "temp_${SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())}_"
+        val storageDir = ctx.getExternalFilesDir(Environment.DIRECTORY_DCIM)
+        return try {
+            val file = File.createTempFile(
+                fileName,
+                Etc.IMG_FILE_EXTENSION,
+                storageDir
+            )
+            FileProvider.getUriForFile(ctx, ctx.packageName, file)
+        } catch (ex: IOException) {
+            JLogger.d("IOException ${ex.message}")
+            null
+        }
     }
 
     private fun getMimeType(path: String): MediaType? {

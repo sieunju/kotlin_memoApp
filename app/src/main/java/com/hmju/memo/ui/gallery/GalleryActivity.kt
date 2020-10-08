@@ -1,38 +1,56 @@
 package com.hmju.memo.ui.gallery
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
+import android.content.res.AssetFileDescriptor
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.media.MediaScannerConnection
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import androidx.lifecycle.Observer
-import com.hmju.memo.R
 import com.hmju.memo.BR
+import com.hmju.memo.R
 import com.hmju.memo.base.BaseActivity
 import com.hmju.memo.databinding.ActivityGalleryBinding
-import com.hmju.memo.define.ExtraCode
-import com.hmju.memo.define.NetworkState
-import com.hmju.memo.define.RequestCode
-import com.hmju.memo.define.ResultCode
+import com.hmju.memo.define.*
 import com.hmju.memo.dialog.ConfirmDialog
 import com.hmju.memo.ui.bottomsheet.CheckableBottomSheet
 import com.hmju.memo.ui.imageEdit.ImageEditActivity
 import com.hmju.memo.ui.toast.showToast
 import com.hmju.memo.utils.JLogger
+import com.hmju.memo.utils.ResourceProvider
 import com.hmju.memo.utils.moveCameraCapture
 import com.hmju.memo.utils.startAct
 import com.hmju.memo.viewModels.GalleryViewModel
 import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.activity_gallery.*
+import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.core.KoinComponent
 import org.koin.core.parameter.parametersOf
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 /**
  * Description : 앨범 및 카메라 페이지
  *
  * Created by hmju on 2020-06-16
  */
-class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>() {
+class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>(), KoinComponent {
     override val layoutId = R.layout.activity_gallery
 
     override val viewModel: GalleryViewModel by viewModel {
@@ -73,6 +91,7 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
                     ).subscribe { isGranted ->
                         if (isGranted) {
                             moveCameraCapture { callbackUri ->
+                                JLogger.d("PhotoUri $callbackUri")
                                 photoUri = callbackUri
                             }
                         } else {
@@ -136,9 +155,9 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
             startImageEdit.observe(this@GalleryActivity, Observer { uri ->
                 imgEditListTest.add(uri)
                 // 데이터가 2개 쌓였을때 실행.
-                if(imgEditListTest.size == 2) {
+                if (imgEditListTest.size == 2) {
                     startAct<ImageEditActivity> {
-                        putStringArrayListExtra(ExtraCode.IMAGE_EDIT_PHOTO_URIS,imgEditListTest)
+                        putStringArrayListExtra(ExtraCode.IMAGE_EDIT_PHOTO_URIS, imgEditListTest)
                     }
                     imgEditListTest.clear()
                 }
@@ -160,7 +179,8 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
         when (requestCode) {
             RequestCode.CAMERA_CAPTURE -> {
                 if (resultCode == RESULT_OK) {
-                    savePicture()
+                    JLogger.d("촬영 성공 성공!")
+
                     val intent = Intent()
                     intent.putExtra(ExtraCode.CAMERA_CAPTURE_PHOTO_URI, photoUri.toString())
                     setResult(ResultCode.CAMERA_CAPTURE_OK, intent)
@@ -176,7 +196,7 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
         }
     }
 
-    private fun savePicture() {
+    private fun savePictureTT() {
         try {
             MediaScannerConnection.scanFile(
                 this,
