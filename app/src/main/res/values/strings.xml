@@ -17,6 +17,7 @@
     <string name="str_add_photo">사진 추가</string>
     <string name="str_summit">전송</string>
     <string name="str_info_file_max_cnt">더이상 추가할수 없습니다.</string>
+    <string name="str_memo_img_delete">정말로 이 파일을 삭제 하시겠습니까?</string>
 
     <string name="str_confirm">확인</string>
     <string name="str_cancel">취소</string>

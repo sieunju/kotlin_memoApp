@@ -106,12 +106,22 @@ interface ApiService {
 
     /**
      * 메모장 파일 제거 API
-     * body {
-     *  resPath : 지우고 싶은 파일 주소.
-     * }
+     * @param manageNo 파일 관리자 번호
+     * @param path 파일 경로
      */
     @DELETE("/api/uploads")
     fun deleteFile(
+        @Query("manageNoList") manageNo: Int,
+        @Query("pathList") path: String
+    ): Maybe<BaseResponse>
+
+    /**
+     * 메모장 파일 제거 API
+     * @param manageNoList 파일 관리자 번호 리스트
+     * @param pathList  파일 경로 리스트
+     */
+    @DELETE("/api/uploads")
+    fun deleteFiles(
         @Query("manageNoList") manageNoList: List<Int>,
         @Query("pathList") pathList: List<String>
     ): Maybe<BaseResponse>

@@ -5,6 +5,10 @@
     <data>
 
         <variable
+            name="viewModel"
+            type="com.hmju.memo.base.BaseViewModel" />
+
+        <variable
             name="item"
             type="com.hmju.memo.model.memo.FileItem" />
     </data>
@@ -19,8 +23,10 @@
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             app:bindImg="@{item.filePath}"
+            app:fileItem="@{item}"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:viewModel="@{viewModel}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

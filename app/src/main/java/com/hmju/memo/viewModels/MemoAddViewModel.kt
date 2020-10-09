@@ -210,4 +210,32 @@ class MemoAddViewModel(
             _fileList.postAddAll(filePathList)
         }
     }
+
+    /**
+     * 파일 삭제 함수.
+     * @param fileItem Current File Item
+     */
+    fun deleteImage(fileItem: FileItem) {
+        JLogger.d("Delete File $fileItem")
+        launch {
+            apiService.deleteFile(
+                manageNo = fileItem.manageNo,
+                path = fileItem.filePath
+            ).single()
+                .doOnSubscribe {
+                    JLogger.d("Api Call")
+                    onLoading()
+                }
+                .subscribe({
+                    JLogger.d("Success $it")
+                    _fileList.postRemove(
+                        fileItem
+                    )
+                    onSuccess()
+                }, {
+                    JLogger.d("Error ${it.message}")
+                    onError()
+                })
+        }
+    }
 }

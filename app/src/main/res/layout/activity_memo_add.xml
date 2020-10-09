@@ -47,7 +47,8 @@
                         app:fileList="@{viewModel.fileList}"
                         app:indicatorView="@{indicator}"
                         app:layout_constraintDimensionRatio="1:1"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:viewModel="@{viewModel}" />
 
                     <!-- ViewPager Indicator 영역  -->
                     <com.hmju.memo.widget.viewpagerIndicator.IndicatorView

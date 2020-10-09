@@ -1,13 +1,16 @@
 package com.hmju.memo.ui.bindingadapter
 
+import android.content.DialogInterface
 import android.view.View
 import android.widget.RadioGroup
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.define.TagType
+import com.hmju.memo.dialog.ConfirmDialog
 import com.hmju.memo.model.memo.FileItem
 import com.hmju.memo.ui.adapter.MemoDetailMoreAdapter
 import com.hmju.memo.ui.adapter.MemoImagePagerAdapter
@@ -23,9 +26,10 @@ import com.hmju.memo.widget.viewpagerIndicator.IndicatorView
  * Created by juhongmin on 2020/09/16
  */
 
-@BindingAdapter(value = ["indicatorView", "fileList"], requireAll = false)
+@BindingAdapter(value = ["viewModel", "indicatorView", "fileList"], requireAll = false)
 fun setMemoDetailImgAdapter(
     viewPager: ViewPager2,
+    viewModel: BaseViewModel,
     indicator: IndicatorView,
     dataList: ArrayList<FileItem>?
 ) {
@@ -40,7 +44,7 @@ fun setMemoDetailImgAdapter(
         } ?: run {
 
             // init View..
-            MemoImagePagerAdapter(dataList).apply {
+            MemoImagePagerAdapter(viewModel, dataList).apply {
                 viewPager.adapter = this
             }
 
@@ -157,6 +161,33 @@ fun setMemoDetailTagAdapter(
                 radioGroup.check(R.id.tag_7)
             }
         }
+    }
+}
+
+@BindingAdapter(value = ["viewModel", "fileItem"], requireAll = false)
+fun setMemoDetailImgLongClickListener(
+    view: AppCompatImageView,
+    viewModel: BaseViewModel,
+    item: FileItem
+) {
+    view.setOnLongClickListener {
+        JLogger.d("onLongClick!!")
+        ConfirmDialog(
+            ctx = view.context,
+            msg = view.context.getString(R.string.str_memo_img_delete),
+            type = ConfirmDialog.Type.TWO
+        ) { _, which ->
+
+            if (which == DialogInterface.BUTTON_POSITIVE) {
+                if(viewModel is MemoDetailViewModel) {
+                    viewModel.deleteImage(item)
+                } else if(viewModel is MemoAddViewModel) {
+                    viewModel.deleteImage(item)
+                }
+
+            }
+        }
+        return@setOnLongClickListener true
     }
 }
 

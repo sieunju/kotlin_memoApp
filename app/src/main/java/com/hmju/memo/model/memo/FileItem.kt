@@ -11,4 +11,18 @@ import java.io.Serializable
 data class FileItem(
     @SerializedName("manageNo") val manageNo: Int,
     @SerializedName("path") val filePath: String
-) : Serializable
+) : Serializable {
+    override fun equals(other: Any?): Boolean {
+        return if (other is FileItem) {
+            other.manageNo == manageNo
+        } else {
+            false
+        }
+    }
+
+    override fun hashCode(): Int {
+        var result = manageNo
+        result = 31 * result + filePath.hashCode()
+        return result
+    }
+}
