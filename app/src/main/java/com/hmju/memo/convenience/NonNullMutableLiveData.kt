@@ -2,9 +2,9 @@ package com.hmju.memo.convenience
 
 import androidx.lifecycle.MutableLiveData
 
-class NonNullMutableLiveData<T>(defaultValue: T) : MutableLiveData<T>() {
+class NonNullMutableLiveData<T>(defValue: T) : MutableLiveData<T>() {
     init {
-        value = defaultValue
+        value = defValue
     }
 
     override fun getValue() = super.getValue()!!

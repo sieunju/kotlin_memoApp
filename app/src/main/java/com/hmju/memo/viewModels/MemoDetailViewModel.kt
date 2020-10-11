@@ -15,6 +15,7 @@ import com.hmju.memo.model.form.MemoItemForm
 import com.hmju.memo.model.memo.FileItem
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.repository.network.ApiService
+import com.hmju.memo.utils.ImageFileProvider
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.ResourceProvider
 import io.reactivex.Flowable
@@ -36,7 +37,8 @@ class MemoDetailViewModel(
     val memoPosition: Int,
     private val originData: MemoItem,
     private val apiService: ApiService,
-    private val provider: ResourceProvider
+    private val provider: ImageFileProvider,
+    private val resProvider: ResourceProvider
 ) : BaseViewModel() {
 
     val manageNo = NonNullMutableLiveData(originData.manageNo) // 메모 ID
@@ -151,13 +153,13 @@ class MemoDetailViewModel(
      */
     fun setSelectedTag(tag: TagType) {
         selectTag.value = tag.tag
-        startSelectedTagColor.value = provider.getColor(tag.color)
+        startSelectedTagColor.value = resProvider.getColor(tag.color)
     }
 
     fun moveGallery() {
         // 이미지 파일 개수 제한.
         if (Etc.IMG_FILE_LIMIT - fileSize.value!! == 0) {
-            startDialog.value = provider.getString(R.string.str_guid_limit_img_file_over)
+            startDialog.value = resProvider.getString(R.string.str_guid_limit_img_file_over)
         } else {
             startGallery.call()
         }
@@ -220,7 +222,7 @@ class MemoDetailViewModel(
         launch {
             // File Path -> File Converter
             Observable.fromIterable(filePathList).flatMap { path ->
-                Observable.just(provider.getImageFileContents(path))
+                Observable.just(provider.getFilePart(path))
             }.flatMap { fileInfo ->
                 tmpFileList.add(fileInfo.second)
                 val body = fileInfo.second.asRequestBody(fileInfo.first)
@@ -242,14 +244,20 @@ class MemoDetailViewModel(
                             // 업로드 완료된 파일들 추가 및 갠신 처리.
                             addImageFileList(it.pathList)
 
-                            provider.deleteFiles(tmpFileList)
+                            tmpFileList.forEach {
+                                provider.deleteFile(it)
+                            }
                             startNetworkState.value = NetworkState.SUCCESS
                         }, {
-                            provider.deleteFiles(tmpFileList)
+                            tmpFileList.forEach {
+                                provider.deleteFile(it)
+                            }
                             startNetworkState.value = NetworkState.ERROR
                         })
                 }, {
-                    provider.deleteFiles(tmpFileList)
+                    tmpFileList.forEach {
+                        provider.deleteFile(it)
+                    }
                     startNetworkState.value = NetworkState.ERROR
                 })
         }

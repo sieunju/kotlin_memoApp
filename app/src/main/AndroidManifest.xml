@@ -72,6 +72,8 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+        <!-- [s] 카메라 캡처 관련 -->
+
     </application>
 
 </manifest>

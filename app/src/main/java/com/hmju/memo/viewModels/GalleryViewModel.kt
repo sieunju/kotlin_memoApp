@@ -17,6 +17,7 @@ import com.hmju.memo.convenience.single
 import com.hmju.memo.define.NetworkState
 import com.hmju.memo.model.gallery.GalleryFilterItem
 import com.hmju.memo.model.gallery.GallerySelectedItem
+import com.hmju.memo.utils.ImageFileProvider
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.ResourceProvider
 import io.reactivex.Observable
@@ -28,7 +29,8 @@ import io.reactivex.Observable
  */
 class GalleryViewModel(
     private val limitImageSize: Int,
-    private val provider: ResourceProvider
+    val provider: ImageFileProvider,
+    private val resProvider: ResourceProvider
 ) : BaseViewModel() {
 
     companion object {
@@ -87,8 +89,8 @@ class GalleryViewModel(
     fun start() {
         fetchFilter()
 
-        provider
-            .getContentResolver()
+
+        provider.contentResolver
             .registerContentObserver(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 true,
@@ -128,7 +130,7 @@ class GalleryViewModel(
 //                        JLogger.d("TEST:: Argument $selectionArgs")
 //                        JLogger.d("===================================================")
 
-                        val cursor = provider.getContentResolver().query(
+                        val cursor = provider.contentResolver.query(
                             uri,
                             projection,
                             if (selection.isEmpty()) null else selection.toString(),
@@ -203,7 +205,7 @@ class GalleryViewModel(
     fun fetchGallery() {
 
         // 선택된 이미지 초기화
-        if(selectedPhotoList.size() > 0) {
+        if (selectedPhotoList.size() > 0) {
             _selectedPhotoList.postClear()
         }
 
@@ -218,7 +220,7 @@ class GalleryViewModel(
         // 기존 남아 있는 커서 Exit
         cursor.value?.close()
         cursor.postValue(
-            provider.getContentResolver().query(
+            provider.contentResolver.query(
                 uri,
                 projection,
                 if (selectedFilter.value.id == DEFAULT_FILTER_ID) null else selection,
@@ -250,7 +252,7 @@ class GalleryViewModel(
     fun onSelect(pos: Int, id: String) {
         // 선택된 이미지 검사.
         val item = GallerySelectedItem(id = id, pos = pos)
-        if(selectedPhotoList.contains(item)) {
+        if (selectedPhotoList.contains(item)) {
             _selectedPhotoList.postRemove(item)
 
             // RecyclerView 갱신 처리.
@@ -264,7 +266,7 @@ class GalleryViewModel(
                 startNotify.value = item
             } else {
                 // 파일 업로드 최대 개수 제한.
-                startToast.value = provider.getString(R.string.str_info_file_max_cnt)
+                startToast.value = resProvider.getString(R.string.str_info_file_max_cnt)
             }
         }
     }
@@ -273,7 +275,7 @@ class GalleryViewModel(
      * Test 를 위한 함수.
      * 이미지 편집 페이지 진입 함수.
      */
-    fun moveImageEdit(id : String) {
+    fun moveImageEdit(id: String) {
         startImageEdit.value = id
     }
 
@@ -293,7 +295,7 @@ class GalleryViewModel(
 
     override fun onCleared() {
         // contentObserver 해제.
-        provider.getContentResolver().unregisterContentObserver(contentObserver)
+        provider.contentResolver.unregisterContentObserver(contentObserver)
         super.onCleared()
     }
 

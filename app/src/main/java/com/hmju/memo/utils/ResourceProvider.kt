@@ -42,11 +42,11 @@ interface ResourceProvider {
     fun getColor(@ColorRes color: Int): Int
     fun getString(@StringRes resId: Int): String
     fun getStringArray(@ArrayRes resId: Int): Array<String>
-    fun getContentResolver(): ContentResolver
-    fun getImageFileContents(path: String): Pair<MediaType, File>?
-    fun deleteFiles(fileList: List<File>)
-    fun getFile(bitmap: Bitmap): File?
-    fun getTempImageFile(): Uri?
+//    fun getContentResolver(): ContentResolver
+//    fun getImageFileContents(path: String): Pair<MediaType, File>?
+//    fun deleteFiles(fileList: List<File>)
+//    fun getFile(bitmap: Bitmap): File?
+//    fun getTempImageFile(): Uri?
 }
 
 class ResourceProviderImpl(private val ctx: Context) : ResourceProvider {
@@ -64,151 +64,151 @@ class ResourceProviderImpl(private val ctx: Context) : ResourceProvider {
 
     override fun getStringArray(resId: Int) = res.getStringArray(resId)
 
-    override fun getContentResolver(): ContentResolver {
-        return ctx.contentResolver
-    }
-
-    override fun getImageFileContents(imgPath: String): Pair<MediaType, File>? {
-        val uriPath = Uri.parse(imgPath)
-        var bitmap: Bitmap
-        // 버전 별로 분기 처리 Scoped Storage
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            JLogger.d("Scoped Storage 처리")
-            bitmap = ImageDecoder.decodeBitmap(
-                ImageDecoder.createSource(
-                    getContentResolver(),
-                    uriPath
-                )
-            )
-
-//            var tmpWidth = bitmap.width
-//            var tmpHeight = bitmap.height
+//    override fun getContentResolver(): ContentResolver {
+//        return ctx.contentResolver
+//    }
 //
-//            // 기준 너비보다 큰경우 비율에 맞게 리사이징
-//            if (1000 < tmpWidth) {
-//                // 비율에 맞게 높이값 계산
-//                val resizeHeight: Int = 1000 * tmpHeight / tmpWidth
-//                tmpWidth = 1000
-//                tmpHeight = resizeHeight
-//                // 이미지 재 설정
-//                bitmap = Bitmap.createScaledBitmap(bitmap, tmpWidth, tmpHeight, true)
+//    override fun getImageFileContents(imgPath: String): Pair<MediaType, File>? {
+//        val uriPath = Uri.parse(imgPath)
+//        var bitmap: Bitmap
+//        // 버전 별로 분기 처리 Scoped Storage
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+//            JLogger.d("Scoped Storage 처리")
+//            bitmap = ImageDecoder.decodeBitmap(
+//                ImageDecoder.createSource(
+//                    getContentResolver(),
+//                    uriPath
+//                )
+//            )
+//
+////            var tmpWidth = bitmap.width
+////            var tmpHeight = bitmap.height
+////
+////            // 기준 너비보다 큰경우 비율에 맞게 리사이징
+////            if (1000 < tmpWidth) {
+////                // 비율에 맞게 높이값 계산
+////                val resizeHeight: Int = 1000 * tmpHeight / tmpWidth
+////                tmpWidth = 1000
+////                tmpHeight = resizeHeight
+////                // 이미지 재 설정
+////                bitmap = Bitmap.createScaledBitmap(bitmap, tmpWidth, tmpHeight, true)
+////            }
+//
+//        } else {
+//            JLogger.d("Legacy 처리 ")
+//            bitmap = BitmapFactory.decodeStream(
+//                getContentResolver().openInputStream(
+//                    uriPath
+//                )
+//            )
+//
+//            // 이미지 자동 회전 방지 로직
+//            val matrix = Matrix()
+//            getContentResolver().openInputStream(uriPath)?.let {
+//                JLogger.d("함수 호출! InputStream")
+//                val exif = ExifInterface(it)
+//                val orientation = exif.getAttributeInt(
+//                    ExifInterface.TAG_ORIENTATION,
+//                    ExifInterface.ORIENTATION_NORMAL
+//                )
+//
+//                setRotate(
+//                    orientation = orientation,
+//                    matrix = matrix
+//                )
+//
+//                it.close()
 //            }
-
-        } else {
-            JLogger.d("Legacy 처리 ")
-            bitmap = BitmapFactory.decodeStream(
-                getContentResolver().openInputStream(
-                    uriPath
-                )
-            )
-
-            // 이미지 자동 회전 방지 로직
-            val matrix = Matrix()
-            getContentResolver().openInputStream(uriPath)?.let {
-                JLogger.d("함수 호출! InputStream")
-                val exif = ExifInterface(it)
-                val orientation = exif.getAttributeInt(
-                    ExifInterface.TAG_ORIENTATION,
-                    ExifInterface.ORIENTATION_NORMAL
-                )
-
-                setRotate(
-                    orientation = orientation,
-                    matrix = matrix
-                )
-
-                it.close()
-            }
-
-            JLogger.d("그후 여기를 탑니다.")
-            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
-        }
-
-        // Temp File Create
-        val file = File.createTempFile("temp_" + System.currentTimeMillis(), Etc.IMG_FILE_EXTENSION)
-        var fos: FileOutputStream? = null
-        try {
-            fos = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
-        } catch (ex: IOException) {
-            JLogger.d("Fos Exception\t${ex.message}")
-            if (file.isFile && file.delete()) {
-                JLogger.d("File Delete Success")
-            }
-            return null
-        } finally {
-            fos?.flush()
-            fos?.close()
-        }
-
-        // 파일 생성할떄 image/png 로 파일 생성하기 떄문에 콘텐츠 타입 하드로 생
-        return Pair(getMimeType(file.path) ?: Etc.IMG_MIME_TYPE_FILE_EXTENSION.toMediaType(), file)
-    }
-
-    override fun deleteFiles(fileList: List<File>) {
-        fileList.forEach { it.delete() }
-    }
-
-    override fun getFile(bitmap: Bitmap): File? {
-        // Temp File Create
-        val file = File.createTempFile("temp_${System.currentTimeMillis()}", ".png")
-        var fos: FileOutputStream? = null
-        try {
-            fos = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
-        } catch (ex: IOException) {
-            JLogger.d("File IOException ${ex.message}")
-            return null
-        } finally {
-            fos?.flush()
-            fos?.close()
-        }
-        return file
-    }
-
-    @SuppressLint("SimpleDateFormat")
-    override fun getTempImageFile(): Uri? {
-        val fileName = "temp_${SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())}_"
-        val storageDir = ctx.getExternalFilesDir(Environment.DIRECTORY_DCIM)
-        return try {
-            val file = File.createTempFile(
-                fileName,
-                Etc.IMG_FILE_EXTENSION,
-                storageDir
-            )
-            FileProvider.getUriForFile(ctx, ctx.packageName, file)
-        } catch (ex: IOException) {
-            JLogger.d("IOException ${ex.message}")
-            null
-        }
-    }
-
-    private fun getMimeType(path: String): MediaType? {
-        val extension = path.substring(path.lastIndexOf(".")).toLowerCase(Locale.ROOT)
-        val typeMap = MimeTypeMap.getFileExtensionFromUrl(extension)
-        val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(typeMap)
-        mimeType?.let {
-            return it.toMediaType()
-        } ?: run {
-            return null
-        }
-    }
-
-    private fun setRotate(orientation: Int, matrix: Matrix): Boolean {
-        return when (orientation) {
-            ExifInterface.ORIENTATION_ROTATE_90 -> {
-                matrix.postRotate(90f)
-                true
-            }
-            ExifInterface.ORIENTATION_ROTATE_180 -> {
-                matrix.postRotate(180f)
-                true
-            }
-            ExifInterface.ORIENTATION_ROTATE_270 -> {
-                matrix.postRotate(270f)
-                true
-            }
-            else -> false
-        }
-    }
+//
+//            JLogger.d("그후 여기를 탑니다.")
+//            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+//        }
+//
+//        // Temp File Create
+//        val file = File.createTempFile("temp_" + System.currentTimeMillis(), Etc.IMG_FILE_EXTENSION)
+//        var fos: FileOutputStream? = null
+//        try {
+//            fos = FileOutputStream(file)
+//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+//        } catch (ex: IOException) {
+//            JLogger.d("Fos Exception\t${ex.message}")
+//            if (file.isFile && file.delete()) {
+//                JLogger.d("File Delete Success")
+//            }
+//            return null
+//        } finally {
+//            fos?.flush()
+//            fos?.close()
+//        }
+//
+//        // 파일 생성할떄 image/png 로 파일 생성하기 떄문에 콘텐츠 타입 하드로 생
+//        return Pair(getMimeType(file.path) ?: Etc.IMG_MIME_TYPE_FILE_EXTENSION.toMediaType(), file)
+//    }
+//
+//    override fun deleteFiles(fileList: List<File>) {
+//        fileList.forEach { it.delete() }
+//    }
+//
+//    override fun getFile(bitmap: Bitmap): File? {
+//        // Temp File Create
+//        val file = File.createTempFile("temp_${System.currentTimeMillis()}", ".png")
+//        var fos: FileOutputStream? = null
+//        try {
+//            fos = FileOutputStream(file)
+//            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+//        } catch (ex: IOException) {
+//            JLogger.d("File IOException ${ex.message}")
+//            return null
+//        } finally {
+//            fos?.flush()
+//            fos?.close()
+//        }
+//        return file
+//    }
+//
+//    @SuppressLint("SimpleDateFormat")
+//    override fun getTempImageFile(): Uri? {
+//        val fileName = "temp_${SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())}_"
+//        val storageDir = ctx.getExternalFilesDir(Environment.DIRECTORY_DCIM)
+//        return try {
+//            val file = File.createTempFile(
+//                fileName,
+//                Etc.IMG_FILE_EXTENSION,
+//                storageDir
+//            )
+//            FileProvider.getUriForFile(ctx, ctx.packageName, file)
+//        } catch (ex: IOException) {
+//            JLogger.d("IOException ${ex.message}")
+//            null
+//        }
+//    }
+//
+//    private fun getMimeType(path: String): MediaType? {
+//        val extension = path.substring(path.lastIndexOf(".")).toLowerCase(Locale.ROOT)
+//        val typeMap = MimeTypeMap.getFileExtensionFromUrl(extension)
+//        val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(typeMap)
+//        mimeType?.let {
+//            return it.toMediaType()
+//        } ?: run {
+//            return null
+//        }
+//    }
+//
+//    private fun setRotate(orientation: Int, matrix: Matrix): Boolean {
+//        return when (orientation) {
+//            ExifInterface.ORIENTATION_ROTATE_90 -> {
+//                matrix.postRotate(90f)
+//                true
+//            }
+//            ExifInterface.ORIENTATION_ROTATE_180 -> {
+//                matrix.postRotate(180f)
+//                true
+//            }
+//            ExifInterface.ORIENTATION_ROTATE_270 -> {
+//                matrix.postRotate(270f)
+//                true
+//            }
+//            else -> false
+//        }
+//    }
 }

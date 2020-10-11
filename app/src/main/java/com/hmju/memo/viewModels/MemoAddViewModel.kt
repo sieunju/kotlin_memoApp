@@ -14,6 +14,7 @@ import com.hmju.memo.define.TagType
 import com.hmju.memo.model.form.MemoItemForm
 import com.hmju.memo.model.memo.FileItem
 import com.hmju.memo.repository.network.ApiService
+import com.hmju.memo.utils.ImageFileProvider
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.ResourceProvider
 import io.reactivex.Observable
@@ -28,7 +29,8 @@ import java.io.File
  */
 class MemoAddViewModel(
     private val apiService: ApiService,
-    private val provider: ResourceProvider
+    private val resProvider: ResourceProvider,
+    private val provider: ImageFileProvider
 ) : BaseViewModel() {
 
     private val _manageNo = NonNullMutableLiveData(-1)
@@ -55,7 +57,6 @@ class MemoAddViewModel(
     val startGallery = SingleLiveEvent<Unit>()
     val startSelectedTagColor = SingleLiveEvent<Int>()
 
-
     init {
         setSelectedTag(TagType.ETC)
     }
@@ -70,13 +71,13 @@ class MemoAddViewModel(
      */
     fun setSelectedTag(tag: TagType) {
         selectTag.value = tag.tag
-        startSelectedTagColor.value = provider.getColor(tag.color)
+        startSelectedTagColor.value = resProvider.getColor(tag.color)
     }
 
     fun moveGallery() {
         // 이미지 파일 개수 제한.
         if (Etc.IMG_FILE_LIMIT - fileSize.value!! == 0) {
-            startDialog.value = provider.getString(R.string.str_guid_limit_img_file_over)
+            startDialog.value = resProvider.getString(R.string.str_guid_limit_img_file_over)
         } else {
             startGallery.call()
         }
@@ -112,7 +113,7 @@ class MemoAddViewModel(
         } else {
             JLogger.d("아닙니다!")
             launch {
-                apiService.addMemo(
+                apiService.postMemo(
                     MemoItemForm(
                         tag = selectTag.value,
                         title = title.value,
@@ -164,7 +165,7 @@ class MemoAddViewModel(
             // File Path -> File Converter
             Observable.fromIterable(filePathList)
                 .flatMap { path ->
-                    Observable.just(provider.getImageFileContents(path))
+                    Observable.just(provider.getFilePart(path))
                 }.flatMap { fileInfo ->
                     tmpFileList.add(fileInfo.second)
                     val body = fileInfo.second.asRequestBody(fileInfo.first)
@@ -187,14 +188,20 @@ class MemoAddViewModel(
                                 // 업로드 완료된 파일들 추가 및 갠신 처리.
                                 addImageFileList(it.pathList)
 
-                                provider.deleteFiles(tmpFileList)
+                                tmpFileList.forEach {
+                                    provider.deleteFile(it)
+                                }
                                 onSuccess()
                             }, {
-                                provider.deleteFiles(tmpFileList)
+                                tmpFileList.forEach {
+                                    provider.deleteFile(it)
+                                }
                                 onError()
                             })
                     }, {
-                        provider.deleteFiles(tmpFileList)
+                        tmpFileList.forEach {
+                            provider.deleteFile(it)
+                        }
                         onError()
                     })
         }

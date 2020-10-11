@@ -47,31 +47,27 @@ open class BaseViewModel : ViewModel() {
     }
 
     protected fun onLoading() {
-        startNetworkState.postValue(NetworkState.LOADING)
-//        if (startNetworkState.value != NetworkState.LOADING) {
-//            startNetworkState.value = NetworkState.LOADING
-//        }
+        if (startNetworkState.value != NetworkState.LOADING) {
+            startNetworkState.postValue(NetworkState.LOADING)
+        }
     }
 
     protected fun onSuccess() {
-        startNetworkState.postValue(NetworkState.SUCCESS)
-//        if (startNetworkState.value != NetworkState.SUCCESS) {
-//            startNetworkState.value = NetworkState.SUCCESS
-//        }
+        if (startNetworkState.value != NetworkState.SUCCESS) {
+            startNetworkState.postValue(NetworkState.SUCCESS)
+        }
     }
 
     protected fun onError() {
-        startNetworkState.postValue(NetworkState.ERROR)
-//        if (startNetworkState.value != NetworkState.ERROR) {
-//            startNetworkState.value = NetworkState.ERROR
-//        }
+        if (startNetworkState.value != NetworkState.ERROR) {
+            startNetworkState.postValue(NetworkState.ERROR)
+        }
     }
 
     protected fun onResultEmpty() {
-        startNetworkState.postValue(NetworkState.RESULT_EMPTY)
-//        if (startNetworkState.value != NetworkState.RESULT_EMPTY) {
-//            startNetworkState.value = NetworkState.RESULT_EMPTY
-//        }
+        if (startNetworkState.value != NetworkState.RESULT_EMPTY) {
+            startNetworkState.postValue(NetworkState.RESULT_EMPTY)
+        }
     }
 
 

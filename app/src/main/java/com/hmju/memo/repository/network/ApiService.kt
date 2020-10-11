@@ -63,7 +63,7 @@ interface ApiService {
      * }
      */
     @POST("/api/memo")
-    fun addMemo(
+    fun postMemo(
         @Body body: MemoItemForm
     ): Maybe<MemoResponse>
 
@@ -79,7 +79,7 @@ interface ApiService {
     @PUT("/api/memo")
     fun updateMemo(
         @Body body: MemoItemForm
-    ): Maybe<BaseResponse>
+    ): Maybe<MemoResponse>
 
     /**
      * 메모장 삭제 API

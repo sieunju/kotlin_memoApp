@@ -15,21 +15,23 @@ val viewModelModule = module {
 
     viewModel { MainViewModel(get(), get(), get()) }
     viewModel { LoginViewModel(get(), get()) }
-    viewModel { MemoAddViewModel(get(), get()) }
+    viewModel { MemoAddViewModel(get(), get(),get()) }
 
     viewModel { (pos: Int, memoInfo: MemoItem) ->
         MemoDetailViewModel(
             memoPosition = pos,
             originData = memoInfo,
             apiService = get(),
-            provider = get()
+            provider = get(),
+            resProvider = get()
         )
     }
 
     viewModel { (limitSize: Int) ->
         GalleryViewModel(
             limitImageSize = limitSize,
-            provider = get()
+            provider = get(),
+            resProvider = get()
         )
     }
 

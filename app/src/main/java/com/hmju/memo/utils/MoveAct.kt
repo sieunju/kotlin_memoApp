@@ -1,5 +1,6 @@
 package com.hmju.memo.utils
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityOptions
 import android.content.ContentValues
@@ -10,6 +11,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.view.View
+import androidx.core.content.FileProvider
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseActivity
 import com.hmju.memo.define.Etc
@@ -18,6 +20,9 @@ import com.hmju.memo.define.RequestCode
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.ui.memo.MemoDetailActivity
 import org.koin.android.ext.android.inject
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 inline fun <reified T : Activity> Activity.startAct() {
     val intent = Intent(this, T::class.java)
@@ -70,6 +75,53 @@ fun Activity.moveMemoDetail(
 }
 
 /**
+ * 카메라 캡처 페이지 이동 함수.
+ *
+ * @param uri 카메라 캡처후 해당 파일 정보 세팅할 위치값.
+ */
+fun Activity.moveCamera(uri: Uri) {
+    Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
+        resolveActivity(packageManager)?.let {
+            putExtra(MediaStore.EXTRA_OUTPUT, uri)
+            startActivityForResult(this, RequestCode.CAMERA_CAPTURE)
+        }
+    }
+}
+
+//@SuppressLint("SimpleDateFormat")
+//fun Activity.moveCamera(callBack: (String) -> Unit) {
+//    Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { intent->
+//        intent.resolveActivity(packageManager)?.also {
+//            try {
+//                // Create TempFile
+//                val tempFile = File.createTempFile(
+//                    "temp_${SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())}",
+//                    ".jpg",
+//                    getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+//                ).apply {
+//                    // Save a File
+//                    JLogger.d("File Path $absolutePath")
+//                    callBack.invoke(absolutePath)
+//                }
+//                tempFile.also {
+//                    val photoUri: Uri = FileProvider.getUriForFile(
+//                        this,
+//                        packageName,
+//                        it
+//                    )
+//                    JLogger.d("Photo Uri $photoUri")
+//                    intent.putExtra(MediaStore.EXTRA_OUTPUT,photoUri)
+//                    startActivityForResult(intent,RequestCode.CAMERA_CAPTURE)
+//                }
+//            } catch (ex :Exception) {
+//                JLogger.d("Create File Exception ${ex.message}")
+//            }
+//        }
+//
+//    }
+//}
+
+/**
  * 카메라 캡처 화면 진입
  */
 fun Activity.moveCameraCapture(photoUriCallback: (Uri?) -> Unit) {
@@ -82,13 +134,13 @@ fun Activity.moveCameraCapture(photoUriCallback: (Uri?) -> Unit) {
             val photoName =
                 "Memo_${System.currentTimeMillis()}${Etc.IMG_FILE_EXTENSION}"
             val values = ContentValues().apply {
-                put(MediaStore.Images.Media.TITLE,"내영!?")
+                put(MediaStore.Images.Media.TITLE, "내용!?")
                 put(MediaStore.Images.Media.DISPLAY_NAME, photoName)
                 put(MediaStore.Images.Media.MIME_TYPE, Etc.IMG_MIME_TYPE_FILE_EXTENSION)
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     put(MediaStore.Images.Media.IS_PENDING, 0)
-                    put(MediaStore.Images.Media.RELATIVE_PATH,Environment.DIRECTORY_PICTURES)
+                    put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
                 }
             }
 

@@ -26,10 +26,7 @@ import com.hmju.memo.dialog.ConfirmDialog
 import com.hmju.memo.ui.bottomsheet.CheckableBottomSheet
 import com.hmju.memo.ui.imageEdit.ImageEditActivity
 import com.hmju.memo.ui.toast.showToast
-import com.hmju.memo.utils.JLogger
-import com.hmju.memo.utils.ResourceProvider
-import com.hmju.memo.utils.moveCameraCapture
-import com.hmju.memo.utils.startAct
+import com.hmju.memo.utils.*
 import com.hmju.memo.viewModels.GalleryViewModel
 import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.activity_gallery.*
@@ -60,6 +57,7 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
     override val bindingVariable = BR.viewModel
 
     private lateinit var selectDialog: CheckableBottomSheet
+
     private var photoUri: Uri? = null
     private val imgEditListTest = arrayListOf<String>()
 
@@ -90,9 +88,9 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
                         Manifest.permission.CAMERA
                     ).subscribe { isGranted ->
                         if (isGranted) {
-                            moveCameraCapture { callbackUri ->
-                                JLogger.d("PhotoUri $callbackUri")
-                                photoUri = callbackUri
+                            provider.createTempFile { uri ->
+                                photoUri = uri
+                                moveCamera(uri)
                             }
                         } else {
                             // 권한 확인 안내 팝업 노출
@@ -100,7 +98,6 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
                         }
                     }
                 }
-
             })
 
             startSubmit.observe(this@GalleryActivity, Observer {
@@ -179,34 +176,64 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
         when (requestCode) {
             RequestCode.CAMERA_CAPTURE -> {
                 if (resultCode == RESULT_OK) {
-                    JLogger.d("촬영 성공 성공!")
+                    JLogger.d("촬영 성공 성공 $photoUri")
 
-                    val intent = Intent()
-                    intent.putExtra(ExtraCode.CAMERA_CAPTURE_PHOTO_URI, photoUri.toString())
-                    setResult(ResultCode.CAMERA_CAPTURE_OK, intent)
-                    finish()
+                    Intent().apply {
+                        putExtra(ExtraCode.CAMERA_CAPTURE_PHOTO_URI, photoUri.toString())
+                        setResult(ResultCode.CAMERA_CAPTURE_OK, this)
+                        finish()
+                    }
                 } else {
+                    JLogger.d("카메라 캡처 취소..")
                     // Remove Photo
                     photoUri?.let {
-                        contentResolver.delete(it, null, null)
-                        JLogger.d("취소!")
+                        File(it.toString()).delete()
                     }
                 }
             }
         }
     }
 
-    private fun savePictureTT() {
-        try {
-            MediaScannerConnection.scanFile(
-                this,
-                arrayOf(photoUri.toString()),
-                null
-            ) { path, uri ->
-                JLogger.d("Path $path Uri $uri")
-            }
-        } catch (ex: Exception) {
-
-        }
-    }
+//    @SuppressLint("SimpleDateFormat")
+//    private fun galleryAddPic() {
+//        val values = ContentValues().apply {
+//            put(
+//                MediaStore.Images.Media.DISPLAY_NAME,
+//                "MemoApp_${SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())}.jpg"
+//            )
+//            put(MediaStore.Images.Media.MIME_TYPE, "image/*")
+//
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//                put(MediaStore.Images.Media.IS_PENDING, 1)
+//            }
+//        }
+//
+//        val item: Uri? =
+//            contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+//
+//        try {
+//            item?.let { uri ->
+//                val pdf = contentResolver.openFileDescriptor(uri, "w", null)
+//                pdf?.let {
+//                    val tempFile = File(photoUri!!)
+//                    val fos = FileOutputStream(it.fileDescriptor)
+//                    fos.write(tempFile.readBytes())
+//                    fos.close()
+//
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//                        values.clear()
+//                        values.put(MediaStore.Images.Media.IS_PENDING, 0)
+//                        contentResolver.update(uri, values, null, null)
+//
+//                        // 해당 파일 삭제.
+//                        tempFile.delete()
+//                    }
+//                } ?: {
+//                    JLogger.d("PDF Null")
+//                }()
+//            }
+//        } catch (ex: Exception) {
+//            JLogger.d("Error ${ex.message}")
+//        }
+//    }
 }
