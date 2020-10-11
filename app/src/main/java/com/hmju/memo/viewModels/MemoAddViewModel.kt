@@ -180,7 +180,7 @@ class MemoAddViewModel(
                 .toList()
                 .subscribe(
                     { list ->
-                        apiService.addFile(
+                        apiService.uploadFile(
                             memoId = manageNo.value,
                             files = list
                         ).single()

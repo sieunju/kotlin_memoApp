@@ -99,7 +99,7 @@ interface ApiService {
      */
     @Multipart
     @POST("/api/uploads")
-    fun addFile(
+    fun uploadFile(
         @Part("memoId") memoId: Int,
         @Part files: List<MultipartBody.Part>
     ): Maybe<MemoFileResponse>

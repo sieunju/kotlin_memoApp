@@ -3,22 +3,14 @@ package com.hmju.memo.viewModels
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.view.View
-import androidx.core.view.drawToBitmap
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.convenience.NonNullMutableLiveData
 import com.hmju.memo.convenience.SingleLiveEvent
-import com.hmju.memo.convenience.single
 import com.hmju.memo.convenience.to
+import com.hmju.memo.utils.ImageFileProvider
 import com.hmju.memo.utils.JLogger
-import com.hmju.memo.utils.ResourceProvider
-import com.hmju.memo.widget.flexibleImageView.FlexibleImageView
 import io.reactivex.Observable
-import kotlinx.android.synthetic.main.activity_image_edit.view.*
-import java.io.File
 
 /**
  * Description:
@@ -27,7 +19,7 @@ import java.io.File
  */
 class ImageEditViewModel(
     photoList: ArrayList<String>,
-    private val provider: ResourceProvider
+    private val provider: ImageFileProvider
 ) : BaseViewModel() {
 
     val leftPhotoPath = NonNullMutableLiveData(photoList[0])
@@ -57,7 +49,7 @@ class ImageEditViewModel(
                 }.to()
                 .flatMap {
                     view.draw(Canvas(it))
-                    Observable.just(provider.getFile(it))
+                    Observable.just(provider.bitmapToFile(it))
                 }.to()
                 .doOnComplete { onSuccess() }
                 .subscribe({

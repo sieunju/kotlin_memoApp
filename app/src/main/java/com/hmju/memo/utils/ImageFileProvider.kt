@@ -18,6 +18,9 @@ import androidx.exifinterface.media.ExifInterface
 import com.hmju.memo.define.Etc
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import okio.IOException
 import java.io.File
 import java.io.FileOutputStream
@@ -32,6 +35,7 @@ import java.util.*
 interface ImageFileProvider {
     val contentResolver: ContentResolver
     fun getFilePart(path: String?): Pair<MediaType, File>?
+    fun createMultiPartBody(path: String?): Pair<RequestBody, File>?
     fun createTempFile(): File
     fun createTempFile(callBack: (Uri) -> Unit)
     fun bitmapToFile(bitmap: Bitmap): File?
@@ -97,6 +101,66 @@ class ImageFileProviderImpl(private val ctx: Context) : ImageFileProvider {
         // Create Temp File
         bitmapToFile(bitmap)?.let {
             return Pair(getMimeType(it.path) ?: Etc.IMG_MIME_TYPE_FILE_EXTENSION.toMediaType(), it)
+        } ?: return null
+    }
+
+    /**
+     * Multipart 전송에 필요한 Body 및 File 값 생성 함수.
+     * 전송 완료후 File 은 삭제 해야함.
+     *
+     * @param path File 위치값.
+     */
+    override fun createMultiPartBody(path: String?): Pair<RequestBody, File>? {
+        // 변수 유효성 체크.
+        if (path.isNullOrEmpty()) return null
+        val uri = Uri.parse(path)
+
+        var bitmap: Bitmap
+        // Scoped Storage
+        bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            JLogger.d("Scoped Storage 처리")
+            ImageDecoder.decodeBitmap(
+                ImageDecoder.createSource(contentResolver, uri)
+            )
+        } else {
+            JLogger.d("Legacy 처리")
+            BitmapFactory.decodeStream(contentResolver.openInputStream(uri))
+        }
+
+        // 이미지 회전 이슈 처리
+        val matrix = Matrix()
+        contentResolver.openInputStream(uri)?.let {
+            val exif = ExifInterface(it)
+            val orientation = exif.getAttributeInt(
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_NORMAL
+            )
+
+            setRotate(
+                orientation = orientation,
+                matrix = matrix
+            )
+
+            it.close()
+        }
+
+        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+
+        // 이미지 리사이징 처리.
+        if (MAX_IMAGE_WIDTH < bitmap.width) {
+            // 비율에 맞게 높이값 계산
+            val height = MAX_IMAGE_WIDTH * bitmap.height / bitmap.width
+            bitmap = Bitmap.createScaledBitmap(bitmap, MAX_IMAGE_WIDTH, height, true)
+        }
+
+        bitmapToFile(bitmap)?.let { file ->
+            return Pair(
+                file.asRequestBody(
+                    contentType = getMimeType(file.path)
+                        ?: Etc.IMG_MIME_TYPE_FILE_EXTENSION.toMediaType()
+                ),
+                file
+            )
         } ?: return null
     }
 

@@ -236,7 +236,7 @@ class MemoDetailViewModel(
             }.single()
                 .toList()
                 .subscribe({ list ->
-                    apiService.addFile(
+                    apiService.uploadFile(
                         memoId = manageNo.value,
                         files = list
                     ).single()
