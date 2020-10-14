@@ -3,10 +3,12 @@ package com.hmju.memo.viewModels
 import android.annotation.SuppressLint
 import android.database.ContentObserver
 import android.database.Cursor
+import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
 import android.view.View
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewModel
@@ -21,6 +23,8 @@ import com.hmju.memo.utils.ImageFileProvider
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.ResourceProvider
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers.*
 
 /**
  * Description : 앨범 및 카메라 ViewModel Class
@@ -54,18 +58,12 @@ class GalleryViewModel(
     val startImageEdit = SingleLiveEvent<String>()
     val startNotify = SingleLiveEvent<GallerySelectedItem>()
 
-    private val _filterList = ListMutableLiveData<GalleryFilterItem>().apply {
-        add(GalleryFilterItem(DEFAULT_FILTER_ID, DEFAULT_FILTER_NAME, true))
-    } // 필터 영역
+    private val _filterList = ListMutableLiveData<GalleryFilterItem>() // 필터 영역
     val filterList: ListMutableLiveData<GalleryFilterItem>
         get() = _filterList
-    val selectedFilter = NonNullMutableLiveData(
-        GalleryFilterItem(
-            id = DEFAULT_FILTER_ID,
-            name = DEFAULT_FILTER_NAME,
-            isSelected = true
-        )
-    ) // 선택한 필터
+    private val _selectedFilter = MutableLiveData<GalleryFilterItem>() // 선택한 필터
+    val selectedFilter: MutableLiveData<GalleryFilterItem>
+        get() = _selectedFilter
 
     private val _selectedPhotoList = ListMutableLiveData<GallerySelectedItem>() // 선택한 사진들
     val selectedPhotoList: ListMutableLiveData<GallerySelectedItem>
@@ -77,7 +75,7 @@ class GalleryViewModel(
 
     fun selectedFilter(id: String) {
         _filterList.value.forEach {
-            if (it.id == id) {
+            if (it.bucketId == id) {
                 it.isSelected = true
                 selectedFilter.value = it
                 return@forEach
@@ -88,7 +86,6 @@ class GalleryViewModel(
 
     fun start() {
         fetchFilter()
-
 
         provider.contentResolver
             .registerContentObserver(
@@ -105,9 +102,6 @@ class GalleryViewModel(
      */
     @SuppressLint("Recycle")
     private fun fetchFilter() {
-        // 로딩바 노출
-        startNetworkState.postValue(NetworkState.LOADING)
-
         val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val projection = arrayOf(
             MediaStore.Images.Media._ID,
@@ -116,19 +110,17 @@ class GalleryViewModel(
         )
         val selection = StringBuilder()
         val selectionArgs = arrayListOf<String>()
+        val sort = "${MediaStore.Images.Media.DATE_TAKEN} DESC "
 
-        // 데이터 하나만 가져오도록... 비용 최소화
-        val sort = "${MediaStore.Images.Media.DATE_ADDED} DESC LIMIT 1"
+        var prevPhotoUri: String = ""
+        var prevBucketId: String = ""
+        var prevBucketName: String = ""
+        var prevSize: Int = -1
 
         launch {
             Observable.create<GalleryFilterItem> {
                 try {
                     loop@ while (true) {
-
-//                        JLogger.d("===================================================")
-//                        JLogger.d("TEST:: Selection $selection")
-//                        JLogger.d("TEST:: Argument $selectionArgs")
-//                        JLogger.d("===================================================")
 
                         val cursor = provider.contentResolver.query(
                             uri,
@@ -139,34 +131,79 @@ class GalleryViewModel(
                         ) ?: break@loop
 
                         if (cursor.moveToLast()) {
-                            val id =
+                            val contentId =
                                 cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media._ID))
+                            val photoUri = Uri.withAppendedPath(
+                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                contentId
+                            ).toString()
                             val bucketId =
                                 cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID))
                             val bucketName =
                                 cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME))
+                            val size = cursor.count
 
                             if (!cursor.isClosed) {
                                 cursor.close()
                             }
 
-                            if (selection.isEmpty()) {
-                                selection.append("${MediaStore.Images.Media.BUCKET_ID} !=?")
-                            } else {
+                            // Where Setting
+                            if (selection.isNotEmpty()) {
                                 selection.append(" AND ")
-                                selection.append("${MediaStore.Images.Media.BUCKET_ID} !=?")
                             }
+
+                            selection.append(MediaStore.Images.Media.BUCKET_ID)
+                            selection.append(" !=?")
                             selectionArgs.add(bucketId)
 
-                            it.onNext(
-                                GalleryFilterItem(
-                                    id = bucketId,
-                                    name = bucketName,
-                                    isSelected = false,
-                                    contentId = id
+                            // 앨범명 유효성 검사.
+                            if (prevBucketId.isNotEmpty()) {
+                                val diffSize = prevSize - size
+                                prevSize = size
+                                it.onNext(
+                                    GalleryFilterItem(
+                                        bucketId = prevBucketId,
+                                        bucketName = prevBucketName,
+                                        photoUri = prevPhotoUri,
+                                        size = diffSize,
+                                        isSelected = false
+                                    )
                                 )
-                            )
+                            }
+
+                            // 초기값 세팅
+                            if (prevSize == -1) {
+                                prevSize = size
+                                it.onNext(
+                                    GalleryFilterItem(
+                                        bucketId = DEFAULT_FILTER_ID,
+                                        bucketName = DEFAULT_FILTER_NAME,
+                                        photoUri = photoUri,
+                                        size = size,
+                                        isSelected = true
+                                    )
+                                )
+                            }
+
+                            // Set Data.
+                            prevPhotoUri = photoUri
+                            prevBucketId = bucketId
+                            prevBucketName = bucketName
+
                         } else {
+                            // 맨 마지막 앨범 추가
+                            if (prevSize != 0) {
+                                it.onNext(
+                                    GalleryFilterItem(
+                                        bucketId = prevBucketId,
+                                        bucketName = prevBucketName,
+                                        photoUri = prevPhotoUri,
+                                        size = prevSize,
+                                        isSelected = false
+                                    )
+                                )
+                            }
+
                             if (!cursor.isClosed) {
                                 cursor.close()
                             }
@@ -181,19 +218,23 @@ class GalleryViewModel(
                     it.onComplete()
                 }
             }
+                .subscribeOn(computation())
+                .doOnSubscribe { onLoading() }
                 .doOnError {
                     JLogger.d("Error ${it.message}")
-
                 }
+                .observeOn(newThread())
                 .doOnNext {
 //                    JLogger.d("onNext $it")
+                    if (it.isSelected) {
+                        selectedFilter.postValue(it)
+                    }
                     _filterList.value.add(it)
                 }
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnComplete {
-                    JLogger.d("onComplete !")
                     fetchGallery()
                 }
-                .single()
                 .subscribe()
         }
     }
@@ -203,7 +244,6 @@ class GalleryViewModel(
      * 필터가 걸려있으면 자동으로 처리함.
      */
     fun fetchGallery() {
-
         // 선택된 이미지 초기화
         if (selectedPhotoList.size() > 0) {
             _selectedPhotoList.postClear()
@@ -217,18 +257,31 @@ class GalleryViewModel(
         val sort = "${MediaStore.Images.Media.DATE_ADDED} DESC"
         val selection = "${MediaStore.Images.Media.BUCKET_ID} ==?"
 
+        val isAll: Boolean = selectedFilter.value?.bucketId == DEFAULT_FILTER_ID
+
         // 기존 남아 있는 커서 Exit
         cursor.value?.close()
-        cursor.postValue(
-            provider.contentResolver.query(
-                uri,
-                projection,
-                if (selectedFilter.value.id == DEFAULT_FILTER_ID) null else selection,
-                if (selectedFilter.value.id == DEFAULT_FILTER_ID) null else arrayOf(selectedFilter.value.id),
-                sort
+        launch {
+            Observable.just(
+                cursor.postValue(
+                    provider.contentResolver.query(
+                        uri,
+                        projection,
+                        if (isAll) null else selection,
+                        if (isAll) null else arrayOf(selectedFilter.value!!.bucketId),
+                        sort
+                    )
+                )
             )
-        )
-        startNetworkState.postValue(NetworkState.SUCCESS)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { onLoading() }
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnComplete { onSuccess() }
+                .subscribe()
+        }
+
+
+        onSuccess()
     }
 
     fun moveCamera() {

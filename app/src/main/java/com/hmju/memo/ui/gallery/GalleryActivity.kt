@@ -126,8 +126,8 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
                 filterList.value.forEach {
                     list.add(
                         CheckableBottomSheet.CheckableBottomSheetItem(
-                            id = it.id,
-                            name = it.name,
+                            id = it.bucketId,
+                            name = it.bucketName,
                             isSelected = it.isSelected
                         )
                     )
@@ -137,7 +137,6 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
                     resources.getDimensionPixelOffset(R.dimen.size_200),
                     list
                 ) { pos, id ->
-                    startNetworkState.postValue(NetworkState.LOADING)
                     resetFilter()
                     selectedFilter(id)
 

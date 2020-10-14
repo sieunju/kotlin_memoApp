@@ -12,6 +12,7 @@ import android.view.MotionEvent.PointerProperties
 import android.view.ScaleGestureDetector
 import androidx.appcompat.widget.AppCompatImageView
 import com.hmju.memo.R
+import com.hmju.memo.utils.JLogger
 import com.hmju.memo.widget.flexibleImageView.base.FlexibleStateItem
 import com.hmju.memo.widget.flexibleImageView.gesture.MoveGestureDetector
 import com.hmju.memo.widget.flexibleImageView.gesture.RotateGestureDetector
@@ -259,7 +260,6 @@ class FlexibleImageView(private val ctx: Context, attrs: AttributeSet?) :
             val delta = detector.focusDelta
             stateItem.focusX += delta.x
             stateItem.focusY += delta.y
-
             return true
         }
     }

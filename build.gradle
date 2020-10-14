@@ -41,7 +41,7 @@ buildscript {
         coroutinesVersion = '1.3.0'
 
         // Reactive X
-        rxJavaVersion = '2.2.9'
+        rxJavaVersion = '2.2.15'
         rxAndroidVersion = '2.1.1'
         rxPermissionVersion = '0.10.2'
 

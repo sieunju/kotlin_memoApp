@@ -76,10 +76,12 @@ class MainApplication : MultiDexApplication() {
             }
             if (error is IOException || error is SocketException) {
                 // fine, irrelevant network problem or API that throws on cancellation
+                JLogger.e("RxJava IOException Or SocketException ${error.message}")
                 return@setErrorHandler
             }
             if (error is InterruptedException) {
                 // fine, some blocking code was interrupted by a dispose call
+                JLogger.e("RxJava InterruptedException ${error.message}")
                 return@setErrorHandler
             }
             if (error is NullPointerException || error is IllegalArgumentException) {
@@ -88,6 +90,7 @@ class MainApplication : MultiDexApplication() {
                     Thread.currentThread(),
                     error
                 )
+                JLogger.e("RxJava NullPointerException Or IllegalArgumentException ${error.message}")
                 return@setErrorHandler
             }
             if (error is IllegalStateException) {
@@ -96,6 +99,7 @@ class MainApplication : MultiDexApplication() {
                     Thread.currentThread(),
                     error
                 )
+                JLogger.e("RxJava IllegalStateException ${error.message}")
                 return@setErrorHandler
             }
         }

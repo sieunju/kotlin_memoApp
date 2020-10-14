@@ -31,6 +31,8 @@ class JLogger {
             }
         }
 
+        @JvmStatic
+        @JvmName("e")
         fun e(msg: String) {
             if (BuildConfig.DEBUG) {
                 val ste = Thread.currentThread().stackTrace[4]

@@ -14,12 +14,12 @@ import java.util.concurrent.TimeUnit
  *
  * Created by hmju on 2020-06-09
  */
-// 관련 링크 https://beomseok95.tistory.com/233
+// subscribeOn -> Observable.create(작업 쓰레드), Observable.just(작업 쓰레드) 에서 사용할 쓰레드
+// observeOn -> 메인 작업을 완료하 그다음 어떤 쓰레드를 사용할건지 정하는 것.
+// observeOn()이 여러번 쓰였을 경우 immediate()를 선언한 바로 윗쪽의 스레드를 따라갑니다.
 // Schedulers.computation() - 이벤트 룹에서 간단한 연산이나 콜백 처리를 위해 사용됩니다.
 // RxComputationThreadPool라는 별도의 스레드 풀에서 돌아갑니다. 최대 cㅔu갯수 개의 스레드 풀이 순환하면서 실행됩니다.
-//
 // Schedulers.immediate() - 현재 스레드에서 즉시 수행합니다.
-// observeOn()이 여러번 쓰였을 경우 immediate()를 선언한 바로 윗쪽의 스레드를 따라갑니다.
 // Schedulers.from(executor) - 특정 executor를 스케쥴러로 사용합니다.
 // Schedulers.io() - 동기 I/O를 별도로 처리시켜 비동기 효율을 얻기 위한 스케줄러입니다.
 // 자체적인 스레드 풀 CachedThreadPool을 사용합니다. API 호출 등 네트워크를 사용한 호출 시 사용됩니다.
