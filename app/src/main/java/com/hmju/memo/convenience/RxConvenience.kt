@@ -3,6 +3,7 @@ package com.hmju.memo.convenience
 import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.Schedulers.io
@@ -16,6 +17,7 @@ import java.util.concurrent.TimeUnit
  */
 // subscribeOn -> Observable.create(작업 쓰레드), Observable.just(작업 쓰레드) 에서 사용할 쓰레드
 // observeOn -> 메인 작업을 완료하 그다음 어떤 쓰레드를 사용할건지 정하는 것.
+
 // observeOn()이 여러번 쓰였을 경우 immediate()를 선언한 바로 윗쪽의 스레드를 따라갑니다.
 // Schedulers.computation() - 이벤트 룹에서 간단한 연산이나 콜백 처리를 위해 사용됩니다.
 // RxComputationThreadPool라는 별도의 스레드 풀에서 돌아갑니다. 최대 cㅔu갯수 개의 스레드 풀이 순환하면서 실행됩니다.
@@ -28,10 +30,18 @@ import java.util.concurrent.TimeUnit
 // AndroidSchedulers.mainThread() - 안드로이드의 UI 스레드에서 동작합니다.
 // HandlerScheduler.from(handler) - 특정 핸들러 handler에 의존하여 동작합니다.
 
-// 단일로 요청하는 경우.
-fun <T> Maybe<T>.single() = subscribeOn(io()).observeOn(AndroidSchedulers.mainThread())
+// Observable 은 되도록 사용을 지양한다.
 
-fun <T> Observable<T>.single() = subscribeOn(io()).observeOn(AndroidSchedulers.mainThread())
+// NetWork I/O
+fun <T> Single<T>.netIo() = subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+fun <T> Single<T>.io() = observeOn(AndroidSchedulers.mainThread());
+fun <T> Maybe<T>.netIo() = subscribeOn(io()).observeOn(AndroidSchedulers.mainThread())
+fun <T> Flowable<T>.netIo() = subscribeOn(io()).observeOn(AndroidSchedulers.mainThread())
+
+// Local 에서 연산 작업 하는 경우 ex.) File Parsing
+fun <T> Flowable<T>.compute() = subscribeOn(Schedulers.computation())
+fun <T> Flowable<T>.computeOn() = observeOn(Schedulers.computation())
+fun <T> Flowable<T>.ui() = observeOn(AndroidSchedulers.mainThread())
 
 // 여러개의 API 를 한꺼번에 보내는 경우
 fun <T> Maybe<T>.multi() = subscribeOn(io())
@@ -40,12 +50,12 @@ fun <T> Flowable<T>.to() = subscribeOn(io())
 fun <T> Flowable<T>.multiWith() = subscribeOn(io()).observeOn(AndroidSchedulers.mainThread())
 
 fun <T> Observable<T>.to() = subscribeOn(io())
-fun <T> Observable<T>.toDelay(_delay: Int) = subscribeOn(io()).delay(_delay.toLong(),TimeUnit.SECONDS)
-fun <T> Observable<T>.multiWith() = subscribeOn(io()).observeOn(AndroidSchedulers.mainThread())
-fun <T> Observable<T>.multiWithDelay() = subscribeOn(io()).observeOn(AndroidSchedulers.mainThread())
+fun <T> Observable<T>.toDelay(_delay: Int) =
+    subscribeOn(io()).delay(_delay.toLong(), TimeUnit.SECONDS)
 
 // 여러개의 API를 한꺼번에 보내는 경우 Delay 타입.
-fun <T> Flowable<T>.multiDelay(_delay: Int) = subscribeOn(io()).delay(_delay.toLong(),TimeUnit.SECONDS)
+fun <T> Flowable<T>.multiDelay(_delay: Int) =
+    subscribeOn(io()).delay(_delay.toLong(), TimeUnit.SECONDS)
 
 open class SimpleDisposableSubscriber<T> : DisposableSubscriber<T>() {
     override fun onNext(t: T) {

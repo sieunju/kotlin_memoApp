@@ -88,7 +88,7 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
                         Manifest.permission.CAMERA
                     ).subscribe { isGranted ->
                         if (isGranted) {
-                            provider.createTempFile { uri ->
+                            fileProvider.createTempFile { uri ->
                                 photoUri = uri
                                 moveCamera(uri)
                             }

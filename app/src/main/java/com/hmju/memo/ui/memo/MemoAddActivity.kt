@@ -89,7 +89,7 @@ class MemoAddActivity : BaseActivity<ActivityMemoAddBinding, MemoAddViewModel>()
                                     rightText = resources.getString(R.string.str_confirm)
                                 ) { _, which ->
                                     if (which == DialogInterface.BUTTON_POSITIVE) {
-
+                                        doDeleteMemo()
                                     }
                                 }
                             }

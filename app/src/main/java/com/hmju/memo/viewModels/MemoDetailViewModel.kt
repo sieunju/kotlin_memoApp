@@ -2,6 +2,7 @@ package com.hmju.memo.viewModels
 
 import androidx.annotation.IdRes
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseResponse
@@ -18,10 +19,7 @@ import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.utils.ImageFileProvider
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.ResourceProvider
-import io.reactivex.Flowable
-import io.reactivex.Maybe
-import io.reactivex.Observable
-import io.reactivex.Single
+import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import okhttp3.MultipartBody
@@ -39,35 +37,25 @@ class MemoDetailViewModel(
     private val apiService: ApiService,
     private val provider: ImageFileProvider,
     private val resProvider: ResourceProvider
-) : BaseViewModel() {
+) : BaseMemoViewModel(
+    originData = originData,
+    apiService = apiService,
+    provider = provider,
+    resProvider = resProvider
+) {
 
-    val manageNo = NonNullMutableLiveData(originData.manageNo) // 메모 ID
     val regDtm = NonNullMutableLiveData(originData.regDtm) // 수정한 날짜.
 
-    private val _selectTag = NonNullMutableLiveData(originData.tag)
-    val selectTag: NonNullMutableLiveData<Int>
-        get() = _selectTag // 선택한 우선 순위
-    private val _title = NonNullMutableLiveData(originData.title)
-    val title: NonNullMutableLiveData<String?>
-        get() = _title // 제목
-    private val _contents = NonNullMutableLiveData(originData.contents)
-    val contents: NonNullMutableLiveData<String?>
-        get() = _contents // 내용
-    private val _fileList = ListMutableLiveData<FileItem>().apply {
-        originData.fileList?.let {
-            addAll(it)
-        }
-    }
-    val fileList: ListMutableLiveData<FileItem>
-        get() = _fileList
-    val fileSize: LiveData<Int> = Transformations.map(fileList) { it.size }
-
-    val startFinish = SingleLiveEvent<Unit>()
     val startCopyText = SingleLiveEvent<String>()
     val startMoreDialog = SingleLiveEvent<Unit>()
     val startGallery = SingleLiveEvent<Unit>()
     val startSelectedTagColor = SingleLiveEvent<Int>()
-    var isDelete = false
+    val isChanged = MutableLiveData<Boolean>().apply {
+                (title.value != originData.title) ||
+                (contents.value != originData.contents) ||
+                (selectTag.value != originData.tag) ||
+                (fileList.value != originData.fileList)
+    }
 
     init {
         val tagType: TagType
@@ -119,30 +107,6 @@ class MemoDetailViewModel(
                 (fileList.value != originData.fileList)
     }
 
-    /**
-     * 메모 업데이트
-     */
-    fun memoUpdate() {
-        if (isMemoChanged()) {
-            launch {
-                apiService.updateMemo(
-                    MemoItemForm(
-                        manageNo = manageNo.value,
-                        tag = selectTag.value,
-                        title = title.value!!,
-                        contents = contents.value!!
-                    )
-                ).single()
-                    .subscribe({
-                        JLogger.d("Result $it")
-                        startFinish.call()
-                    }, {
-                        JLogger.d("Fail ${it.message}")
-                    })
-            }
-        }
-    }
-
     fun moveMoreDialog() {
         startMoreDialog.call()
     }
@@ -162,143 +126,6 @@ class MemoDetailViewModel(
             startDialog.value = resProvider.getString(R.string.str_guid_limit_img_file_over)
         } else {
             startGallery.call()
-        }
-    }
-
-    /**
-     * 메모 삭제 및 파일 삭제 호춯 함수.
-     * @link{deleteMemo}
-     * @link{deleteMemoImgFile}
-     * 위 두 함수 개선할 필요가 있음.
-     */
-    fun doDeleteMemo() {
-        startNetworkState.value = NetworkState.LOADING
-        deleteMemoImgFile()
-    }
-
-    private fun deleteMemoImgFile() {
-        launch {
-            apiService.deleteFiles(
-                manageNoList = fileList.value.map { it.manageNo }.toList(),
-                pathList = fileList.value.map { it.filePath }.toList()
-            ).single()
-                .subscribe({
-                    JLogger.d("onSuccess $it")
-                    deleteMemo()
-                }, {
-                    JLogger.d("Error ${it.message}")
-                    deleteMemo()
-                })
-        }
-    }
-
-    private fun deleteMemo() {
-        launch {
-            apiService.deleteMemo(memoId = manageNo.value)
-                .single()
-                .subscribe({
-                    JLogger.d("onSuccess $it")
-                    startNetworkState.value = NetworkState.SUCCESS
-                    isDelete = true
-                    startFinish.call()
-                }, {
-                    JLogger.d("Error $it")
-                    startNetworkState.value = NetworkState.ERROR
-                })
-        }
-    }
-
-    /**
-     * 파일 업로드 함수.
-     * @param filePathList -> 파일 경로 리스
-     */
-    fun addFileUpload(filePathList: List<String>) {
-        JLogger.d("File Upload 진행 합니다.")
-        // 업로드 완료후 템프 파일 삭제하도록 처리.
-        val tmpFileList = arrayListOf<File>()
-
-        startNetworkState.value = NetworkState.LOADING
-
-        launch {
-            // File Path -> File Converter
-            Observable.fromIterable(filePathList).flatMap { path ->
-                Observable.just(provider.getFilePart(path))
-            }.flatMap { fileInfo ->
-                tmpFileList.add(fileInfo.second)
-                val body = fileInfo.second.asRequestBody(fileInfo.first)
-                Observable.just(
-                    MultipartBody.Part.createFormData(
-                        name = "files",
-                        filename = fileInfo.second.name,
-                        body = body
-                    )
-                )
-            }.single()
-                .toList()
-                .subscribe({ list ->
-                    apiService.uploadFile(
-                        memoId = manageNo.value,
-                        files = list
-                    ).single()
-                        .subscribe({
-                            // 업로드 완료된 파일들 추가 및 갠신 처리.
-                            addImageFileList(it.pathList)
-
-                            tmpFileList.forEach {
-                                provider.deleteFile(it)
-                            }
-                            startNetworkState.value = NetworkState.SUCCESS
-                        }, {
-                            tmpFileList.forEach {
-                                provider.deleteFile(it)
-                            }
-                            startNetworkState.value = NetworkState.ERROR
-                        })
-                }, {
-                    tmpFileList.forEach {
-                        provider.deleteFile(it)
-                    }
-                    startNetworkState.value = NetworkState.ERROR
-                })
-        }
-    }
-
-    /**
-     * 업로드 완료된 파일리스트
-     * 현재 페이지에 갱신 처리 함수.
-     * @param list -> 업로드 완료된 파일 경로 리스트
-     */
-    private fun addImageFileList(tmpList: ArrayList<FileItem>?) {
-        tmpList?.let { filePathList ->
-            _fileList.postAddAll(filePathList)
-        }
-    }
-
-    /**
-     * 파일 삭제 함수.
-     * @param fileItem Current File Item
-     */
-    fun deleteImage(fileItem: FileItem) {
-        JLogger.d("Delete File $fileItem")
-        launch {
-            apiService.deleteFile(
-                manageNo = fileItem.manageNo,
-                path = fileItem.filePath
-            ).single()
-                .doOnSubscribe {
-                    JLogger.d("Api Call")
-                    onLoading()
-                }
-                .subscribe({
-                    JLogger.d("Success $it")
-                    _fileList.postRemove(
-                        fileItem
-                    )
-                    onSuccess()
-                }, {
-                    JLogger.d("Error ${it.message}")
-                    onError()
-                })
         }
     }
 }

@@ -24,4 +24,8 @@ val appModule = module {
     single<DeviceProvider> {
         DeviceProviderImpl(androidContext())
     }
+
+    single<CursorProvider> {
+        CursorProviderImpl(androidContext())
+    }
 }

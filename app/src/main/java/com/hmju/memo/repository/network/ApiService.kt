@@ -8,6 +8,7 @@ import com.hmju.memo.model.memo.MemoFileResponse
 import com.hmju.memo.model.memo.MemoListResponse
 import com.hmju.memo.model.memo.MemoResponse
 import io.reactivex.Maybe
+import io.reactivex.Single
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -29,7 +30,7 @@ interface ApiService {
     @POST("/api/signin")
     fun signIn(
         @Body body: LoginForm
-    ): Maybe<LoginResponse>
+    ): Single<LoginResponse>
 
     /**
      * 메모장 데이터 가져오는 API
@@ -46,13 +47,13 @@ interface ApiService {
     fun fetchMemoList(
         @Query("pageNo") pageNo: Int,
         @Query("filterTag") filterTag: Int
-    ): Maybe<MemoListResponse>
+    ): Call<MemoListResponse>
 
     @GET("/api/memo")
     fun retrieveSearch(
         @Query("pageNo") pageNo: Int,
         @Query("keyWord") keyWord: String
-    ): Maybe<MemoListResponse>
+    ): Call<MemoListResponse>
 
     /**
      * 메모 추가 API
@@ -65,7 +66,7 @@ interface ApiService {
     @POST("/api/memo")
     fun postMemo(
         @Body body: MemoItemForm
-    ): Maybe<MemoResponse>
+    ): Single<MemoResponse>
 
     /**
      * 메모장 데이터 수정 API
@@ -79,7 +80,7 @@ interface ApiService {
     @PUT("/api/memo")
     fun updateMemo(
         @Body body: MemoItemForm
-    ): Maybe<MemoResponse>
+    ): Single<MemoResponse>
 
     /**
      * 메모장 삭제 API
@@ -88,7 +89,7 @@ interface ApiService {
     @DELETE("/api/memo")
     fun deleteMemo(
         @Query("memo_id") memoId: Int
-    ): Maybe<BaseResponse>
+    ): Single<BaseResponse>
 
     /**
      * 메모장 파일 추가 API
@@ -102,7 +103,7 @@ interface ApiService {
     fun uploadFile(
         @Part("memoId") memoId: Int,
         @Part files: List<MultipartBody.Part>
-    ): Maybe<MemoFileResponse>
+    ): Single<MemoFileResponse>
 
     /**
      * 메모장 파일 제거 API
@@ -113,7 +114,7 @@ interface ApiService {
     fun deleteFile(
         @Query("manageNoList") manageNo: Int,
         @Query("pathList") path: String
-    ): Maybe<BaseResponse>
+    ): Single<BaseResponse>
 
     /**
      * 메모장 파일 제거 API
@@ -124,5 +125,5 @@ interface ApiService {
     fun deleteFiles(
         @Query("manageNoList") manageNoList: List<Int>,
         @Query("pathList") pathList: List<String>
-    ): Maybe<BaseResponse>
+    ): Single<BaseResponse>
 }

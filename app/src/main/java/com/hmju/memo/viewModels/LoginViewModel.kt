@@ -3,7 +3,7 @@ package com.hmju.memo.viewModels
 import androidx.lifecycle.MutableLiveData
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.convenience.SingleLiveEvent
-import com.hmju.memo.convenience.single
+import com.hmju.memo.convenience.netIo
 import com.hmju.memo.model.form.LoginForm
 import com.hmju.memo.model.login.LoginResponse
 import com.hmju.memo.repository.network.ApiService
@@ -44,7 +44,7 @@ class LoginViewModel(
                     id = strId.value!!.trim(),
                     pw = strPw.value!!.trim()
                 )
-            ).single()
+            ).netIo()
                 .subscribe({
                     JLogger.d("Result$it")
                     it.loginKey?.let { loginKey ->

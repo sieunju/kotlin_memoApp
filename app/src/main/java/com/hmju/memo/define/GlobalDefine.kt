@@ -61,4 +61,7 @@ object Etc {
     const val IMG_MIME_TYPE_FILE_EXTENSION = "image/jpg"
     const val IMG_FILE_EXTENSION = ".jpg"
     const val IMG_FILE_LIMIT : Int = 5
+    const val DEFAULT_GALLERY_FILTER_ID = "ALL"
+    const val DEFAULT_GALLERY_FILTER_NAME = "최근 항목"
+
 }

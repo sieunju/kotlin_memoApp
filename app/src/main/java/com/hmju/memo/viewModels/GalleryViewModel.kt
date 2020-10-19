@@ -7,24 +7,24 @@ import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
-import android.view.View
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewModel
-import com.hmju.memo.convenience.ListMutableLiveData
-import com.hmju.memo.convenience.NonNullMutableLiveData
-import com.hmju.memo.convenience.SingleLiveEvent
-import com.hmju.memo.convenience.single
-import com.hmju.memo.define.NetworkState
+import com.hmju.memo.convenience.*
+import com.hmju.memo.define.Etc
 import com.hmju.memo.model.gallery.GalleryFilterItem
 import com.hmju.memo.model.gallery.GallerySelectedItem
+import com.hmju.memo.utils.CursorProvider
 import com.hmju.memo.utils.ImageFileProvider
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.ResourceProvider
+import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers.*
+import io.reactivex.schedulers.Schedulers.computation
+import io.reactivex.schedulers.Schedulers.newThread
 
 /**
  * Description : 앨범 및 카메라 ViewModel Class
@@ -33,13 +33,12 @@ import io.reactivex.schedulers.Schedulers.*
  */
 class GalleryViewModel(
     private val limitImageSize: Int,
-    val provider: ImageFileProvider,
+    private val provider: CursorProvider,
+    val fileProvider: ImageFileProvider,
     private val resProvider: ResourceProvider
 ) : BaseViewModel() {
 
     companion object {
-        const val DEFAULT_FILTER_ID = "ALL"
-        const val DEFAULT_FILTER_NAME = "최근 항목"
         val tmpGallerySelectItem = GallerySelectedItem(id = "", pos = -1)
     }
 
@@ -102,140 +101,23 @@ class GalleryViewModel(
      */
     @SuppressLint("Recycle")
     private fun fetchFilter() {
-        val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        val projection = arrayOf(
-            MediaStore.Images.Media._ID,
-            MediaStore.Images.Media.BUCKET_ID,
-            MediaStore.Images.Media.BUCKET_DISPLAY_NAME
-        )
-        val selection = StringBuilder()
-        val selectionArgs = arrayListOf<String>()
-        val sort = "${MediaStore.Images.Media.DATE_TAKEN} DESC "
-
-        var prevPhotoUri: String = ""
-        var prevBucketId: String = ""
-        var prevBucketName: String = ""
-        var prevSize: Int = -1
-
         launch {
-            Observable.create<GalleryFilterItem> {
-                try {
-                    loop@ while (true) {
-
-                        val cursor = provider.contentResolver.query(
-                            uri,
-                            projection,
-                            if (selection.isEmpty()) null else selection.toString(),
-                            if (selectionArgs.isEmpty()) null else selectionArgs.toTypedArray(),
-                            sort
-                        ) ?: break@loop
-
-                        if (cursor.moveToLast()) {
-                            val contentId =
-                                cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media._ID))
-                            val photoUri = Uri.withAppendedPath(
-                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                                contentId
-                            ).toString()
-                            val bucketId =
-                                cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID))
-                            val bucketName =
-                                cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME))
-                            val size = cursor.count
-
-                            if (!cursor.isClosed) {
-                                cursor.close()
-                            }
-
-                            // Where Setting
-                            if (selection.isNotEmpty()) {
-                                selection.append(" AND ")
-                            }
-
-                            selection.append(MediaStore.Images.Media.BUCKET_ID)
-                            selection.append(" !=?")
-                            selectionArgs.add(bucketId)
-
-                            // 앨범명 유효성 검사.
-                            if (prevBucketId.isNotEmpty()) {
-                                val diffSize = prevSize - size
-                                prevSize = size
-                                it.onNext(
-                                    GalleryFilterItem(
-                                        bucketId = prevBucketId,
-                                        bucketName = prevBucketName,
-                                        photoUri = prevPhotoUri,
-                                        size = diffSize,
-                                        isSelected = false
-                                    )
-                                )
-                            }
-
-                            // 초기값 세팅
-                            if (prevSize == -1) {
-                                prevSize = size
-                                it.onNext(
-                                    GalleryFilterItem(
-                                        bucketId = DEFAULT_FILTER_ID,
-                                        bucketName = DEFAULT_FILTER_NAME,
-                                        photoUri = photoUri,
-                                        size = size,
-                                        isSelected = true
-                                    )
-                                )
-                            }
-
-                            // Set Data.
-                            prevPhotoUri = photoUri
-                            prevBucketId = bucketId
-                            prevBucketName = bucketName
-
-                        } else {
-                            // 맨 마지막 앨범 추가
-                            if (prevSize != 0) {
-                                it.onNext(
-                                    GalleryFilterItem(
-                                        bucketId = prevBucketId,
-                                        bucketName = prevBucketName,
-                                        photoUri = prevPhotoUri,
-                                        size = prevSize,
-                                        isSelected = false
-                                    )
-                                )
-                            }
-
-                            if (!cursor.isClosed) {
-                                cursor.close()
-                            }
-                            break@loop
-                        }
-                    }
-
-                    it.onComplete()
-                } catch (ex: Exception) {
-                    JLogger.d("Try Catch Error ${ex.message}")
-                    it.onError(ex)
-                    it.onComplete()
-                }
+            Flowable.fromCallable {
+                provider.fetchGalleryFilter()
             }
-                .subscribeOn(computation())
+                .compute()
                 .doOnSubscribe { onLoading() }
-                .doOnError {
-                    JLogger.d("Error ${it.message}")
-                }
-                .observeOn(newThread())
-                .doOnNext {
-//                    JLogger.d("onNext $it")
-                    if (it.isSelected) {
-                        selectedFilter.postValue(it)
+                .subscribe({ list ->
+                    JLogger.d("onSuccess $list")
+                    list.find { it.isSelected }?.let { selectedItem ->
+                        _selectedFilter.postValue(selectedItem)
                     }
-                    _filterList.value.add(it)
-                }
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnComplete {
+                    _filterList.postValue(list)
+
                     fetchGallery()
-                }
-                .subscribe()
+                }, {
+                    JLogger.d("onError $it")
+                })
         }
     }
 
@@ -249,39 +131,25 @@ class GalleryViewModel(
             _selectedPhotoList.postClear()
         }
 
-        val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        val projection = arrayOf(
-            MediaStore.Images.Media._ID
-        )
-
-        val sort = "${MediaStore.Images.Media.DATE_ADDED} DESC"
-        val selection = "${MediaStore.Images.Media.BUCKET_ID} ==?"
-
-        val isAll: Boolean = selectedFilter.value?.bucketId == DEFAULT_FILTER_ID
-
-        // 기존 남아 있는 커서 Exit
-        cursor.value?.close()
         launch {
-            Observable.just(
-                cursor.postValue(
-                    provider.contentResolver.query(
-                        uri,
-                        projection,
-                        if (isAll) null else selection,
-                        if (isAll) null else arrayOf(selectedFilter.value!!.bucketId),
-                        sort
-                    )
-                )
-            )
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { onLoading() }
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnComplete { onSuccess() }
-                .subscribe()
+            Flowable.just(
+                provider.fetchGallery(selectedFilter = selectedFilter.value!!.bucketId)
+            ).compute()
+                .ui()
+                .doOnSubscribe {
+                    // 기존 남아 있는 커서 Exit
+                    cursor.value?.close()
+                    onLoading()
+                }
+                .subscribe({ _cursor ->
+                    _cursor?.let {
+                        cursor.postValue(it)
+                    }
+                    onSuccess()
+                }, {
+                    onError()
+                })
         }
-
-
-        onSuccess()
     }
 
     fun moveCamera() {

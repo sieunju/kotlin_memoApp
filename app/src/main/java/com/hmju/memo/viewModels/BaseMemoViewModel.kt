@@ -12,9 +12,8 @@ import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.utils.ImageFileProvider
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.ResourceProvider
-import io.reactivex.Observable
+import io.reactivex.Flowable
 import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
 /**
@@ -53,6 +52,11 @@ abstract class BaseMemoViewModel(
     // true API 호출 하면서 갱신 처리
     // false 내부적으로 Adapter 갱신 처리
     val startFinish = SingleLiveEvent<Boolean>()
+    var isDelete = false
+
+    fun postMemo() {
+        postMemo { null }
+    }
 
     fun postMemo(callBack: (Boolean) -> Unit?) {
 
@@ -73,7 +77,7 @@ abstract class BaseMemoViewModel(
                         contents = contents.value
                     )
                 )
-            }.single()
+            }.netIo()
                 .doOnSubscribe { onLoading() }
                 .subscribe({
                     JLogger.d("PostMemo Success $it")
@@ -98,6 +102,10 @@ abstract class BaseMemoViewModel(
 
     }
 
+    /**
+     * 파일 업로드 함수.
+     * @param filePathList -> 파일 경로 리스트
+     */
     fun addFileUpload(pathList: List<String>) {
         if (manageNo.value == -1) {
             postMemo { isSuccess ->
@@ -111,28 +119,54 @@ abstract class BaseMemoViewModel(
         val tmpFileList = arrayListOf<File>()
 
         launch {
-            Observable.fromIterable(pathList)
+            Flowable.fromIterable(pathList)
                 .flatMap { path ->
-                    Observable.just(provider.createMultiPartBody(path)).to()
-                }
-                .flatMap { multiPartBody ->
-                    Observable.just(
+                    JLogger.d("First Thread ${Thread.currentThread()}")
+                    Flowable.just(provider.createMultiPartBody(path)).computeOn()
+                }.flatMap { multiPartBody ->
+                    JLogger.d("Second Thread ${Thread.currentThread()}")
+                    tmpFileList.add(multiPartBody.second)
+                    Flowable.just(
                         MultipartBody.Part.createFormData(
                             name = "files",
                             filename = multiPartBody.second.name,
                             body = multiPartBody.first
                         )
-                    ).to()
-                }
-                .single()
+                    ).computeOn()
+                }.compute()
                 .toList()
-
+                .flatMap { list ->
+                    JLogger.d("Third Thread ${Thread.currentThread()}")
+                    apiService.uploadFile(
+                        memoId = manageNo.value,
+                        files = list
+                    ).io()
+                }
                 .doOnSubscribe { onLoading() }
                 .subscribe({
+                    JLogger.d("Response $it")
+                    // Response 처리.
+                    addImageFileList(it.pathList)
 
+                    tmpFileList.forEach { provider.deleteFile(it) }
+                    onSuccess()
                 }, {
-
+                    JLogger.d("Error $it")
+                    tmpFileList.forEach { provider.deleteFile(it) }
+                    onError()
                 })
+        }
+    }
+
+    /**
+     * 업로드 완료된 파일리스트
+     * 현재 페이지에 갱신 처리 함수.
+     * @param list -> 업로드 완료된 파일 경로 리스트
+     */
+    private fun addImageFileList(tmpList: ArrayList<FileItem>?) {
+
+        tmpList?.let { filePathList ->
+            _fileList.postAddAll(filePathList)
         }
     }
 
@@ -145,7 +179,7 @@ abstract class BaseMemoViewModel(
             apiService.deleteFile(
                 manageNo = fileItem.manageNo,
                 path = fileItem.filePath
-            ).single().doOnSubscribe { onLoading() }
+            ).netIo().doOnSubscribe { onLoading() }
                 .subscribe({
                     JLogger.d("Delete Image Success $it")
                     _fileList.postRemove(fileItem)
@@ -175,12 +209,12 @@ abstract class BaseMemoViewModel(
      * Delete All Images
      * @param callBack Api Service
      */
-    protected fun deleteAllImages(callBack: (Boolean) -> Unit) {
+    private fun deleteAllImages(callBack: (Boolean) -> Unit) {
         launch {
             apiService.deleteFiles(
                 manageNoList = fileList.value.map { it.manageNo }.toList(),
                 pathList = fileList.value.map { it.filePath }.toList()
-            ).single()
+            ).netIo()
                 .doOnSubscribe { onLoading() }
                 .subscribe({
                     JLogger.d("Delete All Images Success $it")
@@ -199,11 +233,12 @@ abstract class BaseMemoViewModel(
         launch {
             apiService.deleteMemo(
                 memoId = manageNo.value
-            ).single()
+            ).netIo()
                 .doOnSubscribe { onLoading() }
                 .subscribe({
                     JLogger.d("Delete Memo Success $it")
                     onSuccess()
+                    isDelete = true
                     startFinish.value = true
                 }, {
                     JLogger.d("Delete Memo Error ${it.message}")
