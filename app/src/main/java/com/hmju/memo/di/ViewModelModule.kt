@@ -42,4 +42,13 @@ val viewModelModule = module {
             provider = get()
         )
     }
+
+    viewModel {(item : MemoItem?) ->
+        MemoEditViewModel(
+            originData = item,
+            apiService = get(),
+            provider = get(),
+            resProvider = get()
+        )
+    }
 }

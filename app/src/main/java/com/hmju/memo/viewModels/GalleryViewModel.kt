@@ -106,6 +106,7 @@ class GalleryViewModel(
                 provider.fetchGalleryFilter()
             }
                 .compute()
+                .computeOn()
                 .doOnSubscribe { onLoading() }
                 .subscribe({ list ->
                     JLogger.d("onSuccess $list")
@@ -114,9 +115,11 @@ class GalleryViewModel(
                     }
                     _filterList.postValue(list)
 
+//                    JLogger.d("Start FetchGallery")
                     fetchGallery()
                 }, {
-                    JLogger.d("onError $it")
+                    JLogger.d(">>onError $it")
+                    onError()
                 })
         }
     }

@@ -17,8 +17,7 @@ import com.hmju.memo.viewModels.MemoDetailViewModel
 class MemoImagePagerAdapter(
     private val viewModel: BaseViewModel,
     private val itemList: ArrayList<FileItem>
-) :
-    RecyclerView.Adapter<MemoImagePagerAdapter.MemoDetailImageViewHolder>() {
+) : RecyclerView.Adapter<MemoImagePagerAdapter.MemoDetailImageViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemoDetailImageViewHolder {
         return MemoDetailImageViewHolder(

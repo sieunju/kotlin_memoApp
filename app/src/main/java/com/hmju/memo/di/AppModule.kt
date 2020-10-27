@@ -13,19 +13,19 @@ import org.koin.dsl.module
  */
 val appModule = module {
 
-    single<ResourceProvider> {
+    factory<ResourceProvider> {
         ResourceProviderImpl(androidApplication())
     }
 
-    single<ImageFileProvider> {
+    factory<ImageFileProvider> {
         ImageFileProviderImpl(androidContext())
     }
 
-    single<DeviceProvider> {
+    factory<DeviceProvider> {
         DeviceProviderImpl(androidContext())
     }
 
-    single<CursorProvider> {
+    factory<CursorProvider> {
         CursorProviderImpl(androidContext())
     }
 }

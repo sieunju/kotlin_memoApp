@@ -9,7 +9,7 @@
 
         <variable
             name="viewModel"
-            type="com.hmju.memo.viewModels.MemoDetailViewModel" />
+            type="com.hmju.memo.viewModels.MemoEditViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

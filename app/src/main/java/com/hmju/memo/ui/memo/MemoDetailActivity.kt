@@ -19,6 +19,7 @@ import com.hmju.memo.ui.toast.showToast
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.startActResult
 import com.hmju.memo.viewModels.MemoDetailViewModel
+import com.hmju.memo.viewModels.MemoEditViewModel
 import com.hmju.memo.widget.keyboard.FluidContentResize
 import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.activity_memo_detail.*
@@ -30,18 +31,19 @@ import org.koin.core.parameter.parametersOf
  *
  * Created by hmju on 2020-06-16
  */
-class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoDetailViewModel>() {
+class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoEditViewModel>() {
 
 
     override val layoutId = R.layout.activity_memo_detail
-    override val viewModel: MemoDetailViewModel by viewModel {
+    override val viewModel: MemoEditViewModel by viewModel {
         parametersOf(
-            intent.getIntExtra(ExtraCode.MEMO_DETAIL_POS, -1),
             intent.getSerializableExtra(ExtraCode.MEMO_DETAIL)
         )
     }
 
     override val bindingVariable = BR.viewModel
+
+    private val memoPosition by lazy { intent.getIntExtra(ExtraCode.MEMO_DETAIL_POS,-1) }
     private lateinit var moreDialog: MemoMoreDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +53,8 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoDetailVie
         FluidContentResize.listen(this)
 
         with(viewModel) {
+
+            initSelectedTag()
 
             startSelectedTagColor.observe(this@MemoDetailActivity, Observer { color ->
                 // 상태바 색상 변경.

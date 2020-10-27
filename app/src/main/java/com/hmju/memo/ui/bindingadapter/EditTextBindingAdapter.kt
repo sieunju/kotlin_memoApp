@@ -24,6 +24,7 @@ import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.LoginViewModel
 import com.hmju.memo.viewModels.MainViewModel
 import com.hmju.memo.viewModels.MemoDetailViewModel
+import com.hmju.memo.viewModels.MemoEditViewModel
 
 /**
  * Description:
@@ -102,7 +103,7 @@ fun setEditTextListener(
         is MainViewModel -> {
 
         }
-        is MemoDetailViewModel -> {
+        is MemoEditViewModel -> {
             // 긴 문장 입력시 스크롤 되도록 처리.
             editText.setOnTouchListener { view, event ->
                 if (view.isFocused) {

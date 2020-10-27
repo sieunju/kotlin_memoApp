@@ -18,20 +18,24 @@ import com.hmju.memo.ui.gallery.GalleryActivity
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.startActResult
 import com.hmju.memo.viewModels.MemoAddViewModel
+import com.hmju.memo.viewModels.MemoEditViewModel
 import com.hmju.memo.widget.keyboard.FluidContentResize
 import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.activity_memo_detail.*
 import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 /**
  * Description : 메인 추가 페이지
  *
  * Created by hmju on 2020-06-16
  */
-class MemoAddActivity : BaseActivity<ActivityMemoAddBinding, MemoAddViewModel>() {
+class MemoAddActivity : BaseActivity<ActivityMemoAddBinding, MemoEditViewModel>() {
 
     override val layoutId = R.layout.activity_memo_add
-    override val viewModel: MemoAddViewModel by viewModel()
+    override val viewModel: MemoEditViewModel by viewModel{
+        parametersOf(null)
+    }
     override val bindingVariable = BR.viewModel
     private lateinit var moreDialog: MemoMoreDialog
 
@@ -41,6 +45,8 @@ class MemoAddActivity : BaseActivity<ActivityMemoAddBinding, MemoAddViewModel>()
         FluidContentResize.listen(this)
 
         with(viewModel) {
+
+            setSelectedTag(TagType.ETC)
 
             startSelectedTagColor.observe(this@MemoAddActivity, Observer { color ->
                 // 상태바 색상 변경.

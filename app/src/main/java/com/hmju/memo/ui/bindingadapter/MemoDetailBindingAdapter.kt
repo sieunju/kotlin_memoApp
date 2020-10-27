@@ -18,6 +18,7 @@ import com.hmju.memo.ui.bottomsheet.MemoMoreDialog
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewModels.MemoAddViewModel
 import com.hmju.memo.viewModels.MemoDetailViewModel
+import com.hmju.memo.viewModels.MemoEditViewModel
 import com.hmju.memo.widget.viewpagerIndicator.IndicatorView
 
 /**
@@ -179,12 +180,9 @@ fun setMemoDetailImgLongClickListener(
         ) { _, which ->
 
             if (which == DialogInterface.BUTTON_POSITIVE) {
-                if(viewModel is MemoDetailViewModel) {
-                    viewModel.deleteImage(item)
-                } else if(viewModel is MemoAddViewModel) {
+                if(viewModel is MemoEditViewModel) {
                     viewModel.deleteImage(item)
                 }
-
             }
         }
         return@setOnLongClickListener true
