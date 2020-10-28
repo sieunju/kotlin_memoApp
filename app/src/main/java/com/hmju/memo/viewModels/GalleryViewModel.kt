@@ -47,6 +47,7 @@ class GalleryViewModel(
         return@lazy object : ContentObserver(Handler(Looper.getMainLooper())) {
             override fun onChange(selfChange: Boolean) {
                 super.onChange(selfChange)
+                fetchFilter();
             }
         }
     }
@@ -102,23 +103,35 @@ class GalleryViewModel(
     @SuppressLint("Recycle")
     private fun fetchFilter() {
         launch {
-            Flowable.fromCallable {
-                provider.fetchGalleryFilter()
-            }
+            Flowable.fromCallable { provider.fetchGalleryFilter() }
                 .compute()
-                .computeOn()
                 .doOnSubscribe { onLoading() }
-                .subscribe({ list ->
-                    JLogger.d("onSuccess $list")
+                .flatMap { list ->
+
+                    var bucketId = "ALL"
                     list.find { it.isSelected }?.let { selectedItem ->
                         _selectedFilter.postValue(selectedItem)
+                        bucketId = selectedItem.bucketId
                     }
                     _filterList.postValue(list)
+                    JLogger.d("Second ${Thread.currentThread()}")
 
-//                    JLogger.d("Start FetchGallery")
-                    fetchGallery()
+                    Flowable.just(
+                        provider.fetchGallery(
+                            filterId = bucketId
+                        )
+                    )
+                }
+                .ui()
+                .subscribe({
+                    JLogger.d("Third ${Thread.currentThread()}")
+                    it?.let {
+                        cursor.postValue(it)
+                    }
+                    onSuccess()
+                    JLogger.d("onSuccess ")
                 }, {
-                    JLogger.d(">>onError $it")
+                    JLogger.d("Error ${it.message}")
                     onError()
                 })
         }
@@ -136,7 +149,7 @@ class GalleryViewModel(
 
         launch {
             Flowable.just(
-                provider.fetchGallery(selectedFilter = selectedFilter.value!!.bucketId)
+                provider.fetchGallery(filterId = selectedFilter.value!!.bucketId)
             ).compute()
                 .ui()
                 .doOnSubscribe {

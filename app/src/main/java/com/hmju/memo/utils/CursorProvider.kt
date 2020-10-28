@@ -9,6 +9,8 @@ import android.provider.MediaStore
 import com.hmju.memo.define.Etc
 import com.hmju.memo.model.gallery.GalleryFilterItem
 import com.hmju.memo.viewModels.GalleryViewModel
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
 
 /**
  * Description : Cursor Provider
@@ -18,7 +20,7 @@ import com.hmju.memo.viewModels.GalleryViewModel
 interface CursorProvider {
     val contentResolver: ContentResolver
     fun fetchGalleryFilter(): ArrayList<GalleryFilterItem>
-    fun fetchGallery(selectedFilter: String): Cursor?
+    fun fetchGallery(filterId: String): Cursor?
 }
 
 class CursorProviderImpl(ctx: Context) : CursorProvider {
@@ -132,7 +134,7 @@ class CursorProviderImpl(ctx: Context) : CursorProvider {
                     break@loop
                 }
             }
-            JLogger.d("FetchGallery Success")
+            JLogger.d("FetchGallery Success ${Thread.currentThread()}")
         } catch (ex: Exception) {
             JLogger.d("FetchGallery Error " + ex.message)
         }
@@ -140,21 +142,22 @@ class CursorProviderImpl(ctx: Context) : CursorProvider {
         return dataList
     }
 
-    override fun fetchGallery(selectedBucketId: String): Cursor? {
+    override fun fetchGallery(filterId: String): Cursor? {
+        JLogger.d("FilterId $filterId")
         val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val projection = arrayOf(
             MediaStore.Images.Media._ID
         )
 
-        val sort = "${MediaStore.Images.Media.DATE_ADDED} DESC"
+        val sort = "${MediaStore.Images.Media._ID} DESC"
         val selection = "${MediaStore.Images.Media.BUCKET_ID} ==?"
 
-        val isAll: Boolean = selectedBucketId == Etc.DEFAULT_GALLERY_FILTER_ID
+        val isAll: Boolean = filterId == Etc.DEFAULT_GALLERY_FILTER_ID
         return contentResolver.query(
             uri,
             projection,
             if (isAll) null else selection,
-            if (isAll) null else arrayOf(selectedBucketId),
+            if (isAll) null else arrayOf(filterId),
             sort
         )
     }
