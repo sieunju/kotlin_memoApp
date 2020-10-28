@@ -153,6 +153,7 @@ class CursorProviderImpl(ctx: Context) : CursorProvider {
         val selection = "${MediaStore.Images.Media.BUCKET_ID} ==?"
 
         val isAll: Boolean = filterId == Etc.DEFAULT_GALLERY_FILTER_ID
+        JLogger.d("FetchGallery ${Thread.currentThread()}")
         return contentResolver.query(
             uri,
             projection,

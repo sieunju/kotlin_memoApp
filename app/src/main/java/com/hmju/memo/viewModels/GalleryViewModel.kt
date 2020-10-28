@@ -103,26 +103,20 @@ class GalleryViewModel(
     @SuppressLint("Recycle")
     private fun fetchFilter() {
         launch {
-            Flowable.fromCallable { provider.fetchGalleryFilter() }
-                .compute()
-                .doOnSubscribe { onLoading() }
-                .flatMap { list ->
-
-                    var bucketId = "ALL"
-                    list.find { it.isSelected }?.let { selectedItem ->
-                        _selectedFilter.postValue(selectedItem)
-                        bucketId = selectedItem.bucketId
-                    }
-                    _filterList.postValue(list)
-                    JLogger.d("Second ${Thread.currentThread()}")
-
-                    Flowable.just(
-                        provider.fetchGallery(
-                            filterId = bucketId
-                        )
-                    )
+            Flowable.fromCallable {
+                val filterList = provider.fetchGalleryFilter()
+                var bucketId = "ALL"
+                filterList.find { it.isSelected }?.let { selectedItem ->
+                    _selectedFilter.postValue(selectedItem)
+                    bucketId = selectedItem.bucketId
                 }
+                _filterList.postValue(filterList)
+
+                provider.fetchGallery(filterId = bucketId)
+            }
+                .compute()
                 .ui()
+                .doOnSubscribe { onLoading() }
                 .subscribe({
                     JLogger.d("Third ${Thread.currentThread()}")
                     it?.let {
