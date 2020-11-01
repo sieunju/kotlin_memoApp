@@ -1,28 +1,16 @@
 package com.hmju.memo.ui.gallery
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
-import android.content.res.AssetFileDescriptor
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Matrix
-import android.media.ExifInterface
-import android.media.MediaScannerConnection
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
 import androidx.lifecycle.Observer
 import com.hmju.memo.BR
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseActivity
 import com.hmju.memo.databinding.ActivityGalleryBinding
 import com.hmju.memo.define.*
-import com.hmju.memo.dialog.ConfirmDialog
+import com.hmju.memo.dialog.CommonDialog
 import com.hmju.memo.ui.bottomsheet.CheckableBottomSheet
 import com.hmju.memo.ui.imageEdit.ImageEditActivity
 import com.hmju.memo.ui.toast.showToast
@@ -30,16 +18,10 @@ import com.hmju.memo.utils.*
 import com.hmju.memo.viewModels.GalleryViewModel
 import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.activity_gallery.*
-import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.KoinComponent
 import org.koin.core.parameter.parametersOf
 import java.io.File
-import java.io.FileInputStream
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 /**
@@ -94,7 +76,10 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
                             }
                         } else {
                             // 권한 확인 안내 팝업 노출
-                            ConfirmDialog(this@GalleryActivity, R.string.str_permission_denied)
+                            CommonDialog(this@GalleryActivity)
+                                .setContents(R.string.str_permission_denied)
+                                .setPositiveButton(R.string.str_confirm)
+                                .show()
                         }
                     }
                 }

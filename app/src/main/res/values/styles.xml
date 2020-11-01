@@ -64,4 +64,11 @@
     </style>
     <!-- [e] Default TextView Style -->
 
+    <!-- [s] Common Dialog Style -->
+    <style name="CommonDialog" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:windowMinWidthMajor">300dp</item>
+        <item name="android:windowMinWidthMinor">300dp</item>
+    </style>
+    <!-- [e] Common Dialog Style -->
+
 </resources>

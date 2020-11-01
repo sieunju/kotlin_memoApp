@@ -21,7 +21,7 @@ import retrofit2.Response
 class MemoListPageDataSource(
     private val actPref: AccountPref,
     private val apiService: ApiService,
-    private val memoParams: MemoListParam,
+    private val memoParams: MemoListParam
 ) : PageKeyedDataSource<Int, MemoItem>() {
 
     var networkState = MutableLiveData<NetworkState>()

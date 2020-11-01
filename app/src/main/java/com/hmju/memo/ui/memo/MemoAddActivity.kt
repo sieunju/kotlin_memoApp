@@ -2,7 +2,6 @@ package com.hmju.memo.ui.memo
 
 import android.Manifest
 import android.animation.ObjectAnimator
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -12,12 +11,11 @@ import com.hmju.memo.BR
 import com.hmju.memo.base.BaseActivity
 import com.hmju.memo.databinding.ActivityMemoAddBinding
 import com.hmju.memo.define.*
-import com.hmju.memo.dialog.ConfirmDialog
+import com.hmju.memo.dialog.CommonDialog
 import com.hmju.memo.ui.bottomsheet.MemoMoreDialog
 import com.hmju.memo.ui.gallery.GalleryActivity
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.startActResult
-import com.hmju.memo.viewModels.MemoAddViewModel
 import com.hmju.memo.viewModels.MemoEditViewModel
 import com.hmju.memo.widget.keyboard.FluidContentResize
 import com.tbruyelle.rxpermissions2.RxPermissions
@@ -33,7 +31,7 @@ import org.koin.core.parameter.parametersOf
 class MemoAddActivity : BaseActivity<ActivityMemoAddBinding, MemoEditViewModel>() {
 
     override val layoutId = R.layout.activity_memo_add
-    override val viewModel: MemoEditViewModel by viewModel{
+    override val viewModel: MemoEditViewModel by viewModel {
         parametersOf(null)
     }
     override val bindingVariable = BR.viewModel
@@ -74,7 +72,10 @@ class MemoAddActivity : BaseActivity<ActivityMemoAddBinding, MemoEditViewModel>(
             })
 
             startDialog.observe(this@MemoAddActivity, Observer { msg ->
-                ConfirmDialog(this@MemoAddActivity, msg)
+                CommonDialog(this@MemoAddActivity)
+                    .setContents(msg)
+                    .setPositiveButton(R.string.str_confirm)
+                    .show()
             })
 
             startMoreDialog.observe(this@MemoAddActivity, Observer {
@@ -88,16 +89,17 @@ class MemoAddActivity : BaseActivity<ActivityMemoAddBinding, MemoEditViewModel>(
                             }
                             1 -> {
                                 // 메모 삭제.
-                                ConfirmDialog(
-                                    ctx = this@MemoAddActivity,
-                                    msg = resources.getString(R.string.memo_delete_guide),
-                                    leftText = resources.getString(R.string.str_cancel),
-                                    rightText = resources.getString(R.string.str_confirm)
-                                ) { _, which ->
-                                    if (which == DialogInterface.BUTTON_POSITIVE) {
-                                        doDeleteMemo()
-                                    }
-                                }
+                                CommonDialog(this@MemoAddActivity)
+                                    .setContents(R.string.memo_delete_guide)
+                                    .setNegativeButton(R.string.str_cancel)
+                                    .setPositiveButton(R.string.str_confirm)
+                                    .setListener(object : CommonDialog.Listener {
+                                        override fun onClick(which: Int) {
+                                            if(which == CommonDialog.POSITIVE) {
+                                                doDeleteMemo()
+                                            }
+                                        }
+                                    }).show()
                             }
                         }
                         moreDialog.dismiss()
@@ -124,7 +126,10 @@ class MemoAddActivity : BaseActivity<ActivityMemoAddBinding, MemoEditViewModel>(
                             }
                         } else {
                             // 권한 확인 안내 팝업 노출
-                            ConfirmDialog(this@MemoAddActivity, R.string.str_permission_denied)
+                            CommonDialog(this@MemoAddActivity)
+                                .setContents(R.string.str_permission_denied)
+                                .setPositiveButton(R.string.str_confirm)
+                                .show()
                         }
                     }
                 }

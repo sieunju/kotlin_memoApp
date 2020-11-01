@@ -10,7 +10,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.define.TagType
-import com.hmju.memo.dialog.ConfirmDialog
+import com.hmju.memo.dialog.CommonDialog
 import com.hmju.memo.model.memo.FileItem
 import com.hmju.memo.ui.adapter.MemoDetailMoreAdapter
 import com.hmju.memo.ui.adapter.MemoImagePagerAdapter
@@ -173,18 +173,20 @@ fun setMemoDetailImgLongClickListener(
 ) {
     view.setOnLongClickListener {
         JLogger.d("onLongClick!!")
-        ConfirmDialog(
-            ctx = view.context,
-            msg = view.context.getString(R.string.str_memo_img_delete),
-            type = ConfirmDialog.Type.TWO
-        ) { _, which ->
-
-            if (which == DialogInterface.BUTTON_POSITIVE) {
-                if(viewModel is MemoEditViewModel) {
-                    viewModel.deleteImage(item)
+        CommonDialog(view.context)
+            .setContents(R.string.str_memo_img_delete)
+            .setPositiveButton(R.string.str_confirm)
+            .setNegativeButton(R.string.str_cancel)
+            .setListener(object : CommonDialog.Listener {
+                override fun onClick(which: Int) {
+                    if(which == CommonDialog.POSITIVE) {
+                        if (viewModel is MemoEditViewModel) {
+                            viewModel.deleteImage(item)
+                        }
+                    }
                 }
-            }
-        }
+            })
+            .show()
         return@setOnLongClickListener true
     }
 }

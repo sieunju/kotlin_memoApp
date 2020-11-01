@@ -11,14 +11,13 @@ import com.hmju.memo.R
 import com.hmju.memo.base.BaseActivity
 import com.hmju.memo.databinding.ActivityMemoDetailBinding
 import com.hmju.memo.define.*
-import com.hmju.memo.dialog.ConfirmDialog
+import com.hmju.memo.dialog.CommonDialog
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.ui.bottomsheet.MemoMoreDialog
 import com.hmju.memo.ui.gallery.GalleryActivity
 import com.hmju.memo.ui.toast.showToast
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.startActResult
-import com.hmju.memo.viewModels.MemoDetailViewModel
 import com.hmju.memo.viewModels.MemoEditViewModel
 import com.hmju.memo.widget.keyboard.FluidContentResize
 import com.tbruyelle.rxpermissions2.RxPermissions
@@ -81,7 +80,10 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoEditViewM
             })
 
             startDialog.observe(this@MemoDetailActivity, Observer { msg ->
-                ConfirmDialog(this@MemoDetailActivity, msg)
+                CommonDialog(this@MemoDetailActivity)
+                    .setContents(msg)
+                    .setPositiveButton(R.string.str_confirm)
+                    .show()
             })
 
             startCopyText.observe(this@MemoDetailActivity, Observer { text ->
@@ -103,16 +105,17 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoEditViewM
                             }
                             1 -> {
                                 // 메모 삭제.
-                                ConfirmDialog(
-                                    ctx = this@MemoDetailActivity,
-                                    msg = resources.getString(R.string.memo_delete_guide),
-                                    leftText = resources.getString(R.string.str_cancel),
-                                    rightText = resources.getString(R.string.str_confirm)
-                                ) { _, which ->
-                                    if (which == DialogInterface.BUTTON_POSITIVE) {
-                                        doDeleteMemo()
-                                    }
-                                }
+                                CommonDialog(this@MemoDetailActivity)
+                                    .setContents(R.string.memo_delete_guide)
+                                    .setNegativeButton(R.string.str_cancel)
+                                    .setPositiveButton(R.string.str_confirm)
+                                    .setListener(object : CommonDialog.Listener {
+                                        override fun onClick(which: Int) {
+                                            if (which == CommonDialog.POSITIVE) {
+                                                doDeleteMemo()
+                                            }
+                                        }
+                                    }).show()
                             }
                         }
                         moreDialog.dismiss()
@@ -139,7 +142,10 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoEditViewM
                             }
                         } else {
                             // 권한 확인 안내 팝업 노출
-                            ConfirmDialog(this@MemoDetailActivity, R.string.str_permission_denied)
+                            CommonDialog(this@MemoDetailActivity)
+                                .setContents(R.string.str_permission_denied)
+                                .setPositiveButton(R.string.str_confirm)
+                                .show()
                         }
                     }
                 }

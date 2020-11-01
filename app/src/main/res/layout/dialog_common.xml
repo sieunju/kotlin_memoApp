@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/size_300"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_dialog_common">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_size_10"
+        android:gravity="center"
+        android:paddingLeft="@dimen/padding_size_10"
+        android:paddingRight="@dimen/padding_size_10"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/text_size_20"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="제목"
+        tools:visibility="visible" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvContents"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_size_10"
+        android:paddingLeft="@dimen/padding_size_10"
+        android:paddingRight="@dimen/padding_size_10"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/text_size_14"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+        app:layout_goneMarginTop="@dimen/margin_size_20"
+        tools:text="내용내용"
+        tools:visibility="visible" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_size_10"
+        android:layout_marginTop="@dimen/margin_size_10"
+        android:layout_marginRight="@dimen/margin_size_10"
+        android:layout_marginBottom="@dimen/margin_size_10"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvContents"
+        app:layout_goneMarginTop="@dimen/margin_size_10">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvNegative"
+            android:layout_width="@dimen/size_110"
+            android:layout_height="@dimen/size_40"
+            android:layout_marginRight="@dimen/margin_size_5"
+            android:background="@drawable/bg_dialog_common_negative"
+            android:gravity="center"
+            android:textColor="@color/colorPrimaryDark"
+            android:visibility="gone"
+            tools:text="취소"
+            tools:visibility="visible" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvPositive"
+            android:layout_width="@dimen/size_110"
+            android:layout_height="@dimen/size_40"
+            android:background="@drawable/bg_dialog_common_positive"
+            android:gravity="center"
+            android:textColor="@color/colorWhite"
+            tools:text="확인" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

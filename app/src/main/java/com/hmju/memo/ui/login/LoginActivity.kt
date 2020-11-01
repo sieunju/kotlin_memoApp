@@ -7,7 +7,7 @@ import com.hmju.memo.BR
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseActivity
 import com.hmju.memo.databinding.ActivityLoginBinding
-import com.hmju.memo.dialog.ConfirmDialog
+import com.hmju.memo.dialog.CommonDialog
 import com.hmju.memo.viewModels.LoginViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -31,7 +31,10 @@ class LoginActivity : BaseActivity<ActivityLoginBinding,LoginViewModel> () {
             })
 
             startErrorDialog.observe(this@LoginActivity, Observer {msg ->
-                ConfirmDialog(this@LoginActivity,msg).show()
+                CommonDialog(this@LoginActivity)
+                    .setContents(msg)
+                    .setPositiveButton(R.string.str_confirm)
+                    .show()
             })
         }
     }
