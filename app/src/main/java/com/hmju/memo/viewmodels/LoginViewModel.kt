@@ -1,4 +1,4 @@
-package com.hmju.memo.viewModels
+package com.hmju.memo.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import com.hmju.memo.base.BaseViewModel

@@ -8,7 +8,7 @@ import com.hmju.memo.R
 import com.hmju.memo.base.BaseActivity
 import com.hmju.memo.databinding.ActivityLoginBinding
 import com.hmju.memo.dialog.CommonDialog
-import com.hmju.memo.viewModels.LoginViewModel
+import com.hmju.memo.viewmodels.LoginViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class LoginActivity : BaseActivity<ActivityLoginBinding,LoginViewModel> () {

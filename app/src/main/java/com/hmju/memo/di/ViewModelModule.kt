@@ -1,7 +1,7 @@
 package com.hmju.memo.di
 
 import com.hmju.memo.model.memo.MemoItem
-import com.hmju.memo.viewModels.*
+import com.hmju.memo.viewmodels.*
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -15,17 +15,6 @@ val viewModelModule = module {
 
     viewModel { MainViewModel(get(), get(), get()) }
     viewModel { LoginViewModel(get(), get()) }
-    viewModel { MemoAddViewModel(get(), get(), get()) }
-
-    viewModel { (pos: Int, memoInfo: MemoItem) ->
-        MemoDetailViewModel(
-            memoPosition = pos,
-            originData = memoInfo,
-            apiService = get(),
-            provider = get(),
-            resProvider = get()
-        )
-    }
 
     viewModel { (limitSize: Int) ->
         GalleryViewModel(
@@ -43,12 +32,19 @@ val viewModelModule = module {
         )
     }
 
-    viewModel {(item : MemoItem?) ->
-        MemoEditViewModel(
+    viewModel { (item: MemoItem?) ->
+        MemoDetailViewModel(
             originData = item,
             apiService = get(),
             provider = get(),
             resProvider = get()
+        )
+    }
+
+    viewModel { (pos: Int, list: ArrayList<String>) ->
+        ImageDetailViewModel(
+            pos = pos,
+            pathList = list
         )
     }
 }

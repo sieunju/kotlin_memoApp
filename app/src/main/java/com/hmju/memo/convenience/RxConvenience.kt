@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
  * Created by hmju on 2020-06-09
  */
 // subscribeOn -> Observable.create(작업 쓰레드), Observable.just(작업 쓰레드) 에서 사용할 쓰레드
-// observeOn -> 메인 작업을 완료하 그다음 어떤 쓰레드를 사용할건지 정하는 것.
+// observeOn -> 메인 작업을 완료하고 그다음 어떤 쓰레드를 사용할건지 정하는 것.
 
 // observeOn()이 여러번 쓰였을 경우 immediate()를 선언한 바로 윗쪽의 스레드를 따라갑니다.
 // Schedulers.computation() - 이벤트 룹에서 간단한 연산이나 콜백 처리를 위해 사용됩니다.
@@ -34,9 +34,9 @@ import java.util.concurrent.TimeUnit
 
 // NetWork I/O
 fun <T> Single<T>.netIo() = subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-fun <T> Single<T>.io() = observeOn(AndroidSchedulers.mainThread());
-fun <T> Maybe<T>.netIo() = subscribeOn(io()).observeOn(AndroidSchedulers.mainThread())
-fun <T> Flowable<T>.netIo() = subscribeOn(io()).observeOn(AndroidSchedulers.mainThread())
+fun <T> Single<T>.io() = subscribeOn(Schedulers.io())
+fun <T> Maybe<T>.netIo() = subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+fun <T> Flowable<T>.io(): Flowable<T> = subscribeOn(Schedulers.io())
 
 // Local 에서 연산 작업 하는 경우 ex.) File Parsing
 fun <T> Flowable<T>.compute() = subscribeOn(Schedulers.computation())
@@ -46,8 +46,8 @@ fun <T> Flowable<T>.ui() = observeOn(AndroidSchedulers.mainThread())
 // 여러개의 API 를 한꺼번에 보내는 경우
 fun <T> Maybe<T>.multi() = subscribeOn(io())
 
-fun <T> Flowable<T>.to() = subscribeOn(io())
-fun <T> Flowable<T>.multiWith() = subscribeOn(io()).observeOn(AndroidSchedulers.mainThread())
+fun <T> Flowable<T>.to() = subscribeOn(Schedulers.io())
+fun <T> Flowable<T>.multiWith() = subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
 
 fun <T> Observable<T>.to() = subscribeOn(io())
 fun <T> Observable<T>.toDelay(_delay: Int) =
@@ -55,7 +55,7 @@ fun <T> Observable<T>.toDelay(_delay: Int) =
 
 // 여러개의 API를 한꺼번에 보내는 경우 Delay 타입.
 fun <T> Flowable<T>.multiDelay(_delay: Int) =
-    subscribeOn(io()).delay(_delay.toLong(), TimeUnit.SECONDS)
+    subscribeOn(Schedulers.io()).delay(_delay.toLong(), TimeUnit.SECONDS)
 
 open class SimpleDisposableSubscriber<T> : DisposableSubscriber<T>() {
     override fun onNext(t: T) {

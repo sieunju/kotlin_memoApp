@@ -7,7 +7,7 @@ import com.hmju.memo.base.BaseViewHolder
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.databinding.ItemMemoDetailImageBinding
 import com.hmju.memo.model.memo.FileItem
-import com.hmju.memo.viewModels.MemoDetailViewModel
+import com.hmju.memo.viewmodels.MemoDetailViewModel
 
 /**
  * Description : 메모 상세 페이지 이미지 PagerAdapter
@@ -15,7 +15,7 @@ import com.hmju.memo.viewModels.MemoDetailViewModel
  * Created by juhongmin on 2020/09/06
  */
 class MemoImagePagerAdapter(
-    private val viewModel: BaseViewModel,
+    private val viewModel: MemoDetailViewModel,
     private val itemList: ArrayList<FileItem>
 ) : RecyclerView.Adapter<MemoImagePagerAdapter.MemoDetailImageViewHolder>() {
 
@@ -28,6 +28,7 @@ class MemoImagePagerAdapter(
     }
 
     override fun onBindViewHolder(holder: MemoDetailImageViewHolder, pos: Int) {
+        holder.binding.pos = pos
         holder.binding.item = itemList[pos]
     }
 
@@ -36,7 +37,7 @@ class MemoImagePagerAdapter(
     }
 
     class MemoDetailImageViewHolder(
-        viewModel: BaseViewModel,
+        viewModel: MemoDetailViewModel,
         parent: ViewGroup,
         layoutId: Int
     ) :

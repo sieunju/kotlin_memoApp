@@ -110,6 +110,7 @@
     <dimen name="margin_size_5">5dp</dimen>
     <dimen name="margin_size_10">10dp</dimen>
     <dimen name="margin_size_20">20dp</dimen>
+    <dimen name="margin_size_30">30dp</dimen>
 
     <dimen name="padding_size_2">2dp</dimen>
     <dimen name="padding_size_5">5dp</dimen>

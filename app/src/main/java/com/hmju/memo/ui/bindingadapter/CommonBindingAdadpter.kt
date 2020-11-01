@@ -15,7 +15,7 @@ import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.ui.adapter.BottomSheetCheckableAdapter
 import com.hmju.memo.ui.bottomsheet.CheckableBottomSheet
 import com.hmju.memo.utils.JLogger
-import com.hmju.memo.viewModels.MainViewModel
+import com.hmju.memo.viewmodels.MainViewModel
 import com.hmju.memo.widget.bottomToolbar.BottomToolbar
 
 /**

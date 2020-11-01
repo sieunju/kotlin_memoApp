@@ -9,7 +9,7 @@
 
         <variable
             name="viewModel"
-            type="com.hmju.memo.viewModels.MemoEditViewModel" />
+            type="com.hmju.memo.viewmodels.MemoDetailViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,6 +32,8 @@
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:orientation="vertical">
 
                 <!-- 이미지 레이아웃 영역  -->
@@ -154,8 +156,9 @@
                     <com.google.android.material.button.MaterialButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/str_change"
+                        tools:text="수정"
                         android:enabled="@{viewModel.isChanged}"
+                        android:text="@{viewModel.commitText}"
                         android:textColor="@color/colorTextWhite"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintRight_toRightOf="parent"

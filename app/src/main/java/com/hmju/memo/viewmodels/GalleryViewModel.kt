@@ -1,9 +1,8 @@
-package com.hmju.memo.viewModels
+package com.hmju.memo.viewmodels
 
 import android.annotation.SuppressLint
 import android.database.ContentObserver
 import android.database.Cursor
-import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
@@ -11,20 +10,13 @@ import androidx.lifecycle.MutableLiveData
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.convenience.*
-import com.hmju.memo.define.Etc
 import com.hmju.memo.model.gallery.GalleryFilterItem
 import com.hmju.memo.model.gallery.GallerySelectedItem
 import com.hmju.memo.utils.CursorProvider
 import com.hmju.memo.utils.ImageFileProvider
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.ResourceProvider
-import io.reactivex.Completable
 import io.reactivex.Flowable
-import io.reactivex.Observable
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers.computation
-import io.reactivex.schedulers.Schedulers.newThread
 
 /**
  * Description : 앨범 및 카메라 ViewModel Class

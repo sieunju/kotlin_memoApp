@@ -1,7 +1,6 @@
 package com.hmju.memo.ui.adapter
 
 import android.content.Context
-import android.content.LocusId
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
@@ -14,7 +13,7 @@ import com.hmju.memo.databinding.ItemMemoImgBinding
 import com.hmju.memo.databinding.ItemMemoNormalBinding
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.utils.JLogger
-import com.hmju.memo.viewModels.MainViewModel
+import com.hmju.memo.viewmodels.MainViewModel
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 

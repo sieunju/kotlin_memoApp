@@ -38,6 +38,14 @@ inline fun <reified T : Activity> Activity.startAct(data: Intent.() -> Unit) {
     startActivity(intent)
 }
 
+inline fun <reified T : Activity> Activity.startActBundle(data: Bundle.() -> Unit) {
+    val intent = Intent(this,T::class.java)
+    val bundle = Bundle()
+    bundle.data()
+    intent.putExtras(bundle)
+    startActivity(intent)
+}
+
 inline fun <reified T : Activity> Activity.startActResult(
     requestCode: Int,
     data: Intent.() -> Unit
@@ -79,7 +87,7 @@ fun Activity.moveMemoDetail(
  *
  * @param uri 카메라 캡처후 해당 파일 정보 세팅할 위치값.
  */
-fun Activity.moveCamera(uri: Uri) {
+fun Activity.moveCamera(uri: Uri?) {
     Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
         resolveActivity(packageManager)?.let {
             putExtra(MediaStore.EXTRA_OUTPUT, uri)

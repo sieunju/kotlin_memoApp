@@ -1,8 +1,10 @@
 package com.hmju.memo.ui.memo
 
-import android.Manifest
 import android.animation.ObjectAnimator
-import android.content.*
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
@@ -17,10 +19,11 @@ import com.hmju.memo.ui.bottomsheet.MemoMoreDialog
 import com.hmju.memo.ui.gallery.GalleryActivity
 import com.hmju.memo.ui.toast.showToast
 import com.hmju.memo.utils.JLogger
+import com.hmju.memo.utils.startAct
+import com.hmju.memo.utils.startActBundle
 import com.hmju.memo.utils.startActResult
-import com.hmju.memo.viewModels.MemoEditViewModel
+import com.hmju.memo.viewmodels.MemoDetailViewModel
 import com.hmju.memo.widget.keyboard.FluidContentResize
-import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.activity_memo_detail.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -30,11 +33,11 @@ import org.koin.core.parameter.parametersOf
  *
  * Created by hmju on 2020-06-16
  */
-class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoEditViewModel>() {
+class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoDetailViewModel>() {
 
 
     override val layoutId = R.layout.activity_memo_detail
-    override val viewModel: MemoEditViewModel by viewModel {
+    override val viewModel: MemoDetailViewModel by viewModel {
         parametersOf(
             intent.getSerializableExtra(ExtraCode.MEMO_DETAIL)
         )
@@ -42,11 +45,21 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoEditViewM
 
     override val bindingVariable = BR.viewModel
 
-    private val memoPosition by lazy { intent.getIntExtra(ExtraCode.MEMO_DETAIL_POS,-1) }
+    private val memoPosition by lazy { intent.getIntExtra(ExtraCode.MEMO_DETAIL_POS, -1) }
+    private val isMemoAddEnter by lazy {
+        intent.getBooleanExtra(
+            ExtraCode.MEMO_DETAIL_ADD_ENTER,
+            false
+        )
+    }
     private lateinit var moreDialog: MemoMoreDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        onTransFormationEndContainer()
+        intent.action
+        // 메모 상세 보기로 들어온 경우.
+        if (!isMemoAddEnter) {
+            onTransFormationEndContainer()
+        }
         super.onCreate(savedInstanceState)
         // 자연스러운 키보드 올라오기 위한 코드.
         FluidContentResize.listen(this)
@@ -54,6 +67,13 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoEditViewM
         with(viewModel) {
 
             initSelectedTag()
+
+            // 메모 추가인경우.
+            if (isMemoAddEnter) {
+                commitText.value = getString(R.string.str_add)
+            } else {
+                commitText.value = getString(R.string.str_change)
+            }
 
             startSelectedTagColor.observe(this@MemoDetailActivity, Observer { color ->
                 // 상태바 색상 변경.
@@ -66,6 +86,7 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoEditViewM
             })
 
             startNetworkState.observe(this@MemoDetailActivity, Observer { state ->
+                JLogger.d("NetState $state" )
                 when (state) {
                     NetworkState.LOADING -> {
                         showLoadingDialog()
@@ -117,6 +138,9 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoEditViewM
                                         }
                                     }).show()
                             }
+                            2 -> {
+
+                            }
                         }
                         moreDialog.dismiss()
                     }
@@ -127,27 +151,19 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoEditViewM
 
             // 갤러리 페이지 진입.
             startGallery.observe(this@MemoDetailActivity, Observer {
-                with(RxPermissions(this@MemoDetailActivity)) {
-                    request(
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    ).subscribe { isGranted ->
-                        // 동의 한경우.
-                        if (isGranted) {
-                            startActResult<GalleryActivity>(RequestCode.GALLERY) {
-                                putExtra(
-                                    ExtraCode.GALLERY_IMG_LIMIT,
-                                    0.coerceAtLeast(Etc.IMG_FILE_LIMIT - fileSize.value!!)
-                                )
-                            }
-                        } else {
-                            // 권한 확인 안내 팝업 노출
-                            CommonDialog(this@MemoDetailActivity)
-                                .setContents(R.string.str_permission_denied)
-                                .setPositiveButton(R.string.str_confirm)
-                                .show()
-                        }
-                    }
+                startActResult<GalleryActivity>(RequestCode.GALLERY) {
+                    putExtra(
+                        ExtraCode.GALLERY_IMG_LIMIT,
+                        0.coerceAtLeast(Etc.IMG_FILE_LIMIT - fileSize.value!!)
+                    )
+                }
+            })
+
+            startImageDetail.observe(this@MemoDetailActivity, Observer {pos->
+
+                startActBundle<ImageDetailActivity> {
+                    putSerializable(ExtraCode.IMAGE_DETAIL_PATH_LIST,fileList.value)
+                    putInt(ExtraCode.IMAGE_DETAIL_POS,pos)
                 }
             })
 
@@ -158,7 +174,11 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoEditViewM
     }
 
     override fun onBackPressed() {
-        supportFinishAfterTransition()
+        if(isMemoAddEnter) {
+            finish()
+        } else {
+            supportFinishAfterTransition()
+        }
     }
 
     override fun finish() {
@@ -169,7 +189,7 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoEditViewM
                     val intent = Intent()
                     intent.putExtra(ExtraCode.MEMO_DETAIL_POS, memoPosition)
                     intent.putExtra(ExtraCode.MEMO_DETAIL_DELETE, true)
-                    intent.putExtra(ExtraCode.MEMO_DETAIL_MANAGE_NO,manageNo.value)
+                    intent.putExtra(ExtraCode.MEMO_DETAIL_MANAGE_NO, manageNo.value)
                     setResult(RESULT_OK, intent)
                 }
                 isMemoChanged() -> {

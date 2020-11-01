@@ -11,7 +11,7 @@
 
         <variable
             name="viewModel"
-            type="com.hmju.memo.viewModels.MainViewModel" />
+            type="com.hmju.memo.viewmodels.MainViewModel" />
 
 
         <variable

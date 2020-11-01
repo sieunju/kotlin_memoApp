@@ -8,9 +8,6 @@ import android.net.Uri
 import android.provider.MediaStore
 import com.hmju.memo.define.Etc
 import com.hmju.memo.model.gallery.GalleryFilterItem
-import com.hmju.memo.viewModels.GalleryViewModel
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
 
 /**
  * Description : Cursor Provider

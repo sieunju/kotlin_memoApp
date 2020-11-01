@@ -17,6 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+
         <activity
             android:name=".ui.home.MainActivity"
             android:launchMode="singleTop"
@@ -50,21 +51,23 @@
             android:theme="@style/AppTheme.MemoDetail"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ui.memo.MemoAddActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.MemoDetail"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
             android:name=".ui.gallery.GalleryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Gallery"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name=".ui.imageEdit.ImageEditActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Memo"
             android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".ui.memo.ImageDetailActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/FullscreenTheme">
+
+        </activity>
 
         <!-- [s] 카메라 캡처 관련 -->
         <provider
@@ -76,8 +79,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-        <!-- [s] 카메라 캡처 관련 -->
-
     </application>
 
 </manifest>

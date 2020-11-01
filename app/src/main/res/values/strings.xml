@@ -75,5 +75,8 @@
     <string name="str_left_root_tag">왼쪽 레이아웃</string>
     <string name="str_right_tag">오른쪽 이미지</string>
     <string name="str_right_root_tag">오른쪽 레이아웃</string>
+    <string name="title_activity_image_detail">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 
 </resources>

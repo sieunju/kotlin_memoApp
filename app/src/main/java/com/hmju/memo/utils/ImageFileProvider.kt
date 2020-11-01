@@ -37,7 +37,6 @@ interface ImageFileProvider {
     fun getFilePart(path: String?): Pair<MediaType, File>?
     fun createMultiPartBody(path: String?): Pair<RequestBody, File>?
     fun createTempFile(): File
-    fun createTempFile(callBack: (Uri) -> Unit)
     fun bitmapToFile(bitmap: Bitmap): File?
     fun sendPicture(path: String?): Boolean
     fun deleteFile(path: String?): Boolean
@@ -176,25 +175,6 @@ class ImageFileProviderImpl(private val ctx: Context) : ImageFileProvider {
             Etc.IMG_FILE_EXTENSION,
             ctx.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         )
-    }
-
-    /**
-     * Create Temp ImageFile
-     * 파일 경로 콜백 하는 타입.
-     *
-     * @param callBack TempFile 생성후 경로값 CallBack
-     */
-    override fun createTempFile(callBack: (Uri) -> Unit) {
-        createTempFile().apply {
-            val uri: Uri =
-                // 버전 별로 분기 처리.
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    FileProvider.getUriForFile(ctx, ctx.packageName, this)
-                } else {
-                    Uri.fromFile(this)
-                }
-            callBack.invoke(uri)
-        }
     }
 
     /**

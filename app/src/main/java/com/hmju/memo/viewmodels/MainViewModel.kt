@@ -1,4 +1,4 @@
-package com.hmju.memo.viewModels
+package com.hmju.memo.viewmodels
 
 import android.view.View
 import androidx.lifecycle.LiveData
@@ -15,7 +15,6 @@ import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.repository.network.NetworkDataSource
 import com.hmju.memo.repository.network.paging.PagingModel
 import com.hmju.memo.repository.preferences.AccountPref
-import com.hmju.memo.utils.JLogger
 import io.reactivex.BackpressureStrategy
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject

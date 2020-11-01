@@ -9,7 +9,7 @@
 
         <variable
             name="viewModel"
-            type="com.hmju.memo.viewModels.GalleryViewModel" />
+            type="com.hmju.memo.viewmodels.GalleryViewModel" />
 
     </data>
 

@@ -18,13 +18,12 @@ import com.hmju.memo.define.ToolBarDefine.POS_HOME
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.ui.adapter.MemoListAdapter
 import com.hmju.memo.ui.login.LoginActivity
-import com.hmju.memo.ui.memo.MemoAddActivity
+import com.hmju.memo.ui.memo.MemoDetailActivity
 import com.hmju.memo.ui.toast.showToast
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.moveMemoDetail
 import com.hmju.memo.utils.startActResult
-import com.hmju.memo.viewModels.MainViewModel
-import com.hmju.memo.widget.bottomToolbar.BottomToolbar
+import com.hmju.memo.viewmodels.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -33,7 +32,8 @@ import org.koin.android.viewmodel.ext.android.viewModel
  *
  * Created by hmju on 2020-05-10
  */
-class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), SwipeRefreshLayout.OnRefreshListener, LifecycleObserver {
+class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(),
+    SwipeRefreshLayout.OnRefreshListener, LifecycleObserver {
 
     override val layoutId = R.layout.activity_main
     override val viewModel: MainViewModel by viewModel()
@@ -66,9 +66,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), SwipeRe
                 }
             })
 
-            networkState.observe(this@MainActivity, Observer {state->
+            networkState.observe(this@MainActivity, Observer { state ->
                 JLogger.d("PagedNetwork State $state")
-                when(state) {
+                when (state) {
                     NetworkState.SUCCESS -> {
                         // 전체 로딩 Dismiss
                         dismissLoadingDialog()
@@ -88,8 +88,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), SwipeRe
                     }
                     POS_ADD -> {
                         // 메모 추가 페이지 진입
-                        startActResult<MemoAddActivity>(RequestCode.MEMO_ADD) {
-
+                        startActResult<MemoDetailActivity>(RequestCode.MEMO_ADD) {
+                            putExtra(ExtraCode.MEMO_DETAIL_ADD_ENTER, true)
                         }
                     }
 

@@ -1,8 +1,6 @@
 package com.hmju.memo.ui.imageEdit
 
-import android.animation.Animator
 import android.animation.ObjectAnimator
-import android.animation.PropertyValuesHolder
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -13,8 +11,7 @@ import com.hmju.memo.base.BaseActivity
 import com.hmju.memo.databinding.ActivityImageEditBinding
 import com.hmju.memo.define.ExtraCode
 import com.hmju.memo.define.NetworkState
-import com.hmju.memo.utils.JLogger
-import com.hmju.memo.viewModels.ImageEditViewModel
+import com.hmju.memo.viewmodels.ImageEditViewModel
 import kotlinx.android.synthetic.main.activity_image_edit.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf

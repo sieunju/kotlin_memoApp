@@ -7,7 +7,7 @@ import android.view.DragEvent
 import android.view.View
 import androidx.databinding.BindingAdapter
 import com.hmju.memo.base.BaseViewModel
-import com.hmju.memo.viewModels.ImageEditViewModel
+import com.hmju.memo.viewmodels.ImageEditViewModel
 import com.hmju.memo.widget.flexibleImageView.FlexibleImageView
 
 /**

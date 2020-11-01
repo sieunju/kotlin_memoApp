@@ -1,4 +1,4 @@
-package com.hmju.memo.viewModels
+package com.hmju.memo.viewmodels
 
 import androidx.annotation.IdRes
 import androidx.lifecycle.LiveData
@@ -17,7 +17,10 @@ import com.hmju.memo.utils.ImageFileProvider
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.ResourceProvider
 import io.reactivex.Flowable
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import java.io.File
 
 /**
@@ -25,14 +28,14 @@ import java.io.File
  *
  * Created by juhongmin on 2020/10/25
  */
-class MemoEditViewModel(
+class MemoDetailViewModel(
     private val originData: MemoItem? = null,
     private val apiService: ApiService,
     private val provider: ImageFileProvider,
     private val resProvider: ResourceProvider
 ) : BaseViewModel() {
 
-    private val _manageNo = NonNullMutableLiveData(-1)
+    private val _manageNo = NonNullMutableLiveData(originData?.manageNo ?: -1)
     val manageNo: NonNullMutableLiveData<Int>
         get() = _manageNo
     private val _selectTag = NonNullMutableLiveData(originData?.tag ?: TagType.ETC.tag)
@@ -61,16 +64,20 @@ class MemoEditViewModel(
                 (fileList.value != originData.fileList)
     }
 
+    val commitText = NonNullMutableLiveData("") // 수정 및 추가 버튼에 대한 텍스트.
+
     val startCopyText = SingleLiveEvent<String>()
     val startMoreDialog = SingleLiveEvent<Unit>()
     val startGallery = SingleLiveEvent<Unit>()
     val startSelectedTagColor = SingleLiveEvent<Int>()
+    val startImageDetail = SingleLiveEvent<Int>()
     val startFinish = SingleLiveEvent<Boolean>()
 
     var isDelete = false
 
     fun initSelectedTag() {
-        val tagType: TagType
+        var tagType = TagType.ETC
+
         when (selectTag.value) {
             TagType.RED.tag -> {
                 tagType = TagType.RED
@@ -89,9 +96,6 @@ class MemoEditViewModel(
             }
             TagType.PURPLE.tag -> {
                 tagType = TagType.PURPLE
-            }
-            else -> {
-                tagType = TagType.ETC
             }
         }
 
@@ -150,7 +154,7 @@ class MemoEditViewModel(
      * Memo Add and Update
      * @param callBack Api Success CallBack.
      */
-    fun postMemo(callBack: (Boolean) -> Unit?) {
+    private fun postMemo(callBack: (Boolean) -> Unit?) {
         launch {
             if (manageNo.value == -1) apiService.postMemo(
                 MemoItemForm(
@@ -199,41 +203,42 @@ class MemoEditViewModel(
         }
 
         val tmpFileList = arrayListOf<File>()
-
         launch {
-            Flowable.fromIterable(pathList)
-                .flatMap { path ->
-                    JLogger.d("First Thread ${Thread.currentThread()}")
-                    Flowable.just(provider.createMultiPartBody(path)).computeOn()
-                }.flatMap { multiPartBody ->
-                    JLogger.d("Second Thread ${Thread.currentThread()}")
-                    tmpFileList.add(multiPartBody.second)
-                    Flowable.just(
-                        MultipartBody.Part.createFormData(
-                            name = "files",
-                            filename = multiPartBody.second.name,
-                            body = multiPartBody.first
+            Flowable.fromCallable {
+                val multiParts = arrayListOf<MultipartBody.Part>()
+                for (path in pathList) {
+                    provider.createMultiPartBody(path)?.let {
+                        multiParts.add(
+                            MultipartBody.Part.createFormData(
+                                name = "files",
+                                filename = it.second.name,
+                                body = it.first
+                            )
                         )
-                    ).computeOn()
-                }.compute()
-                .toList()
-                .flatMap { list ->
-                    JLogger.d("Third Thread ${Thread.currentThread()}")
+                        tmpFileList.add(it.second)
+                    }
+                }
+                JLogger.d("File Parser Thread ${Thread.currentThread()}")
+                return@fromCallable multiParts
+            }
+                .doOnSubscribe {
+                    onLoading()
+                }
+                .compute()
+                .flatMap {
                     apiService.uploadFile(
                         memoId = manageNo.value,
-                        files = list
-                    ).io()
+                        files = it
+                    ).toFlowable().io()
                 }
-                .doOnSubscribe { onLoading() }
-                .subscribe({
-                    JLogger.d("Response $it")
-                    // Response 처리.
-                    addImageFileList(it.pathList)
-
+                .ui()
+                .subscribe({ response ->
+                    JLogger.d("Success Thread ${Thread.currentThread()}")
+                    addImageFileList(response.pathList)
                     tmpFileList.forEach { provider.deleteFile(it) }
                     onSuccess()
-                }, {
-                    JLogger.d("Error $it")
+                }, { error ->
+                    JLogger.d("Error ${error.message}")
                     tmpFileList.forEach { provider.deleteFile(it) }
                     onError()
                 })
@@ -261,7 +266,8 @@ class MemoEditViewModel(
             apiService.deleteFile(
                 manageNo = fileItem.manageNo,
                 path = fileItem.filePath
-            ).netIo().doOnSubscribe { onLoading() }
+            ).netIo()
+                .doOnSubscribe { onLoading() }
                 .subscribe({
                     JLogger.d("Delete Image Success $it")
                     _fileList.postRemove(fileItem)
@@ -291,7 +297,7 @@ class MemoEditViewModel(
      * Delete All Images
      * @param callBack Api Service
      */
-    private fun deleteAllImages(callBack: (Boolean) -> Unit) {
+    private fun deleteAllImages(callBack: () -> Unit) {
         launch {
             apiService.deleteFiles(
                 manageNoList = fileList.value.map { it.manageNo }.toList(),
@@ -300,10 +306,10 @@ class MemoEditViewModel(
                 .doOnSubscribe { onLoading() }
                 .subscribe({
                     JLogger.d("Delete All Images Success $it")
-                    callBack.invoke(true)
+                    callBack.invoke()
                 }, {
                     JLogger.d("Delete All Images Error ${it.message}")
-                    callBack.invoke(false)
+                    callBack.invoke()
                 })
         }
     }
@@ -311,7 +317,7 @@ class MemoEditViewModel(
     /**
      * Delete Memo Func..
      */
-    protected fun deleteMemo() {
+    private fun deleteMemo() {
         launch {
             apiService.deleteMemo(
                 memoId = manageNo.value
@@ -328,5 +334,13 @@ class MemoEditViewModel(
                     startFinish.value = true
                 })
         }
+    }
+
+    /**
+     * 이미지 자세히 보기 페이지 이동.
+     * @param pos -> 현재 바라보고 있는 이미지 위치값
+     */
+    fun moveDetailImage(pos: Int) {
+        startImageDetail.value = pos
     }
 }

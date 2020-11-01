@@ -9,22 +9,15 @@ import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.inputmethod.EditorInfo
-import android.widget.EditText
 import android.widget.TextView
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
-import androidx.lifecycle.LiveData
 import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
-import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewModel
-import com.hmju.memo.utils.JLogger
-import com.hmju.memo.viewModels.LoginViewModel
-import com.hmju.memo.viewModels.MainViewModel
-import com.hmju.memo.viewModels.MemoDetailViewModel
-import com.hmju.memo.viewModels.MemoEditViewModel
+import com.hmju.memo.viewmodels.LoginViewModel
+import com.hmju.memo.viewmodels.MainViewModel
+import com.hmju.memo.viewmodels.MemoDetailViewModel
 
 /**
  * Description:
@@ -103,7 +96,7 @@ fun setEditTextListener(
         is MainViewModel -> {
 
         }
-        is MemoEditViewModel -> {
+        is MemoDetailViewModel -> {
             // 긴 문장 입력시 스크롤 되도록 처리.
             editText.setOnTouchListener { view, event ->
                 if (view.isFocused) {

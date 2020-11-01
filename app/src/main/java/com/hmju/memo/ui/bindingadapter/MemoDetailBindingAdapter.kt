@@ -1,6 +1,5 @@
 package com.hmju.memo.ui.bindingadapter
 
-import android.content.DialogInterface
 import android.view.View
 import android.widget.RadioGroup
 import androidx.appcompat.widget.AppCompatImageView
@@ -16,9 +15,7 @@ import com.hmju.memo.ui.adapter.MemoDetailMoreAdapter
 import com.hmju.memo.ui.adapter.MemoImagePagerAdapter
 import com.hmju.memo.ui.bottomsheet.MemoMoreDialog
 import com.hmju.memo.utils.JLogger
-import com.hmju.memo.viewModels.MemoAddViewModel
-import com.hmju.memo.viewModels.MemoDetailViewModel
-import com.hmju.memo.viewModels.MemoEditViewModel
+import com.hmju.memo.viewmodels.MemoDetailViewModel
 import com.hmju.memo.widget.viewpagerIndicator.IndicatorView
 
 /**
@@ -30,7 +27,7 @@ import com.hmju.memo.widget.viewpagerIndicator.IndicatorView
 @BindingAdapter(value = ["viewModel", "indicatorView", "fileList"], requireAll = false)
 fun setMemoDetailImgAdapter(
     viewPager: ViewPager2,
-    viewModel: BaseViewModel,
+    viewModel: MemoDetailViewModel,
     indicator: IndicatorView,
     dataList: ArrayList<FileItem>?
 ) {
@@ -105,39 +102,12 @@ fun setMemoDetailTagAdapter(
             }
         }
 
-        if (viewModel is MemoDetailViewModel) {
-            viewModel.setSelectedTag(tagType)
-        } else if (viewModel is MemoAddViewModel) {
+        if(viewModel is MemoDetailViewModel) {
             viewModel.setSelectedTag(tagType)
         }
     }
 
-    if (viewModel is MemoDetailViewModel) {
-        // Binding RadioButton
-        when (viewModel.selectTag.value) {
-            TagType.RED.tag -> {
-                radioGroup.check(R.id.tag_1)
-            }
-            TagType.ORANGE.tag -> {
-                radioGroup.check(R.id.tag_2)
-            }
-            TagType.YELLOW.tag -> {
-                radioGroup.check(R.id.tag_3)
-            }
-            TagType.GREEN.tag -> {
-                radioGroup.check(R.id.tag_4)
-            }
-            TagType.BLUE.tag -> {
-                radioGroup.check(R.id.tag_5)
-            }
-            TagType.PURPLE.tag -> {
-                radioGroup.check(R.id.tag_6)
-            }
-            else -> {
-                radioGroup.check(R.id.tag_7)
-            }
-        }
-    } else if (viewModel is MemoAddViewModel) {
+    if(viewModel is MemoDetailViewModel) {
         // Binding RadioButton
         when (viewModel.selectTag.value) {
             TagType.RED.tag -> {
@@ -168,11 +138,10 @@ fun setMemoDetailTagAdapter(
 @BindingAdapter(value = ["viewModel", "fileItem"], requireAll = false)
 fun setMemoDetailImgLongClickListener(
     view: AppCompatImageView,
-    viewModel: BaseViewModel,
+    viewModel: MemoDetailViewModel,
     item: FileItem
 ) {
     view.setOnLongClickListener {
-        JLogger.d("onLongClick!!")
         CommonDialog(view.context)
             .setContents(R.string.str_memo_img_delete)
             .setPositiveButton(R.string.str_confirm)
@@ -180,9 +149,7 @@ fun setMemoDetailImgLongClickListener(
             .setListener(object : CommonDialog.Listener {
                 override fun onClick(which: Int) {
                     if(which == CommonDialog.POSITIVE) {
-                        if (viewModel is MemoEditViewModel) {
-                            viewModel.deleteImage(item)
-                        }
+                        viewModel.deleteImage(item)
                     }
                 }
             })

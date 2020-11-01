@@ -3,7 +3,9 @@ package com.hmju.memo.ui.gallery
 import android.Manifest
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import com.hmju.memo.BR
 import com.hmju.memo.R
@@ -15,7 +17,7 @@ import com.hmju.memo.ui.bottomsheet.CheckableBottomSheet
 import com.hmju.memo.ui.imageEdit.ImageEditActivity
 import com.hmju.memo.ui.toast.showToast
 import com.hmju.memo.utils.*
-import com.hmju.memo.viewModels.GalleryViewModel
+import com.hmju.memo.viewmodels.GalleryViewModel
 import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.activity_gallery.*
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -46,6 +48,26 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // 권한 체크
+        with(RxPermissions(this@GalleryActivity)) {
+            request(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ).subscribe { isGranted ->
+                if (!isGranted) {
+                    CommonDialog(this@GalleryActivity)
+                        .setContents(R.string.str_permission_denied)
+                        .setPositiveButton(R.string.str_confirm)
+                        .setListener(object : CommonDialog.Listener {
+                            override fun onClick(which: Int) {
+                                finish()
+                            }
+                        })
+                        .show()
+                }
+            }
+        }
+
         with(viewModel) {
 
             startNetworkState.observe(this@GalleryActivity, Observer { state ->
@@ -70,10 +92,15 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
                         Manifest.permission.CAMERA
                     ).subscribe { isGranted ->
                         if (isGranted) {
-                            fileProvider.createTempFile { uri ->
-                                photoUri = uri
-                                moveCamera(uri)
+                            val file = fileProvider.createTempFile()
+                            photoUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                FileProvider.getUriForFile(this@GalleryActivity, packageName, file)
+                            } else {
+                                Uri.fromFile(file)
                             }
+
+                            moveCamera(photoUri)
+
                         } else {
                             // 권한 확인 안내 팝업 노출
                             CommonDialog(this@GalleryActivity)

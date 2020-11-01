@@ -15,10 +15,13 @@ object ExtraCode {
     const val MEMO_DETAIL_POS = "b"
     const val MEMO_DETAIL_DELETE = "c"
     const val MEMO_DETAIL_MANAGE_NO = "d"
+    const val MEMO_DETAIL_ADD_ENTER = "e"
     const val GALLERY_IMG_LIMIT = "a"
     const val GALLERY_SELECT_IMAGES = "a"
     const val CAMERA_CAPTURE_PHOTO_URI = "a"
     const val IMAGE_EDIT_PHOTO_URIS = "a"
+    const val IMAGE_DETAIL_POS = "a"
+    const val IMAGE_DETAIL_PATH_LIST = "b"
 }
 
 object RequestCode {

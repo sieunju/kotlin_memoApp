@@ -1,4 +1,4 @@
-package com.hmju.memo.viewModels
+package com.hmju.memo.viewmodels
 
 import android.graphics.Bitmap
 import android.graphics.Canvas

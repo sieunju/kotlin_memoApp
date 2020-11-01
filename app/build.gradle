@@ -84,6 +84,7 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:$rootProject.recyclerViewVersion"
     implementation "androidx.cardview:cardview:$rootProject.cardViewVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.viewModelVersion"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     kapt "com.android.databinding:compiler:$rootProject.androidPluginVersion"
 
     testImplementation 'junit:junit:4.13'

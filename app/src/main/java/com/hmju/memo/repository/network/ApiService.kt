@@ -106,6 +106,20 @@ interface ApiService {
     ): Single<MemoFileResponse>
 
     /**
+     * 메모장 파일 추가 API
+     * Multipart {
+     *  memoId  : Memo Uid,
+     *  files   : File
+     * }
+     */
+    @Multipart
+    @POST("/api/uploads")
+    fun uploadFile(
+        @Part("memoId") memoId: Int,
+        @Part files: ArrayList<MultipartBody.Part>
+    ): Single<MemoFileResponse>
+
+    /**
      * 메모장 파일 제거 API
      * @param manageNo 파일 관리자 번호
      * @param path 파일 경로

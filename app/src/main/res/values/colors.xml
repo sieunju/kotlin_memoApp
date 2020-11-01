@@ -16,7 +16,7 @@
     <color name="colorTextWhite">#FFFFFF</color>
 
     <color name="colorHeaderOverlay">#19FFFFFF</color>
-    
+
     <color name="colorPrimaryNegative">#e6892d</color>
     <color name="colorPrimaryLightNegative">#9c5b00</color>
     <color name="colorPrimaryDarkNegative">#ffb45f</color>
@@ -42,5 +42,7 @@
 
     <color name="colorNormalIndicator">#6A6969</color>
     <color name="colorCheckedIndicator">#1976d2</color>
+
+    <color name="black_overlay">#66000000</color>
 
 </resources>

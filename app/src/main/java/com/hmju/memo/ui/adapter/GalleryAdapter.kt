@@ -3,17 +3,14 @@ package com.hmju.memo.ui.adapter
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
-import android.view.View
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewHolder
 import com.hmju.memo.databinding.ItemGalleryCameraBinding
 import com.hmju.memo.databinding.ItemGalleryPhotoBinding
 import com.hmju.memo.utils.JLogger
-import com.hmju.memo.viewModels.GalleryViewModel
+import com.hmju.memo.viewmodels.GalleryViewModel
 
 /**
  * Description : 갤러리 Adapter Class

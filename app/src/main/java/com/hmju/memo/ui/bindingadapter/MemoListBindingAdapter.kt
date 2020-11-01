@@ -10,8 +10,7 @@ import com.hmju.memo.define.TagType
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.ui.adapter.MemoListAdapter
 import com.hmju.memo.ui.decoration.VerticalItemDecoration
-import com.hmju.memo.utils.JLogger
-import com.hmju.memo.viewModels.MainViewModel
+import com.hmju.memo.viewmodels.MainViewModel
 
 /**
  * Description : 메모 리스트 Binding Adapter

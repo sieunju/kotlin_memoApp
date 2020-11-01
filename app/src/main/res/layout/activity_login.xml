@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.hmju.memo.viewModels.LoginViewModel" />
+            type="com.hmju.memo.viewmodels.LoginViewModel" />
     </data>
 
 

@@ -6,8 +6,7 @@ import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewHolder
 import com.hmju.memo.databinding.ItemGallerySelectedPhotoBinding
 import com.hmju.memo.model.gallery.GallerySelectedItem
-import com.hmju.memo.utils.JLogger
-import com.hmju.memo.viewModels.GalleryViewModel
+import com.hmju.memo.viewmodels.GalleryViewModel
 
 /**
  * Description : 갤러리 선택한 리스트 관련 Adapter Class

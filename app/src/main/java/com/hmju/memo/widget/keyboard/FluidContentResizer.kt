@@ -15,11 +15,11 @@ object FluidContentResize {
         val viewHolder = ActivityViewHolder.createFrom(activity)
 
         KeyboardVisibilityDetector.listen(viewHolder) {
-            JLogger.d("키보드가 올라옵니다.")
+            JLogger.d("키보드가 올라옵니다. " + it.contentHeight)
             animateHeight(viewHolder, it)
         }
+        // 화면 꺼질때.
         viewHolder.onDetach {
-            JLogger.d("화면 꺼짐!!!!! ")
             heightAnimator.cancel()
             heightAnimator.removeAllUpdateListeners()
         }

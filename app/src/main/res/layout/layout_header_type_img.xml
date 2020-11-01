@@ -3,9 +3,6 @@
 
     <data>
 
-        <variable
-            name="viewModel"
-            type="com.hmju.memo.viewModels.HeaderViewModel" />
     </data>
 
     <com.google.android.material.appbar.AppBarLayout

@@ -13,7 +13,7 @@ import com.hmju.memo.ui.adapter.GalleryAdapter
 import com.hmju.memo.ui.adapter.GallerySelectedPhotoAdapter
 import com.hmju.memo.ui.decoration.GalleryItemDecoration
 import com.hmju.memo.ui.decoration.HorizontalItemDecoration
-import com.hmju.memo.viewModels.GalleryViewModel
+import com.hmju.memo.viewmodels.GalleryViewModel
 
 /**
  * Description : Album 및 Camera Binding Adapter

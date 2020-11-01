@@ -3,7 +3,6 @@ package com.hmju.memo.widget.bottomToolbar
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
 import android.content.res.XmlResourceParser
@@ -16,7 +15,6 @@ import android.os.Build
 import android.util.AttributeSet
 import android.view.*
 import android.view.animation.DecelerateInterpolator
-import androidx.activity.ComponentActivity
 import androidx.annotation.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -25,15 +23,12 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.customview.widget.ViewDragHelper
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.navigation.NavController
 import com.hmju.memo.R
-import com.hmju.memo.base.BaseActivity
 import com.hmju.memo.define.ToolBarDefine
 import com.hmju.memo.ui.home.MainActivity
-import com.hmju.memo.ui.memo.MemoAddActivity
-import com.hmju.memo.utils.JLogger
+import com.hmju.memo.ui.memo.MemoDetailActivity
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -674,7 +669,7 @@ class BottomToolbar(
             // 각 페이지에 맞게 툴바 레이아웃 세팅.
             if (activity is MainActivity) {
                 itemActiveIndex = ToolBarDefine.POS_HOME
-            } else if (activity is MemoAddActivity) {
+            } else if (activity is MemoDetailActivity) {
                 itemActiveIndex = ToolBarDefine.POS_ADD
             }
         }
