@@ -160,7 +160,6 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoDetailVie
             })
 
             startImageDetail.observe(this@MemoDetailActivity, Observer {pos->
-
                 startActBundle<ImageDetailActivity> {
                     putSerializable(ExtraCode.IMAGE_DETAIL_PATH_LIST,fileList.value)
                     putInt(ExtraCode.IMAGE_DETAIL_POS,pos)

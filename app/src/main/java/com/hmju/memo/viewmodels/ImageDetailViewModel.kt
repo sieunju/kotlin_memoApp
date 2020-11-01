@@ -1,6 +1,7 @@
 package com.hmju.memo.viewmodels
 
 import com.hmju.memo.base.BaseViewModel
+import com.hmju.memo.model.memo.FileItem
 
 /**
  * Description : 이미지 자세히 보기 페이지
@@ -9,7 +10,7 @@ import com.hmju.memo.base.BaseViewModel
  */
 class ImageDetailViewModel(
     private val pos : Int,
-    private val pathList: ArrayList<String>
+    private val pathList: ArrayList<FileItem>
 ) : BaseViewModel(){
 
 }

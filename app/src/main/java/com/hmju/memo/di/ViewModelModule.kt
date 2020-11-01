@@ -1,5 +1,6 @@
 package com.hmju.memo.di
 
+import com.hmju.memo.model.memo.FileItem
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.viewmodels.*
 import org.koin.android.viewmodel.dsl.viewModel
@@ -41,7 +42,7 @@ val viewModelModule = module {
         )
     }
 
-    viewModel { (pos: Int, list: ArrayList<String>) ->
+    viewModel { (pos: Int, list: ArrayList<FileItem>) ->
         ImageDetailViewModel(
             pos = pos,
             pathList = list

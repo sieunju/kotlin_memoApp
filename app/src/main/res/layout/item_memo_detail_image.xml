@@ -5,8 +5,6 @@
 
     <data>
 
-        <import type="Integer" />
-
         <variable
             name="viewModel"
             type="com.hmju.memo.viewmodels.MemoDetailViewModel" />
