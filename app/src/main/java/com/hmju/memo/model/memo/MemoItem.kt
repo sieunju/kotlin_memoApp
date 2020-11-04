@@ -43,4 +43,14 @@ data class MemoItem(
             false
         }
     }
+
+    override fun hashCode(): Int {
+        var result = manageNo
+        result = 31 * result + tag
+        result = 31 * result + (title?.hashCode() ?: 0)
+        result = 31 * result + (contents?.hashCode() ?: 0)
+        result = 31 * result + (fileList?.hashCode() ?: 0)
+        result = 31 * result + (regDtm?.hashCode() ?: 0)
+        return result
+    }
 }

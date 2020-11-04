@@ -2,7 +2,6 @@ package com.hmju.memo.viewmodels
 
 import androidx.annotation.IdRes
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewModel
@@ -17,10 +16,7 @@ import com.hmju.memo.utils.ImageFileProvider
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.ResourceProvider
 import io.reactivex.Flowable
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import java.io.File
 
 /**
@@ -29,7 +25,7 @@ import java.io.File
  * Created by juhongmin on 2020/10/25
  */
 class MemoDetailViewModel(
-    private val originData: MemoItem? = null,
+    private var originData: MemoItem? = null,
     private val apiService: ApiService,
     private val provider: ImageFileProvider,
     private val resProvider: ResourceProvider
@@ -57,12 +53,12 @@ class MemoDetailViewModel(
     val fileSize: LiveData<Int> = Transformations.map(fileList) { it.size }
     val regDtm: String? = originData?.regDtm
 
-    val isChanged = MutableLiveData<Boolean>().apply {
-        (title.value != originData?.title) ||
-                (contents.value != originData.contents) ||
-                (selectTag.value != originData.tag) ||
-                (fileList.value != originData.fileList)
-    }
+    private val isChanged: Boolean
+        get() {
+            return title.value != originData?.title ||
+                    contents.value != originData?.contents ||
+                    selectTag.value != originData?.tag
+        }
 
     val commitText = NonNullMutableLiveData("") // 수정 및 추가 버튼에 대한 텍스트.
 
@@ -118,9 +114,9 @@ class MemoDetailViewModel(
     fun isMemoChanged(): Boolean {
         // 제목, 내용, 태그 셋중 하나라도 다르다면 메모 변경함
         return (title.value != originData?.title) ||
-                (contents.value != originData.contents) ||
-                (selectTag.value != originData.tag) ||
-                (fileList.value != originData.fileList)
+                (contents.value != originData?.contents) ||
+                (selectTag.value != originData?.tag) ||
+                (fileList.value != originData?.fileList)
     }
 
     fun moveMoreDialog() {
@@ -145,9 +141,14 @@ class MemoDetailViewModel(
         }
     }
 
-
     fun postMemo() {
-        postMemo { null }
+        if (isChanged) {
+            JLogger.d("변경된게 있습니다. ")
+            postMemo { null }
+        } else {
+            JLogger.d("변경점이 없습니다.!")
+        }
+
     }
 
     /**
@@ -176,6 +177,8 @@ class MemoDetailViewModel(
                 .subscribe({
                     JLogger.d("PostMemo Success $it")
 
+                    saveData()
+
                     // 메모를 새로 추가 하는 경우.
                     if (manageNo.value == -1 && it.manageNo != 0) {
                         _manageNo.value = it.manageNo
@@ -189,6 +192,24 @@ class MemoDetailViewModel(
                     callBack.invoke(false)
                     onError()
                 })
+        }
+    }
+
+    /**
+     * 메모 추가/ 수정 API 호출시 작성한 데이터 저장.
+     */
+    private fun saveData() {
+        if (originData == null) {
+            originData = MemoItem(
+                manageNo = manageNo.value,
+                tag = selectTag.value,
+                title = title.value,
+                contents = contents.value
+            )
+        } else {
+            originData?.tag = selectTag.value
+            originData?.title = title.value
+            originData?.contents = contents.value
         }
     }
 

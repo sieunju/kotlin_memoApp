@@ -156,14 +156,13 @@
                     <com.google.android.material.button.MaterialButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="수정"
-                        android:enabled="@{viewModel.isChanged}"
-                        android:text="@{viewModel.commitText}"
+                        android:text="@{viewModel.manageNo > 0 ? @string/str_change: @string/str_add }"
                         android:textColor="@color/colorTextWhite"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:turtleClick="@{()->viewModel.postMemo()}" />
+                        app:turtleClick="@{()->viewModel.postMemo()}"
+                        tools:text="수정" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
