@@ -50,6 +50,7 @@ build
 *.swp
 NetInfo.kt
 
-/app/study/release
+/app/study
+/app/dev
 
 
