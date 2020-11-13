@@ -1,23 +1,19 @@
 package com.hmju.memo
 
 import android.app.Activity
-import android.app.Application
 import android.content.ComponentCallbacks2
-import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.IntentCompat
-import androidx.lifecycle.LifecycleObserver
 import androidx.multidex.MultiDexApplication
 import com.hmju.memo.di.apiModule
 import com.hmju.memo.di.appModule
 import com.hmju.memo.di.prefModule
 import com.hmju.memo.di.viewModelModule
-import com.hmju.memo.ui.home.MainActivity
+import com.hmju.memo.ui.memo.MainActivity
 import com.hmju.memo.ui.toast.showToast
 import com.hmju.memo.utils.JLogger
 import io.reactivex.exceptions.UndeliverableException
@@ -162,7 +158,7 @@ class MainApplication : MultiDexApplication() {
 
     fun Activity.applicationRestart() {
         finishAffinity()
-        val intent = Intent(this@MainApplication,MainActivity::class.java)
+        val intent = Intent(this@MainApplication, MainActivity::class.java)
         startActivity(intent)
         exitProcess(0)
     }

@@ -13,6 +13,7 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.webkit.MimeTypeMap
+import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.exifinterface.media.ExifInterface
 import com.hmju.memo.define.Etc
@@ -39,6 +40,7 @@ interface ImageFileProvider {
     fun createTempFile(): File
     fun bitmapToFile(bitmap: Bitmap): File?
     fun sendPicture(path: String?): Boolean
+    fun savePicture(directory: String?, bitmap: Bitmap): String?
     fun deleteFile(path: String?): Boolean
     fun deleteFile(file: File?): Boolean
 }
@@ -201,41 +203,6 @@ class ImageFileProviderImpl(private val ctx: Context) : ImageFileProvider {
         }
     }
 
-    /**
-     * Delete File
-     *
-     * @param path File Path
-     * @return true -> Delete Success, false -> Delete Fail
-     */
-    override fun deleteFile(path: String?): Boolean {
-        path?.let {
-            return try {
-                File(it).delete()
-            } catch (ex: IOException) {
-                JLogger.e("Delete File Error ${ex.message}")
-                false
-            }
-        } ?: return false
-    }
-
-    /**
-     * Delete File
-     *
-     * @param file File
-     * @return true -> Delete Success, false -> Delete Fail
-     */
-    override fun deleteFile(file: File?): Boolean {
-        file?.let {
-            return try {
-                it.delete()
-            } catch (ex: IOException) {
-                JLogger.e("Delete File Error ${ex.message}")
-                false
-            }
-        } ?: return false
-    }
-
-    @SuppressLint("SimpleDateFormat")
     override fun sendPicture(path: String?): Boolean {
         // Path 유효성 검사
         if (path.isNullOrEmpty()) return false
@@ -244,7 +211,7 @@ class ImageFileProviderImpl(private val ctx: Context) : ImageFileProvider {
             // 이미지 이름.
             put(
                 MediaStore.Images.Media.DISPLAY_NAME,
-                "Memo_${SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())}${Etc.IMG_FILE_EXTENSION}"
+                createTempFileName()
             )
             // 이미지 타입.
             put(MediaStore.Images.Media.MIME_TYPE, Etc.IMG_MIME_TYPE_FILE_EXTENSION)
@@ -285,6 +252,117 @@ class ImageFileProviderImpl(private val ctx: Context) : ImageFileProvider {
             JLogger.e("Error ${ex.message}")
             return false
         }
+    }
+
+    /**
+     * Save Picture
+     * @param directory 저장하고 싶은 디렉토리
+     * @param bitmap Source Bitmap
+     * @return 저장한 이미지 주소값. 실패시 Null return.
+     */
+    override fun savePicture(directory: String?, bitmap: Bitmap): String? {
+        return try {
+            // 버전 별로 분기 처리
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                saveImageFileScoped(directory, bitmap)
+            } else {
+                saveImageFileLegacy(directory, bitmap)
+            }
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            null
+        }
+    }
+
+    @Throws(Exception::class)
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun saveImageFileScoped(directory: String?, bitmap: Bitmap): String? {
+        val values = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, createTempFileName())
+            put(MediaStore.Images.Media.MIME_TYPE, Etc.IMG_MIME_TYPE_FILE_EXTENSION)
+            put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis())
+            put(MediaStore.Images.Media.IS_PENDING, 1) // 외부 앱 접근 금지.
+
+            if (directory != null) {
+                put(MediaStore.Images.Media.RELATIVE_PATH, directory)
+            }
+        }
+
+        val item = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        item?.run {
+            val fileDescriptor = contentResolver.openFileDescriptor(item, "w", null)?.fileDescriptor
+            val fos = FileOutputStream(fileDescriptor)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+            fos.flush()
+            fos.close()
+            bitmap.recycle()
+            values.clear()
+            values.put(MediaStore.Images.Media.IS_PENDING, 0) // 외부 앱 접근 허용
+            // Update File
+            contentResolver.update(item, values, null, null)
+            return item.toString()
+        } ?: {
+            throw NullPointerException("Insert Query is Null")
+        }()
+    }
+
+    @Throws(Exception::class)
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun saveImageFileLegacy(directory: String?, bitmap: Bitmap): String? {
+        val path: File = if (directory.isNullOrEmpty()) {
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
+        } else {
+            Environment.getExternalStoragePublicDirectory("${Environment.DIRECTORY_DCIM}/${directory}")
+        }
+
+        path.mkdirs()
+
+        val imgFile = File(path, createTempFileName())
+        val fos = FileOutputStream(imgFile)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+        fos.flush()
+        fos.close()
+        bitmap.recycle()
+        return imgFile.absolutePath
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun createTempFileName(): String {
+        return "Memo_${SimpleDateFormat("yyyMMdd_HHmmss").format(Date())}${Etc.IMG_FILE_EXTENSION}"
+    }
+
+    /**
+     * Delete File
+     *
+     * @param path File Path
+     * @return true -> Delete Success, false -> Delete Fail
+     */
+    override fun deleteFile(path: String?): Boolean {
+        path?.let {
+            return try {
+                File(it).delete()
+            } catch (ex: IOException) {
+                JLogger.e("Delete File Error ${ex.message}")
+                false
+            }
+        } ?: return false
+    }
+
+    /**
+     * Delete File
+     *
+     * @param file File
+     * @return true -> Delete Success, false -> Delete Fail
+     */
+    override fun deleteFile(file: File?): Boolean {
+        file?.let {
+            return try {
+                it.delete()
+            } catch (ex: IOException) {
+                JLogger.e("Delete File Error ${ex.message}")
+                false
+            }
+        } ?: return false
     }
 
     private fun getMimeType(path: String): MediaType? {

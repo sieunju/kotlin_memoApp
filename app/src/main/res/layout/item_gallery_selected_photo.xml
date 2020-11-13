@@ -10,10 +10,6 @@
             type="String" />
 
         <variable
-            name="pos"
-            type="Integer" />
-
-        <variable
             name="viewModel"
             type="com.hmju.memo.viewmodels.GalleryViewModel" />
     </data>
@@ -42,7 +38,7 @@
             app:filterColorId="@{@color/colorWhite_50}"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:turtleClick="@{()->viewModel.onSelect(pos,imgUrl)}" />
+            app:turtleClick="@{()->viewModel.onSelect(imgUrl)}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

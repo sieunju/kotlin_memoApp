@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.hmju.memo.model.gallery.GalleryFilterItem" />
+
+        <variable
+            name="item"
+            type="GalleryFilterItem" />
+
+        <variable
+            name="viewModel"
+            type="com.hmju.memo.viewmodels.GalleryViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/size_5">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgThumb"
+            android:layout_width="@dimen/size_50"
+            android:layout_height="@dimen/size_50"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            app:bindImgGallery="@{item.photoUri}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/temp1" />
+
+        <TableLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/size_5"
+            android:shrinkColumns="0"
+            android:stretchColumns="0"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/imgThumb"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TableRow android:layout_width="match_parent">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:maxLines="1"
+                    android:text="@{item.bucketName}"
+                    android:textSize="@dimen/text_size_20"
+                    tools:text="DCIM" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_size_5"
+                    android:gravity="right"
+                    android:maxLines="1"
+                    android:textSize="@dimen/text_size_20"
+                    app:commaText="@{item.count}"
+                    tools:text="3,000" />
+
+
+            </TableRow>
+
+        </TableLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

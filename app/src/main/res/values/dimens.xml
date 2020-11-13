@@ -104,7 +104,9 @@
     <dimen name="size_350">350dp</dimen>
     <!-- [e] 공통 사이즈 -->
 
+    <dimen name="text_size_12">12dp</dimen>
     <dimen name="text_size_14">14dp</dimen>
+    <dimen name="text_size_15">15dp</dimen>
     <dimen name="text_size_20">20dp</dimen>
 
     <dimen name="margin_size_5">5dp</dimen>

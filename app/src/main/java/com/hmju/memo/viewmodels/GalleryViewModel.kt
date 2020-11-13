@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
+import android.view.View
 import androidx.lifecycle.MutableLiveData
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewModel
@@ -48,7 +49,6 @@ class GalleryViewModel(
     val startSubmit = SingleLiveEvent<Unit>()
     val startFilter = SingleLiveEvent<Unit>()
     val startImageEdit = SingleLiveEvent<String>()
-    val startNotify = SingleLiveEvent<GallerySelectedItem>()
 
     private val _filterList = ListMutableLiveData<GalleryFilterItem>() // 필터 영역
     val filterList: ListMutableLiveData<GalleryFilterItem>
@@ -57,8 +57,8 @@ class GalleryViewModel(
     val selectedFilter: MutableLiveData<GalleryFilterItem>
         get() = _selectedFilter
 
-    private val _selectedPhotoList = ListMutableLiveData<GallerySelectedItem>() // 선택한 사진들
-    val selectedPhotoList: ListMutableLiveData<GallerySelectedItem>
+    private val _selectedPhotoList = ListMutableLiveData<String>()// 선택한 사진들
+    val selectedPhotoList: ListMutableLiveData<String>
         get() = _selectedPhotoList
 
     fun resetFilter() {
@@ -92,7 +92,6 @@ class GalleryViewModel(
      *
      * @author hmju
      */
-    @SuppressLint("Recycle")
     private fun fetchFilter() {
         launch {
             Flowable.fromCallable {
@@ -128,11 +127,6 @@ class GalleryViewModel(
      * 필터가 걸려있으면 자동으로 처리함.
      */
     fun fetchGallery() {
-        // 선택된 이미지 초기화
-        if (selectedPhotoList.size() > 0) {
-            _selectedPhotoList.postClear()
-        }
-
         launch {
             Flowable.just(
                 provider.fetchGallery(filterId = selectedFilter.value!!.bucketId)
@@ -166,29 +160,25 @@ class GalleryViewModel(
         startFilter.call()
     }
 
-
+    fun onSelect(id: String) {
+        onSelect(null,id)
+    }
     /**
      * 갤러리에서 사진 선택 및 해제시 호출하는 함수.
-     * @param pos -> RecyclerView 기준 포지션
      * @param id -> 갤러리 콘텐츠 아이디
      */
-    fun onSelect(pos: Int, id: String) {
-        // 선택된 이미지 검사.
-        val item = GallerySelectedItem(id = id, pos = pos)
-        if (selectedPhotoList.contains(item)) {
-            _selectedPhotoList.postRemove(item)
+    fun onSelect(view: View?, id: String) {
+        // 선택한 이미지가 있는 경우.
+        if (selectedPhotoList.contains(id)) {
+            selectedPhotoList.postRemove(id)
 
-            // RecyclerView 갱신 처리.
-            startNotify.value = item
+            view?.visibility = View.VISIBLE
         } else {
-            // 사진 추가.
+            // 사진 추가 가능한지 여부
             if (limitImageSize > selectedPhotoList.size()) {
-                _selectedPhotoList.postAdd(item)
-
-                // RecyclerView 갱신 처리.
-                startNotify.value = item
+                _selectedPhotoList.postAdd(id)
+                view?.visibility = View.GONE
             } else {
-                // 파일 업로드 최대 개수 제한.
                 startToast.value = resProvider.getString(R.string.str_info_file_max_cnt)
             }
         }
@@ -206,13 +196,10 @@ class GalleryViewModel(
      * 선택한 이미지인지 검사.
      */
     fun isSelected(id: String): Boolean {
-        return if (selectedPhotoList.size() > 0) {
-            synchronized(tmpGallerySelectItem) {
-                tmpGallerySelectItem.id = id
-                return selectedPhotoList.contains(tmpGallerySelectItem)
-            }
-        } else {
+        return if (selectedPhotoList.size() == 0) {
             false
+        } else {
+            selectedPhotoList.contains(id)
         }
     }
 

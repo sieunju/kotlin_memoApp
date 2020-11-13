@@ -23,28 +23,38 @@ interface CursorProvider {
 class CursorProviderImpl(ctx: Context) : CursorProvider {
     override val contentResolver: ContentResolver = ctx.contentResolver
 
+    companion object {
+        val CONTENT_URI = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        val ID = MediaStore.Images.Media._ID
+
+        @SuppressLint("InlinedApi")
+        val BUCKET_ID = MediaStore.Images.Media.BUCKET_ID
+
+        @SuppressLint("InlinedApi")
+        val BUCKET_NAME = MediaStore.Images.Media.BUCKET_DISPLAY_NAME
+    }
+
     @SuppressLint("Recycle")
     override fun fetchGalleryFilter(): ArrayList<GalleryFilterItem> {
         val dataList = arrayListOf<GalleryFilterItem>()
-        val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val projection = arrayOf(
-            MediaStore.Images.Media._ID,
-            MediaStore.Images.Media.BUCKET_ID,
-            MediaStore.Images.Media.BUCKET_DISPLAY_NAME
+            ID,
+            BUCKET_ID,
+            BUCKET_NAME
         )
         val selection = StringBuilder()
         val selectionArgs = arrayListOf<String>()
-        val sort = "${MediaStore.Images.Media.DATE_TAKEN} DESC "
+        val sort = "$ID DESC "
 
         var prevPhotoUri: String = ""
         var prevBucketId: String = ""
         var prevBucketName: String = ""
-        var prevSize: Int = -1
+        var prevCount: Int = -1
 
         try {
             loop@ while (true) {
                 val cursor = contentResolver.query(
-                    uri,
+                    CONTENT_URI,
                     projection,
                     if (selection.isEmpty()) null else selection.toString(),
                     if (selectionArgs.isEmpty()) null else selectionArgs.toTypedArray(),
@@ -52,17 +62,11 @@ class CursorProviderImpl(ctx: Context) : CursorProvider {
                 ) ?: break@loop
 
                 if (cursor.moveToLast()) {
-                    val contentId =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media._ID))
-                    val photoUri = Uri.withAppendedPath(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        contentId
-                    ).toString()
-                    val bucketId =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID))
-                    val bucketName =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME))
-                    val size = cursor.count
+                    val contentId = cursor.getString(cursor.getColumnIndex(ID))
+                    val photoUri = Uri.withAppendedPath(CONTENT_URI, contentId).toString()
+                    val bucketId = cursor.getString(cursor.getColumnIndex(BUCKET_ID))
+                    val bucketName = cursor.getString(cursor.getColumnIndex(BUCKET_NAME))
+                    val count = cursor.count
 
                     if (!cursor.isClosed) {
                         cursor.close()
@@ -73,34 +77,34 @@ class CursorProviderImpl(ctx: Context) : CursorProvider {
                         selection.append(" AND ")
                     }
 
-                    selection.append(MediaStore.Images.Media.BUCKET_ID)
+                    selection.append(BUCKET_ID)
                     selection.append(" !=?")
                     selectionArgs.add(bucketId)
 
                     // 앨범명 유효성 검사.
                     if (prevBucketId.isNotEmpty()) {
-                        val diffSize = prevSize - size
-                        prevSize = size
+                        val diffCount = prevCount - count
+                        prevCount = count
                         dataList.add(
                             GalleryFilterItem(
                                 bucketId = prevBucketId,
                                 bucketName = prevBucketName,
                                 photoUri = prevPhotoUri,
-                                size = diffSize,
+                                count = diffCount,
                                 isSelected = false
                             )
                         )
                     }
 
                     // 초기값 세팅
-                    if (prevSize == -1) {
-                        prevSize = size
+                    if (prevCount == -1) {
+                        prevCount = count
                         dataList.add(
                             GalleryFilterItem(
                                 bucketId = Etc.DEFAULT_GALLERY_FILTER_ID,
                                 bucketName = Etc.DEFAULT_GALLERY_FILTER_NAME,
                                 photoUri = photoUri,
-                                size = size,
+                                count = count,
                                 isSelected = true
                             )
                         )
@@ -113,13 +117,13 @@ class CursorProviderImpl(ctx: Context) : CursorProvider {
 
                 } else {
                     // 맨 마지막 앨범 추가
-                    if (prevSize != 0) {
+                    if (prevCount != 0) {
                         dataList.add(
                             GalleryFilterItem(
                                 bucketId = prevBucketId,
                                 bucketName = prevBucketName,
                                 photoUri = prevPhotoUri,
-                                size = prevSize,
+                                count = prevCount,
                                 isSelected = false
                             )
                         )
@@ -140,17 +144,14 @@ class CursorProviderImpl(ctx: Context) : CursorProvider {
 
     override fun fetchGallery(filterId: String): Cursor? {
         JLogger.d("FilterId $filterId")
-        val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        val projection = arrayOf(
-            MediaStore.Images.Media._ID
-        )
+        val projection = arrayOf(ID)
 
-        val sort = "${MediaStore.Images.Media._ID} DESC"
-        val selection = "${MediaStore.Images.Media.BUCKET_ID} ==?"
+        val sort = "$ID DESC"
+        val selection = "$BUCKET_ID ==?"
 
         val isAll: Boolean = filterId == Etc.DEFAULT_GALLERY_FILTER_ID
         return contentResolver.query(
-            uri,
+            CONTENT_URI,
             projection,
             if (isAll) null else selection,
             if (isAll) null else arrayOf(filterId),

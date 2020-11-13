@@ -17,13 +17,13 @@ class GallerySelectedPhotoAdapter(
     private val viewModel: GalleryViewModel
 ) : RecyclerView.Adapter<GallerySelectedPhotoAdapter.ItemSelectedPhotoViewHolder>() {
 
-    private val dataList = arrayListOf<GallerySelectedItem>()
+    private val dataList = arrayListOf<String>()
 
     /**
      * setDataList
      * @param list -> 선택한 사진 리스트
      */
-    fun setDataList(list: ArrayList<GallerySelectedItem>) {
+    fun setDataList(list: ArrayList<String>) {
         dataList.clear()
         dataList.addAll(list)
     }
@@ -37,11 +37,8 @@ class GallerySelectedPhotoAdapter(
     }
 
     override fun onBindViewHolder(holder: ItemSelectedPhotoViewHolder, pos: Int) {
-        if (dataList.size > pos) {
-            dataList[pos].let {
-                holder.binding.imgUrl = it.id
-                holder.binding.pos = it.pos
-            }
+        if(pos < dataList.size) {
+            holder.binding.imgUrl = dataList[pos]
         }
     }
 

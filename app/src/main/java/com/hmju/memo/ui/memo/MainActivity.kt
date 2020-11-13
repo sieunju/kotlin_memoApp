@@ -1,4 +1,4 @@
-package com.hmju.memo.ui.home
+package com.hmju.memo.ui.memo
 
 import android.content.Intent
 import android.os.Bundle
@@ -18,7 +18,6 @@ import com.hmju.memo.define.ToolBarDefine.POS_HOME
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.ui.adapter.MemoListAdapter
 import com.hmju.memo.ui.login.LoginActivity
-import com.hmju.memo.ui.memo.MemoDetailActivity
 import com.hmju.memo.ui.toast.showToast
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.moveMemoDetail

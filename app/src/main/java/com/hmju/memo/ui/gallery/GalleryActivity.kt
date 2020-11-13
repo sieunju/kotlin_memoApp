@@ -115,12 +115,9 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
             startSubmit.observe(this@GalleryActivity, Observer {
                 if (selectedPhotoList.size() > 0) {
                     val intent = Intent()
-                    val list = selectedPhotoList.value.map { it.id }.toList()
-                    val arrayList = arrayListOf<String>()
-                    arrayList.addAll(list)
                     intent.putStringArrayListExtra(
                         ExtraCode.GALLERY_SELECT_IMAGES,
-                        arrayList
+                        selectedPhotoList.value
                     )
                     setResult(RESULT_OK, intent)
                 } else {
@@ -170,12 +167,6 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
                     imgEditListTest.clear()
                 }
 
-            })
-
-            startNotify.observe(this@GalleryActivity, Observer { item ->
-                rvContents.adapter?.let {
-                    it.notifyItemChanged(item.pos + 1)
-                }
             })
 
             start()

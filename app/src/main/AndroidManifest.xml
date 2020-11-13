@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.hmju.memo">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -16,10 +17,11 @@
         android:label="${appLabel}"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:targetApi="m">
 
         <activity
-            android:name=".ui.home.MainActivity"
+            android:name=".ui.memo.MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.Memo"
             android:windowSoftInputMode="adjustPan">
@@ -38,33 +40,44 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.intro.IntroActivity" />
+
+        <activity
+            android:name=".ui.intro.IntroActivity"
+            android:launchMode="singleTop" />
+
         <activity
             android:name=".ui.login.LoginActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Login"
             android:windowSoftInputMode="adjustPan" />
+
         <activity
             android:name=".ui.memo.MemoDetailActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.MemoDetail"
             android:windowSoftInputMode="adjustPan" />
+
         <activity
             android:name=".ui.gallery.GalleryActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Gallery"
             android:windowSoftInputMode="adjustPan" />
+
         <activity
             android:name=".ui.imageEdit.ImageEditActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Memo"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:name=".ui.memo.ImageDetailActivity"
-            android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme">
 
         </activity>

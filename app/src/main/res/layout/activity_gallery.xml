@@ -46,7 +46,7 @@
                         android:layout_gravity="center_vertical"
                         android:text="@{viewModel.selectedFilter.bucketName}"
                         android:textColor="@color/colorTextPrimary"
-                        android:textSize="@dimen/text_size_20"
+                        android:textSize="@dimen/text_size_14"
                         tools:text="전체 보기" />
 
                     <androidx.appcompat.widget.AppCompatImageView

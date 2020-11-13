@@ -13,127 +13,64 @@ import com.bumptech.glide.request.target.Target
 import com.hmju.memo.R
 import com.hmju.memo.define.NetInfo
 import com.hmju.memo.utils.JLogger
+import com.hmju.memo.widget.glide.GlideUtil
 import java.util.*
 
 /**
- * Description : 이미지 로더 Binding Adapter
- *
- * Created by hmju on 2020-06-12
+ * Http Url 로 이미지 가져오는 경우
+ * 사용 함수.
  */
-
-
 @BindingAdapter("bindImg")
 fun bindingImg(
     imgView: AppCompatImageView,
     imgUrl: String?
 ) {
-    val placeHolder = listOf<Int>(
-        R.color.colorPlaceHolder_1,
-        R.color.colorPlaceHolder_2,
-        R.color.colorPlaceHolder_3,
-        R.color.colorPlaceHolder_4
-    )
-    val ran = Random().nextInt(placeHolder.size)
-
     imgUrl?.let {
-        Glide.with(imgView.context)
+        GlideUtil.with()
             .load(getUrl(it))
-            .placeholder(placeHolder[ran])
-            .thumbnail(0.1F)
-            .transform(CenterCrop())
-            .error(R.drawable.bg_res_error)
+            .scaleType(GlideUtil.ScaleType.CENTER_CROP)
             .into(imgView)
     }
 }
 
-@BindingAdapter("bind_img_header")
-fun bindingImgHeader(
-    imgView: AppCompatImageView,
-    imgUrl: String?
-) {
-
-    val placeHolder = listOf(
-        R.color.colorPlaceHolder_1,
-        R.color.colorPlaceHolder_2,
-        R.color.colorPlaceHolder_3,
-        R.color.colorPlaceHolder_4
-    )
-    val ran = Random().nextInt(placeHolder.size)
-
-    imgUrl?.let {
-        Glide.with(imgView.context)
-            .load(getUrl(it))
-            .placeholder(placeHolder[ran])
-            .dontAnimate()
-            .transform(CenterCrop())
-            .error(R.drawable.bg_res_error)
-            .into(imgView)
-    }
-}
-
+/**
+ * 로컬에서 가져오는 경우
+ * 사용 함수.
+ */
 @BindingAdapter("bindImgGallery")
 fun bindingImgGallery(
     imgView: AppCompatImageView,
     imgUrl: String?
 ) {
-    val placeHolder = listOf<Int>(
-        R.color.colorPlaceHolder_1,
-        R.color.colorPlaceHolder_2,
-        R.color.colorPlaceHolder_3,
-        R.color.colorPlaceHolder_4
-    )
-    val ran = Random().nextInt(placeHolder.size)
-
     imgUrl?.let {
-        Glide.with(imgView.context)
+        GlideUtil.with()
             .load(it)
-            .placeholder(placeHolder[ran])
-            .thumbnail(0.1F)
-            .error(R.drawable.bg_res_error)
-            .transform(CenterCrop())
-//            .addListener(glideLoggerListener())
+            .scaleType(GlideUtil.ScaleType.CENTER_CROP)
+            .failDrawable(R.drawable.bg_res_error)
             .into(imgView)
     }
 }
 
 @BindingAdapter("bindUri")
-fun bindingImgSrc(
+fun bindingImgMj(
     imgView: AppCompatImageView,
     imgUri: String?
 ) {
-    val placeHolder = listOf<Int>(
-        R.color.colorPlaceHolder_1,
-        R.color.colorPlaceHolder_2,
-        R.color.colorPlaceHolder_3,
-        R.color.colorPlaceHolder_4
-    )
-    val ran = Random().nextInt(placeHolder.size)
 
-    imgUri?.let{
-        Glide.with(imgView)
+    imgUri?.let {
+        GlideUtil.with()
             .load(it)
-            .placeholder(placeHolder[ran])
-            .thumbnail(0.1F)
-            .error(R.drawable.bg_res_error)
-            .fitCenter()
+            .scaleType(GlideUtil.ScaleType.FIT_CENTER)
+            .failDrawable(R.drawable.bg_res_error)
             .into(imgView)
     }
-
-//    imgUri?.let{
-//        try {
-//            val uri = Uri.parse(it)
-//            imgView.setImageURI(uri)
-//        } catch (ex: Exception) {
-//
-//        }
-//    }
 }
 
 /**
  * Glide ImageLoader
  * 각 Url 맞게 가공해서 리턴 하는 함수.
  */
-fun getUrl(url: String?): String? {
+fun getUrl(url: String?): String {
     url?.let {
         return when {
             it.startsWith("http") -> {
@@ -155,37 +92,5 @@ fun getUrl(url: String?): String? {
         }
     } ?: run {
         return ""
-    }
-}
-
-fun glideLoggerListener(): RequestListener<Drawable> {
-    return object : RequestListener<Drawable> {
-
-        override fun onResourceReady(
-            resource: Drawable?,
-            model: Any?,
-            target: Target<Drawable>?,
-            dataSource: DataSource?,
-            isFirstResource: Boolean
-        ): Boolean {
-//            if (resource is BitmapDrawable) {
-//                val bitmap = resource.bitmap
-//                JLogger.d("onResourceReady ${bitmap.byteCount} Width ${bitmap.width} Height ${bitmap.height}")
-//            }
-
-            JLogger.d("onResourceReady ${resource.toString()}")
-            return false
-        }
-
-        override fun onLoadFailed(
-            e: GlideException?,
-            model: Any?,
-            target: Target<Drawable>?,
-            isFirstResource: Boolean
-        ): Boolean {
-            JLogger.d("onLoadFailed Fail${e?.message} \tModel\t$model")
-            return false
-        }
-
     }
 }

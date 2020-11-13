@@ -17,6 +17,7 @@ import com.hmju.memo.ui.bottomsheet.CheckableBottomSheet
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewmodels.MainViewModel
 import com.hmju.memo.widget.bottomToolbar.BottomToolbar
+import java.text.DecimalFormat
 
 /**
  * Description : 공통 Binding Adapter
@@ -47,6 +48,15 @@ fun bindingHtmlText(
             textView.text = Html.fromHtml(it, Html.FROM_HTML_MODE_LEGACY)
         }
     }
+}
+
+@BindingAdapter("commaText")
+fun bindingCommaText(
+    textView: AppCompatTextView,
+    number : Int
+) {
+    val formatter = DecimalFormat("###,###")
+    textView.text = formatter.format(number)
 }
 
 class OnSingleClickListener(private val onSingleCLick: (View) -> Unit) : View.OnClickListener {

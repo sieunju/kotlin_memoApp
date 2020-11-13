@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hmju.memo.R
-import com.hmju.memo.model.gallery.GallerySelectedItem
+import com.hmju.memo.model.gallery.GalleryFilterItem
 import com.hmju.memo.ui.adapter.GalleryAdapter
 import com.hmju.memo.ui.adapter.GallerySelectedPhotoAdapter
 import com.hmju.memo.ui.decoration.GalleryItemDecoration
@@ -16,11 +16,8 @@ import com.hmju.memo.ui.decoration.HorizontalItemDecoration
 import com.hmju.memo.viewmodels.GalleryViewModel
 
 /**
- * Description : Album 및 Camera Binding Adapter
- *
- * Created by hmju on 2020-09-17
+ * Gallery Contents Adapter
  */
-
 @BindingAdapter(value = ["viewModel", "galleryCursor"])
 fun setGalleryListAdapter(
     view: RecyclerView,
@@ -52,16 +49,32 @@ fun setGalleryListAdapter(
     }
 }
 
+@BindingAdapter(value = ["viewModel", "galleryFilterList"])
+fun setGalleryFilterAdapter(
+    view: RecyclerView,
+    viewModel: GalleryViewModel,
+    dataList: ArrayList<GalleryFilterItem>
+) {
+    view.adapter?.let {
+
+    } ?: run {
+
+    }
+}
+
+/**
+ * Gallery Selected Photo Adapter
+ */
 @BindingAdapter(value = ["viewModel", "selectedPhotoList"])
 fun setSelectedPhotoListAdapter(
     view: RecyclerView,
     viewModel: GalleryViewModel,
-    dataList: ArrayList<GallerySelectedItem>
+    dataList: ArrayList<String>
 ) {
     view.adapter?.let { adapter ->
         if (adapter is GallerySelectedPhotoAdapter) {
             adapter.setDataList(dataList)
-            ObjectAnimator.ofFloat(view, View.ALPHA,0.5F,1F).apply {
+            ObjectAnimator.ofFloat(view, View.ALPHA, 0.5F, 1F).apply {
                 duration = 500
                 start()
             }

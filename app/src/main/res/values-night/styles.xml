@@ -11,12 +11,11 @@
         <item name="android:colorBackground">@color/colorBackground</item>
         <item name="android:windowBackground">@color/colorBackground</item>
 
-        <item name="android:navigationBarColor">@color/colorNavigation</item>
+        <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
     </style>
 
     <style name="AppTheme.Memo">
         <item name="android:statusBarColor" tools:ignore="NewApi">@color/color_transparent</item>
-        <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
     </style>
 
     <style name="AppTheme.Login">
@@ -25,12 +24,10 @@
 
     <style name="AppTheme.MemoDetail">
         <item name="android:statusBarColor" tools:ignore="NewApi">@color/colorBackground</item>
-        <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
     </style>
 
     <style name="AppTheme.Gallery">
         <item name="android:statusBarColor" tools:ignore="NewApi">@color/colorStatusBar</item>
-        <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
     </style>
 
 

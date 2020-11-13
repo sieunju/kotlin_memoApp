@@ -27,7 +27,7 @@ import androidx.lifecycle.OnLifecycleEvent
 import androidx.navigation.NavController
 import com.hmju.memo.R
 import com.hmju.memo.define.ToolBarDefine
-import com.hmju.memo.ui.home.MainActivity
+import com.hmju.memo.ui.memo.MainActivity
 import com.hmju.memo.ui.memo.MemoDetailActivity
 import kotlin.math.abs
 import kotlin.math.roundToInt
