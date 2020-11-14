@@ -12,6 +12,10 @@
         <variable
             name="dataList"
             type="ArrayList&lt;GalleryFilterItem>" />
+
+        <variable
+            name="listener"
+            type="com.hmju.memo.ui.gallery.SelectedFilterBottomSheet.Listener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,8 +27,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_size_20"
             android:splitMotionEvents="false"
+            app:galleryFilterList="@{dataList}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toTopOf="parent"
+            app:listener="@{listener}"
             tools:itemCount="3"
             tools:listitem="@layout/item_gallery_filter" />
 

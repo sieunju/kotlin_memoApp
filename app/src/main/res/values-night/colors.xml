@@ -40,4 +40,6 @@
     <color name="colorNormalIndicator">#6A6969</color>
     <color name="colorCheckedIndicator">#EAE4E4</color>
 
+    <color name="colorLine">#DFDCDC</color>
+
 </resources>

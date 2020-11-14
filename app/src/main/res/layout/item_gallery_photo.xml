@@ -12,10 +12,6 @@
             type="String" />
 
         <variable
-            name="pos"
-            type="Integer" />
-
-        <variable
             name="viewModel"
             type="com.hmju.memo.viewmodels.GalleryViewModel" />
     </data>

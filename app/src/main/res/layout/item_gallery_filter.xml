@@ -12,14 +12,15 @@
             type="GalleryFilterItem" />
 
         <variable
-            name="viewModel"
-            type="com.hmju.memo.viewmodels.GalleryViewModel" />
+            name="listener"
+            type="com.hmju.memo.ui.gallery.SelectedFilterBottomSheet.Listener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/size_5">
+        android:layout_margin="@dimen/size_5"
+        app:turtleClick="@{()->listener.onItemSelected(item)}">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imgThumb"

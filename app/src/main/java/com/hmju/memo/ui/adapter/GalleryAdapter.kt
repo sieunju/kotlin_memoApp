@@ -65,7 +65,6 @@ class GalleryAdapter(
             }
 
             if (holder is PhotoViewHolder) {
-                holder.binding.pos = dataPos
                 holder.binding.imgUrl = photoList[dataPos]
             }
 

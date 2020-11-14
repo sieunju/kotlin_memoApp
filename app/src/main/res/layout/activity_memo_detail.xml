@@ -14,8 +14,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:background="@color/colorBackground">
+        android:layout_height="match_parent">
 
         <!-- 선택한 우선 순위. -->
         <View
@@ -25,16 +24,20 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/svContents"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/clBottom"
             app:layout_constraintTop_toBottomOf="@+id/vSelectedTag">
 
             <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/llContents"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/vSelectedTag">
 
                 <!-- 이미지 레이아웃 영역  -->
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -117,56 +120,58 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_size_10"
-                    android:layout_marginTop="@dimen/margin_size_10"
-                    android:layout_marginRight="@dimen/margin_size_10"
-                    android:layout_marginBottom="@dimen/margin_size_10">
-
-                    <!-- 더보기 버튼 -->
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="@dimen/size_40"
-                        android:layout_height="@dimen/size_40"
-                        android:layout_marginStart="@dimen/margin_size_5"
-                        android:layout_marginLeft="@dimen/margin_size_5"
-                        android:adjustViewBounds="true"
-                        android:padding="@dimen/padding_size_5"
-                        android:src="@drawable/ic_more_vertical"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:turtleClick="@{()->viewModel.moveMoreDialog()}"
-                        tools:src="@drawable/ic_more_vertical" />
-
-                    <!-- 수정 날짜. -->
-                    <com.google.android.material.textview.MaterialTextView
-                        style="@style/ContentsText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@{viewModel.regDtm}"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="수정: 09.01. 15:00" />
-
-                    <!-- 수정 버튼 -->
-                    <com.google.android.material.button.MaterialButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@{viewModel.manageNo > 0 ? @string/str_change: @string/str_add }"
-                        android:textColor="@color/colorTextWhite"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:turtleClick="@{()->viewModel.postMemo()}"
-                        tools:text="수정" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.core.widget.NestedScrollView>
+
+        <!-- 하단 버튼 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clBottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_size_10"
+            android:layout_marginRight="@dimen/margin_size_10"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <!-- 더보기 버튼 -->
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/size_40"
+                android:layout_height="@dimen/size_40"
+                android:layout_marginStart="@dimen/margin_size_5"
+                android:layout_marginLeft="@dimen/margin_size_5"
+                android:adjustViewBounds="true"
+                android:padding="@dimen/padding_size_5"
+                android:src="@drawable/ic_more_vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:turtleClick="@{()->viewModel.moveMoreDialog()}"
+                tools:src="@drawable/ic_more_vertical" />
+
+            <!-- 수정 날짜. -->
+            <com.google.android.material.textview.MaterialTextView
+                style="@style/ContentsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.regDtm}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="수정: 09.01. 15:00" />
+
+            <!-- 수정 버튼 -->
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.manageNo > 0 ? @string/str_change: @string/str_add }"
+                android:textColor="@color/colorTextWhite"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:turtleClick="@{()->viewModel.postMemo()}"
+                tools:text="수정" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

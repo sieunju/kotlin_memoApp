@@ -5,19 +5,21 @@ import android.database.ContentObserver
 import android.database.Cursor
 import android.os.Handler
 import android.os.Looper
+import android.os.Message
 import android.provider.MediaStore
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.convenience.*
+import com.hmju.memo.define.Etc
 import com.hmju.memo.model.gallery.GalleryFilterItem
-import com.hmju.memo.model.gallery.GallerySelectedItem
 import com.hmju.memo.utils.CursorProvider
 import com.hmju.memo.utils.ImageFileProvider
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.ResourceProvider
 import io.reactivex.Flowable
+import java.lang.ref.WeakReference
 
 /**
  * Description : 앨범 및 카메라 ViewModel Class
@@ -32,7 +34,21 @@ class GalleryViewModel(
 ) : BaseViewModel() {
 
     companion object {
-        val tmpGallerySelectItem = GallerySelectedItem(id = "", pos = -1)
+        val LAST_EXECUTE_DELAY: Long = 500
+        val MSG_GALLERY_UPDATE = 1
+    }
+
+    @SuppressLint("HandlerLeak")
+    inner class LastExecute(viewModel: BaseViewModel) : Handler() {
+        private val weakRef : WeakReference<BaseViewModel> = WeakReference<BaseViewModel>(viewModel)
+
+        override fun handleMessage(msg: Message) {
+            if(weakRef.get() == null ) return
+
+            if (msg.what == MSG_GALLERY_UPDATE) {
+                fetchFilter()
+            }
+        }
     }
 
     // 갤러리에서 사진이 추가 / 삭제 되는 경우 갱신 처리.
@@ -40,7 +56,8 @@ class GalleryViewModel(
         return@lazy object : ContentObserver(Handler(Looper.getMainLooper())) {
             override fun onChange(selfChange: Boolean) {
                 super.onChange(selfChange)
-                fetchFilter();
+                lastExecute.removeMessages(MSG_GALLERY_UPDATE)
+                lastExecute.sendEmptyMessageDelayed(MSG_GALLERY_UPDATE, LAST_EXECUTE_DELAY)
             }
         }
     }
@@ -49,6 +66,7 @@ class GalleryViewModel(
     val startSubmit = SingleLiveEvent<Unit>()
     val startFilter = SingleLiveEvent<Unit>()
     val startImageEdit = SingleLiveEvent<String>()
+    val lastExecute = LastExecute(this)
 
     private val _filterList = ListMutableLiveData<GalleryFilterItem>() // 필터 영역
     val filterList: ListMutableLiveData<GalleryFilterItem>
@@ -61,21 +79,6 @@ class GalleryViewModel(
     val selectedPhotoList: ListMutableLiveData<String>
         get() = _selectedPhotoList
 
-    fun resetFilter() {
-        _filterList.value.map { it.isSelected = false }
-    }
-
-    fun selectedFilter(id: String) {
-        _filterList.value.forEach {
-            if (it.bucketId == id) {
-                it.isSelected = true
-                selectedFilter.value = it
-                return@forEach
-
-            }
-        }
-    }
-
     fun start() {
         fetchFilter()
 
@@ -87,6 +90,14 @@ class GalleryViewModel(
             )
     }
 
+    fun selectedFilter(item: GalleryFilterItem): Boolean {
+        if (item != selectedFilter.value) {
+            _selectedFilter.value = item
+            return true
+        }
+        return false
+    }
+
     /**
      * 갤러리 모든 앨범 가져오는 함수.
      *
@@ -96,14 +107,14 @@ class GalleryViewModel(
         launch {
             Flowable.fromCallable {
                 val filterList = provider.fetchGalleryFilter()
-                var bucketId = "ALL"
-                filterList.find { it.isSelected }?.let { selectedItem ->
-                    _selectedFilter.postValue(selectedItem)
-                    bucketId = selectedItem.bucketId
-                }
+                // 초기값 세팅.
+                filterList.find { it.bucketId == Etc.DEFAULT_GALLERY_FILTER_ID }
+                    ?.let { selectedItem ->
+                        _selectedFilter.postValue(selectedItem)
+                    }
                 _filterList.postValue(filterList)
 
-                provider.fetchGallery(filterId = bucketId)
+                provider.fetchGallery(filterId = Etc.DEFAULT_GALLERY_FILTER_ID)
             }
                 .compute()
                 .ui()
@@ -161,8 +172,9 @@ class GalleryViewModel(
     }
 
     fun onSelect(id: String) {
-        onSelect(null,id)
+        onSelect(null, id)
     }
+
     /**
      * 갤러리에서 사진 선택 및 해제시 호출하는 함수.
      * @param id -> 갤러리 콘텐츠 아이디
@@ -172,12 +184,12 @@ class GalleryViewModel(
         if (selectedPhotoList.contains(id)) {
             selectedPhotoList.postRemove(id)
 
-            view?.visibility = View.VISIBLE
+            view?.visibility = View.GONE
         } else {
             // 사진 추가 가능한지 여부
             if (limitImageSize > selectedPhotoList.size()) {
                 _selectedPhotoList.postAdd(id)
-                view?.visibility = View.GONE
+                view?.visibility = View.VISIBLE
             } else {
                 startToast.value = resProvider.getString(R.string.str_info_file_max_cnt)
             }

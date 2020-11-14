@@ -11,15 +11,18 @@ import com.hmju.memo.BR
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseActivity
 import com.hmju.memo.databinding.ActivityGalleryBinding
-import com.hmju.memo.define.*
+import com.hmju.memo.define.ExtraCode
+import com.hmju.memo.define.NetworkState
+import com.hmju.memo.define.RequestCode
+import com.hmju.memo.define.ResultCode
 import com.hmju.memo.dialog.CommonDialog
-import com.hmju.memo.ui.bottomsheet.CheckableBottomSheet
 import com.hmju.memo.ui.imageEdit.ImageEditActivity
 import com.hmju.memo.ui.toast.showToast
-import com.hmju.memo.utils.*
+import com.hmju.memo.utils.JLogger
+import com.hmju.memo.utils.moveCamera
+import com.hmju.memo.utils.startAct
 import com.hmju.memo.viewmodels.GalleryViewModel
 import com.tbruyelle.rxpermissions2.RxPermissions
-import kotlinx.android.synthetic.main.activity_gallery.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.KoinComponent
 import org.koin.core.parameter.parametersOf
@@ -40,7 +43,8 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
 
     override val bindingVariable = BR.viewModel
 
-    private lateinit var selectDialog: CheckableBottomSheet
+    //    private lateinit var selectDialog: CheckableBottomSheet
+    private lateinit var selectedFilterDialog: SelectedFilterBottomSheet
 
     private var photoUri: Uri? = null
     private val imgEditListTest = arrayListOf<String>()
@@ -131,28 +135,15 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
             })
 
             startFilter.observe(this@GalleryActivity, Observer {
-                val list = arrayListOf<CheckableBottomSheet.CheckableBottomSheetItem>()
-                filterList.value.forEach {
-                    list.add(
-                        CheckableBottomSheet.CheckableBottomSheetItem(
-                            id = it.bucketId,
-                            name = it.bucketName,
-                            isSelected = it.isSelected
-                        )
-                    )
-                }
-
-                selectDialog = CheckableBottomSheet.newInstance(
-                    resources.getDimensionPixelOffset(R.dimen.size_200),
-                    list
-                ) { pos, id ->
-                    resetFilter()
-                    selectedFilter(id)
-
-                    fetchGallery()
-                    selectDialog.dismiss()
+                selectedFilterDialog = SelectedFilterBottomSheet.newInstance(
+                    filterList.value
+                ) { item ->
+                    if (selectedFilter(item)) {
+                        fetchGallery()
+                    }
+                    selectedFilterDialog.dismiss()
                 }.also {
-                    it.show(supportFragmentManager, "filterDialog")
+                    it.show(supportFragmentManager, "selectedFilterDialog")
                 }
             })
 

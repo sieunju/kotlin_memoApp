@@ -90,8 +90,7 @@ class CursorProviderImpl(ctx: Context) : CursorProvider {
                                 bucketId = prevBucketId,
                                 bucketName = prevBucketName,
                                 photoUri = prevPhotoUri,
-                                count = diffCount,
-                                isSelected = false
+                                count = diffCount
                             )
                         )
                     }
@@ -104,8 +103,7 @@ class CursorProviderImpl(ctx: Context) : CursorProvider {
                                 bucketId = Etc.DEFAULT_GALLERY_FILTER_ID,
                                 bucketName = Etc.DEFAULT_GALLERY_FILTER_NAME,
                                 photoUri = photoUri,
-                                count = count,
-                                isSelected = true
+                                count = count
                             )
                         )
                     }
@@ -123,8 +121,7 @@ class CursorProviderImpl(ctx: Context) : CursorProvider {
                                 bucketId = prevBucketId,
                                 bucketName = prevBucketName,
                                 photoUri = prevPhotoUri,
-                                count = prevCount,
-                                isSelected = false
+                                count = prevCount
                             )
                         )
                     }

@@ -3,6 +3,7 @@ package com.hmju.memo.ui.bindingadapter
 import android.animation.ObjectAnimator
 import android.database.Cursor
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,9 +11,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hmju.memo.R
 import com.hmju.memo.model.gallery.GalleryFilterItem
 import com.hmju.memo.ui.adapter.GalleryAdapter
+import com.hmju.memo.ui.adapter.GalleryFilterAdapter
 import com.hmju.memo.ui.adapter.GallerySelectedPhotoAdapter
 import com.hmju.memo.ui.decoration.GalleryItemDecoration
 import com.hmju.memo.ui.decoration.HorizontalItemDecoration
+import com.hmju.memo.ui.decoration.VerticalLineItemDecoration
+import com.hmju.memo.ui.gallery.SelectedFilterBottomSheet
 import com.hmju.memo.viewmodels.GalleryViewModel
 
 /**
@@ -49,16 +53,27 @@ fun setGalleryListAdapter(
     }
 }
 
-@BindingAdapter(value = ["viewModel", "galleryFilterList"])
+@BindingAdapter(value = ["listener", "galleryFilterList"])
 fun setGalleryFilterAdapter(
     view: RecyclerView,
-    viewModel: GalleryViewModel,
+    listener: SelectedFilterBottomSheet.Listener,
     dataList: ArrayList<GalleryFilterItem>
 ) {
-    view.adapter?.let {
-
+    view.adapter?.let { adapter ->
+        if (adapter is GalleryFilterAdapter) {
+            adapter.setDataList(dataList)
+        }
     } ?: run {
-
+        GalleryFilterAdapter(listener).apply {
+            view.adapter = this
+            view.addItemDecoration(
+                VerticalLineItemDecoration(
+                    view.context.resources.getDimensionPixelOffset(R.dimen.size_5),
+                    ContextCompat.getDrawable(view.context, R.drawable.divider_vertical_size_1)!!
+                )
+            )
+            setDataList(dataList)
+        }
     }
 }
 

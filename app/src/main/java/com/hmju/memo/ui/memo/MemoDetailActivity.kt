@@ -169,6 +169,10 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoDetailVie
             startFinish.observe(this@MemoDetailActivity, Observer {
                 onBackPressed()
             })
+
+            startKeyboardHide.observe(this@MemoDetailActivity, Observer {
+                FluidContentResize.closeSoftKeyboard()
+            })
         }
     }
 

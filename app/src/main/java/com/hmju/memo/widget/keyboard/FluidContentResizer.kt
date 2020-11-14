@@ -3,25 +3,38 @@ package com.hmju.memo.widget.keyboard
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.app.Activity
+import android.app.Service
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.hmju.memo.utils.JLogger
 
 object FluidContentResize {
 
     private var heightAnimator: ValueAnimator = ObjectAnimator()
+    private var isKeyboardShow = false
+    private lateinit var imm : InputMethodManager
 
     fun listen(activity: Activity) {
         val viewHolder = ActivityViewHolder.createFrom(activity)
+        imm = activity.getSystemService(Service.INPUT_METHOD_SERVICE) as InputMethodManager
 
         KeyboardVisibilityDetector.listen(viewHolder) {
-            JLogger.d("키보드가 올라옵니다. " + it.contentHeight)
+            isKeyboardShow = it.visible
+            JLogger.d("Keyboard Changed ${it.contentHeight} NonLayout ${it.contentHeightBeforeResize} Visible ${it.visible}")
             animateHeight(viewHolder, it)
         }
         // 화면 꺼질때.
         viewHolder.onDetach {
             heightAnimator.cancel()
             heightAnimator.removeAllUpdateListeners()
+        }
+    }
+
+    fun closeSoftKeyboard() {
+        if(isKeyboardShow) {
+            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY,0)
+            isKeyboardShow = false
         }
     }
 

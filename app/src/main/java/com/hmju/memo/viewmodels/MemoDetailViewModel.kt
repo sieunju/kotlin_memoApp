@@ -68,6 +68,7 @@ class MemoDetailViewModel(
     val startSelectedTagColor = SingleLiveEvent<Int>()
     val startImageDetail = SingleLiveEvent<Int>()
     val startFinish = SingleLiveEvent<Boolean>()
+    val startKeyboardHide = SingleLiveEvent<Unit>()
 
     var isDelete = false
 
@@ -148,7 +149,6 @@ class MemoDetailViewModel(
         } else {
             JLogger.d("변경점이 없습니다.!")
         }
-
     }
 
     /**
