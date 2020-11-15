@@ -69,9 +69,6 @@
         <attr name="minDistRequestDisallowParent" format="dimension" />
     </declare-styleable>
 
-    <!-- [s] FlexibleImageView Attrs -->
-    <declare-styleable name="FlexibleImageView"></declare-styleable>
-
     <!-- Declare custom theme attributes that allow changing which styles are
          used for button bars depending on the API level.
          ?android:attr/buttonBarStyle is new as of API 11 so this is
@@ -80,7 +77,6 @@
         <attr name="metaButtonBarStyle" format="reference" />
         <attr name="metaButtonBarButtonStyle" format="reference" />
     </declare-styleable>
-    <!-- [e] FlexibleImageView Attrs -->
 
 
 </resources>

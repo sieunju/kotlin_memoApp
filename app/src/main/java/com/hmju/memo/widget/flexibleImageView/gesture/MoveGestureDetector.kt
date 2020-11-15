@@ -34,13 +34,8 @@ class MoveGestureDetector(private val ctx: Context, private val listener: OnMove
 
     private lateinit var currentFocusInternal: PointF
     private lateinit var prevFocusInternal: PointF
-    lateinit var focusDelta: PointF
-
+    lateinit var currentFocus: PointF
     private val focusExternal = PointF()
-    val focusX: Float
-        get() = focusExternal.x
-    val focusY: Float
-        get() = focusExternal.y
 
     @SuppressLint("Recycle")
     override fun handleStartProgressEvent(actionCode: Int, event: MotionEvent?) {
@@ -105,7 +100,7 @@ class MoveGestureDetector(private val ctx: Context, private val listener: OnMove
             // Focus external
             // - Prevent skipping of focus delta when a finger is added or removed
             val skipNextMoveEvent: Boolean = prev.pointerCount != event.pointerCount
-            focusDelta = if (skipNextMoveEvent) FOCUS_DELTA_ZERO
+            currentFocus = if (skipNextMoveEvent) FOCUS_DELTA_ZERO
             else PointF(
                 currentFocusInternal.x - prevFocusInternal.x,
                 currentFocusInternal.y - prevFocusInternal.y
@@ -114,8 +109,8 @@ class MoveGestureDetector(private val ctx: Context, private val listener: OnMove
 
         // - Don't directly use mFocusInternal (or skipping will occur). Add
         //      unskipped delta values to mFocusExternal instead.
-        focusExternal.x += focusDelta.x
-        focusExternal.y += focusDelta.y
+        focusExternal.x += currentFocus.x
+        focusExternal.y += currentFocus.y
     }
 
 

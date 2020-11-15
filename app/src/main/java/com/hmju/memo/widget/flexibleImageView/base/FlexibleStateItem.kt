@@ -22,21 +22,25 @@ data class FlexibleStateItem(
         get() = scale * flipX
     val scaleY: Float
         get() = scale * flipY
+    var minScale: Float = -1F
+    var imgWidth: Int = -1
+    var imgHeight: Int = -1
+
+    val currentImgWidth: Float
+        get() = if(imgWidth == -1) -1F else imgWidth * scale
+    val currentImgHeight: Float
+        get() = if(imgHeight == -1) -1F else imgHeight * scale
 
     fun reset() {
-        scale = 1.0F
+        scale = if (minScale != -1F) {
+            minScale
+        } else {
+            1.0F
+        }
         focusX = 0F
         focusY = 0F
         rotationDegree = 0F
         flipX = 1F
         flipY = 1F
     }
-
-//    fun scaleX(): Float {
-//        return scale * flipX
-//    }
-//
-//    fun scaleY(): Float {
-//        return scale * flipY
-//    }
 }
