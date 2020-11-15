@@ -55,6 +55,8 @@ class MemoDetailViewModel(
 
     private val isChanged: Boolean
         get() {
+            if(title.value.isEmpty() && contents.value.isEmpty()) return false
+
             return title.value != originData?.title ||
                     contents.value != originData?.contents ||
                     selectTag.value != originData?.tag
@@ -145,7 +147,13 @@ class MemoDetailViewModel(
     fun postMemo() {
         if (isChanged) {
             JLogger.d("변경된게 있습니다. ")
-            postMemo { null }
+            postMemo {isSuccess ->
+                if(isSuccess) {
+                    onSuccess()
+                } else {
+                    onError()
+                }
+            }
         } else {
             JLogger.d("변경점이 없습니다.!")
         }
@@ -155,7 +163,7 @@ class MemoDetailViewModel(
      * Memo Add and Update
      * @param callBack Api Success CallBack.
      */
-    private fun postMemo(callBack: (Boolean) -> Unit?) {
+    private fun postMemo(callBack: (Boolean) -> Unit) {
         launch {
             if (manageNo.value == -1) apiService.postMemo(
                 MemoItemForm(
@@ -181,16 +189,17 @@ class MemoDetailViewModel(
 
                     // 메모를 새로 추가 하는 경우.
                     if (manageNo.value == -1 && it.manageNo != 0) {
+                        JLogger.d("Add Memo")
                         _manageNo.value = it.manageNo
-                        callBack.invoke(true)
-                    } else if (manageNo.value == -1) {
-                        callBack.invoke(false)
+                    } else {
+                        // Update 경우
+                        JLogger.d("Update Memo")
+
                     }
-                    onSuccess()
+                    callBack.invoke(true)
                 }, {
                     JLogger.d("PostMemo Error ${it.message}")
                     callBack.invoke(false)
-                    onError()
                 })
         }
     }
