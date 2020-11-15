@@ -30,32 +30,41 @@
                 android:layout_width="match_parent"
                 android:layout_height="?android:actionBarSize">
 
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_size_5"
-                    android:orientation="horizontal"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                <TableLayout
+                    android:layout_width="@dimen/size_200"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/padding_size_10"
+                    android:shrinkColumns="0"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
                     app:turtleClick="@{()->viewModel.showFilterSheet()}">
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="@{viewModel.selectedFilter.bucketName}"
-                        android:textColor="@color/colorTextPrimary"
-                        android:textSize="@dimen/text_size_14"
-                        tools:text="전체 보기" />
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical">
 
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="@dimen/size_30"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        android:src="@drawable/ic_arrow_down" />
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="@{viewModel.selectedFilter.bucketName}"
+                            android:textColor="@color/colorTextPrimary"
+                            android:textSize="@dimen/text_size_14"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="최근 항목" />
 
-                </androidx.appcompat.widget.LinearLayoutCompat>
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:layout_width="@dimen/size_30"
+                            android:layout_height="match_parent"
+                            android:adjustViewBounds="true"
+                            android:src="@drawable/ic_arrow_down" />
+
+                    </TableRow>
+                </TableLayout>
 
                 <!-- 전송 버튼 -->
                 <com.google.android.material.button.MaterialButton

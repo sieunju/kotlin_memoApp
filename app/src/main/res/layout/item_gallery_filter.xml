@@ -39,7 +39,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/size_5"
             android:shrinkColumns="0"
-            android:stretchColumns="0"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/imgThumb"
             app:layout_constraintRight_toRightOf="parent"
@@ -52,7 +51,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:gravity="left"
                     android:maxLines="1"
                     android:text="@{item.bucketName}"
                     android:textSize="@dimen/text_size_20"
@@ -64,14 +62,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_size_5"
                     android:gravity="right"
-                    android:maxLines="1"
+                    android:ellipsize="none"
                     android:textSize="@dimen/text_size_20"
                     app:commaText="@{item.count}"
                     tools:text="3,000" />
 
-
             </TableRow>
-
         </TableLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
