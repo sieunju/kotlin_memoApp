@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "224673435573",
+    "firebase_url": "https://memoapplication-45c5b.firebaseio.com",
+    "project_id": "memoapplication-45c5b",
+    "storage_bucket": "memoapplication-45c5b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:224673435573:android:3d9929f89372d8309993fc",
+        "android_client_info": {
+          "package_name": "com.hmju.memo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "224673435573-13n7c3pvo0d4nqln595viamdlpnmsu30.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXZe_2B4fAx4rtgSNn612VD_2q5mdgFHc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "224673435573-13n7c3pvo0d4nqln595viamdlpnmsu30.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

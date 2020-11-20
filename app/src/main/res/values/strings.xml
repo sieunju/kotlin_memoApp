@@ -79,4 +79,10 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
+    <!-- Firebase Messaging -->
+    <string name="notification_channel_id">memo_channel_id</string>
+    <string name="notification_channel_name">푸시 알림</string>
+    <string name="notification_channel_description">푸시 알림 입니다.</string>
+
+
 </resources>

@@ -1,5 +1,7 @@
 package com.hmju.memo.ui.memo
 
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
@@ -114,7 +116,15 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(),
 
             // API 호출.
             start()
+
+            pushDeepLink(intent)
         }
+    }
+
+    private fun pushDeepLink(intent: Intent) : Boolean{
+        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        manager.cancelAll()
+        return true
     }
 
     override fun onBackPressed() {

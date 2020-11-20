@@ -1,5 +1,7 @@
 package com.hmju.memo.di
 
+import com.hmju.memo.fcm.FCMProvider
+import com.hmju.memo.fcm.FCMProviderImpl
 import com.hmju.memo.utils.*
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
@@ -27,5 +29,9 @@ val appModule = module {
 
     factory<CursorProvider> {
         CursorProviderImpl(androidContext())
+    }
+
+    factory<FCMProvider> {
+        FCMProviderImpl(androidContext())
     }
 }

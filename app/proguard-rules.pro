@@ -7,10 +7,10 @@
 -keepclassmembers class com.hmju.memo.model.** { *;}
 
 # Remove Log Disable
--assumenosideeffects class android.util.Log {
-    public static int d(...);
-    public static int e(...);
-}
+#-assumenosideeffects class android.util.Log {
+#    public static int d(...);
+#    public static int e(...);
+#}
 # [e] Common Setting ==============================================================================
 
 # [s] Retrofit Proguard ===========================================================================

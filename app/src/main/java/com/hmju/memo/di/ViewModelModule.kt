@@ -14,7 +14,7 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
 
-    viewModel { MainViewModel(get(), get(), get()) }
+    viewModel { MainViewModel(get(), get(), get(), get()) }
     viewModel { LoginViewModel(get(), get()) }
 
     viewModel { (limitSize: Int) ->

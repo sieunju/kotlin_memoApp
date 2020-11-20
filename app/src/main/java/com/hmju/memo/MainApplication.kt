@@ -13,11 +13,13 @@ import com.hmju.memo.di.apiModule
 import com.hmju.memo.di.appModule
 import com.hmju.memo.di.prefModule
 import com.hmju.memo.di.viewModelModule
+import com.hmju.memo.fcm.FCMProvider
 import com.hmju.memo.ui.memo.MainActivity
 import com.hmju.memo.ui.toast.showToast
 import com.hmju.memo.utils.JLogger
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
+import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import java.io.IOException
@@ -57,6 +59,10 @@ class MainApplication : MultiDexApplication() {
 
         registerActivityLifecycleCallbacks(activityLifecycleCallbacks)
         registerComponentCallbacks(componentCallbacks)
+
+        // FCM Channel
+        val fcmProvider : FCMProvider by inject()
+        fcmProvider.createNotificationChannel()
     }
 
     /**

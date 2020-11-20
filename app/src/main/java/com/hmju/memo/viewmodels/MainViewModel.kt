@@ -8,13 +8,16 @@ import androidx.paging.PagedList
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.convenience.SimpleDisposableSubscriber
 import com.hmju.memo.convenience.SingleLiveEvent
+import com.hmju.memo.convenience.netIo
 import com.hmju.memo.define.NetworkState
+import com.hmju.memo.fcm.FCMProvider
 import com.hmju.memo.model.form.MemoListParam
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.repository.network.NetworkDataSource
 import com.hmju.memo.repository.network.paging.PagingModel
 import com.hmju.memo.repository.preferences.AccountPref
+import com.hmju.memo.utils.JLogger
 import io.reactivex.BackpressureStrategy
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -28,7 +31,8 @@ import io.reactivex.subjects.Subject
 class MainViewModel(
     private val actPref: AccountPref,
     private val networkDataSource: NetworkDataSource,
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    private val fcmProvider: FCMProvider
 ) : BaseViewModel() {
 
     val startLogin = SingleLiveEvent<Unit>()
@@ -67,6 +71,18 @@ class MainViewModel(
                         finish.value = t.second - t.first < 2000
                     }
                 })
+
+            fcmProvider
+                .createToken()
+                .netIo()
+                .subscribe({ token ->
+                    if (!token.isNullOrEmpty()) {
+                        JLogger.d("Token!!!! $token")
+                        actPref.setFcmToken(token)
+                    }
+                }, {
+                    JLogger.e("Error " + it.message)
+                })
         }
     }
 
@@ -74,7 +90,7 @@ class MainViewModel(
      * init Data..
      * 현재는 파라미터만 초기화.
      */
-    private fun initData(){
+    private fun initData() {
         params.pageNo = 1
         params.keyword = null
         params.selectTag = null
@@ -93,7 +109,7 @@ class MainViewModel(
         startMemoDetail.value = Triple(view, item, pos)
     }
 
-    fun refresh(){
+    fun refresh() {
         startNetworkState.value = NetworkState.LOADING
         initData()
         start()

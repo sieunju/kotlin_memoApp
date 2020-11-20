@@ -15,20 +15,20 @@ class JLogger {
         @JvmStatic
         @JvmName("d")
         fun d(msg: String) {
-            if (BuildConfig.DEBUG) {
+//            if (BuildConfig.DEBUG) {
                 val ste = Thread.currentThread().stackTrace[4]
                 val sb = StringBuilder()
                 sb.append("[")
                 sb.append(ste.methodName)
                 sb.append("]")
                 Log.d("$TAG:$sb", msg)
-            }
+//            }
         }
 
         fun d(tag: String, msg: String) {
-            if (BuildConfig.DEBUG) {
+//            if (BuildConfig.DEBUG) {
                 Log.d(tag, msg)
-            }
+//            }
         }
 
         @JvmStatic
