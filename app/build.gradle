@@ -52,16 +52,16 @@ android {
 //            applicationIdSuffix  ".dev"
             versionCode 1
             versionName "0.0.1"
-            manifestPlaceholders = [appLabel: "DevApp",testOnly: "true"]
+            manifestPlaceholders = [appLabel: "devMemo",testOnly: "true"]
             buildConfigField "Boolean" , "IS_DEBUG" , "true"
         }
 
-        study {
+        live {
             dimension "config"
 //            applicationIdSuffix  ".study"
             versionCode 1
             versionName "0.0.1"
-            manifestPlaceholders = [appLabel: "StudyApp", testOnly: "false"]
+            manifestPlaceholders = [appLabel: "memo", testOnly: "false"]
             buildConfigField "Boolean" , "IS_DEBUG" , "false"
         }
     }

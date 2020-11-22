@@ -22,6 +22,7 @@ object ExtraCode {
     const val IMAGE_EDIT_PHOTO_URIS = "a"
     const val IMAGE_DETAIL_POS = "a"
     const val IMAGE_DETAIL_PATH_LIST = "b"
+    const val PUSH_LINK_URL = "push_link_url"
 }
 
 object RequestCode {
