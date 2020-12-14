@@ -165,4 +165,7 @@ dependencies {
     // Refresh Lib
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$rootProject.refreshLayoutVersion"
 
+    // Gson Lib
+    implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
+
 }

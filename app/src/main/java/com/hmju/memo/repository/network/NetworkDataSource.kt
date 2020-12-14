@@ -2,7 +2,10 @@ package com.hmju.memo.repository.network
 
 import com.hmju.memo.model.form.MemoListParam
 import com.hmju.memo.model.memo.MemoItem
+import com.hmju.memo.model.test.TestResponse
+import com.hmju.memo.model.test.TestUiModel
 import com.hmju.memo.repository.network.paging.PagingModel
+import io.reactivex.Single
 
 /**
  * Description : Network 통신후 데이터 처리 관련 클래스
@@ -12,4 +15,6 @@ import com.hmju.memo.repository.network.paging.PagingModel
 interface NetworkDataSource {
 
     fun fetchMemoList(params: MemoListParam): PagingModel<MemoItem>
+
+    fun fetchMainTest() : Single<ArrayList<TestUiModel>>
 }

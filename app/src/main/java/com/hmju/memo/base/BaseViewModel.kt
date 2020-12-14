@@ -46,6 +46,10 @@ open class BaseViewModel : ViewModel() {
         disposable.add(job())
     }
 
+    fun addJob(job : Disposable) {
+        disposable.add(job)
+    }
+
     protected fun onLoading() {
         if (startNetworkState.value != NetworkState.LOADING) {
             startNetworkState.postValue(NetworkState.LOADING)

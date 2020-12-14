@@ -92,13 +92,13 @@ class MyFirebaseService : FirebaseMessagingService() {
 
                 if (!linkUrl.isNullOrEmpty()) {
                     val intent = Intent(this@MyFirebaseService, MainActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         putExtra(ExtraCode.PUSH_LINK_URL, linkUrl)
                     }
                     val pendingIntent =
                         PendingIntent.getActivity(
                             this@MyFirebaseService,
-                            0,
+                            10000,
                             intent,
                             PendingIntent.FLAG_UPDATE_CURRENT
                         )

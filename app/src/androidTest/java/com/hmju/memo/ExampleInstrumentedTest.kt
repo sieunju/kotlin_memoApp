@@ -1,12 +1,12 @@
 package com.hmju.memo
 
+import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.koin.core.KoinComponent
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -14,13 +14,13 @@ import org.koin.core.KoinComponent
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 @RunWith(AndroidJUnit4::class)
-class ExampleInstrumentedTest : KoinComponent {
+class ExampleInstrumentedTest {
 
-//    lateinit var instrumentationContext: Context
+    lateinit var instrumentationContext: Context
 
     @Before
     fun setup() {
-//        instrumentationContext = InstrumentationRegistry.getInstrumentation().context
+        instrumentationContext = InstrumentationRegistry.getInstrumentation().context
     }
 
     @Test
@@ -28,5 +28,11 @@ class ExampleInstrumentedTest : KoinComponent {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         assertEquals("com.hmju.memo", appContext.packageName)
+    }
+
+    @Test
+    fun gsonTest() {
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+
     }
 }

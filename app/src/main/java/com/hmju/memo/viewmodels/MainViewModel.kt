@@ -5,9 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations.switchMap
 import androidx.paging.PagedList
+import com.google.gson.JsonObject
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.convenience.SimpleDisposableSubscriber
 import com.hmju.memo.convenience.SingleLiveEvent
+import com.hmju.memo.convenience.io
 import com.hmju.memo.convenience.netIo
 import com.hmju.memo.define.NetworkState
 import com.hmju.memo.fcm.FCMProvider
@@ -19,6 +21,8 @@ import com.hmju.memo.repository.network.paging.PagingModel
 import com.hmju.memo.repository.preferences.AccountPref
 import com.hmju.memo.utils.JLogger
 import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
@@ -60,18 +64,17 @@ class MainViewModel(
     }
 
     init {
-        launch {
-            // BackPress 처리
-            backButtonSubject.toFlowable(BackpressureStrategy.BUFFER)
-                .observeOn(AndroidSchedulers.mainThread())
-                .buffer(2, 1)
-                .map { it[0] to it[1] }
-                .subscribeWith(object : SimpleDisposableSubscriber<Pair<Long, Long>>() {
-                    override fun onNext(t: Pair<Long, Long>) {
-                        finish.value = t.second - t.first < 2000
-                    }
-                })
-
+        addJob(backButtonSubject.toFlowable(BackpressureStrategy.BUFFER)
+            .observeOn(AndroidSchedulers.mainThread())
+            .buffer(2, 1)
+            .map { it[0] to it[1] }
+            .subscribeWith(object : SimpleDisposableSubscriber<Pair<Long, Long>>() {
+                override fun onNext(t: Pair<Long, Long>) {
+                    finish.value = t.second - t.first < 2000
+                }
+            })
+        )
+        addJob(
             fcmProvider
                 .createToken()
                 .netIo()
@@ -82,8 +85,9 @@ class MainViewModel(
                     }
                 }, {
                     JLogger.e("Error " + it.message)
+
                 })
-        }
+        )
     }
 
     /**
@@ -113,6 +117,21 @@ class MainViewModel(
         startNetworkState.value = NetworkState.LOADING
         initData()
         start()
+    }
+
+    fun testStart(){
+        launch {
+            Single.merge(
+                Flowable.fromArray(
+                    apiService.fetchMainTest().io().onErrorReturnItem(JsonObject()),
+                    apiService.fetchMainTest()
+                )
+            ).subscribe({
+
+            },{
+
+            })
+        }
     }
 }
 

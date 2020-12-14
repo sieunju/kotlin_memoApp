@@ -58,7 +58,11 @@ class GalleryActivity : BaseActivity<ActivityGalleryBinding, GalleryViewModel>()
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             ).subscribe { isGranted ->
-                if (!isGranted) {
+                if(isGranted) {
+                    with(viewModel){
+                        start()
+                    }
+                } else {
                     CommonDialog(this@GalleryActivity)
                         .setContents(R.string.str_permission_denied)
                         .setPositiveButton(R.string.str_confirm)

@@ -1,5 +1,6 @@
 package com.hmju.memo.repository.network
 
+import com.google.gson.JsonObject
 import com.hmju.memo.base.BaseResponse
 import com.hmju.memo.model.form.LoginForm
 import com.hmju.memo.model.form.MemoItemForm
@@ -10,6 +11,7 @@ import com.hmju.memo.model.memo.MemoResponse
 import io.reactivex.Maybe
 import io.reactivex.Single
 import okhttp3.MultipartBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -102,20 +104,6 @@ interface ApiService {
     @POST("/api/uploads")
     fun uploadFile(
         @Part("memoId") memoId: Int,
-        @Part files: List<MultipartBody.Part>
-    ): Single<MemoFileResponse>
-
-    /**
-     * 메모장 파일 추가 API
-     * Multipart {
-     *  memoId  : Memo Uid,
-     *  files   : File
-     * }
-     */
-    @Multipart
-    @POST("/api/uploads")
-    fun uploadFile(
-        @Part("memoId") memoId: Int,
         @Part files: ArrayList<MultipartBody.Part>
     ): Single<MemoFileResponse>
 
@@ -140,4 +128,7 @@ interface ApiService {
         @Query("manageNoList") manageNoList: List<Int>,
         @Query("pathList") pathList: List<String>
     ): Single<BaseResponse>
+
+    @GET("/api/mainTest")
+    fun fetchMainTest() : Single<JsonObject>
 }

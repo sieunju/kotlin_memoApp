@@ -67,5 +67,20 @@ object Etc {
     const val IMG_FILE_LIMIT : Int = 5
     const val DEFAULT_GALLERY_FILTER_ID = "ALL"
     const val DEFAULT_GALLERY_FILTER_NAME = "최근 항목"
+}
+
+object TestCardType {
+    const val KEY_CARD = "v_card_type"
+    const val KEY_SUB = "v_sub_card_type"
+
+    const val A0001 = "A0001"
+    const val A0002 = "A0002"
+    const val A0003 = "A0003"
+    const val A0004 = "A0004"
+    const val A0005 = "A0005"
+    const val B0001 = "B0001"
+    const val B0002 = "B0002"
+    const val B0003 = "B0003"
+
 
 }

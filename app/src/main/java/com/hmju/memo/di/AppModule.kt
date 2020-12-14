@@ -34,4 +34,8 @@ val appModule = module {
     factory<FCMProvider> {
         FCMProviderImpl(androidContext())
     }
+
+    factory<GsonProvider> {
+        GsonProviderImpl(androidContext())
+    }
 }

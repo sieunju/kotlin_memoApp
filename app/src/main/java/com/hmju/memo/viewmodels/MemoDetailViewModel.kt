@@ -16,6 +16,10 @@ import com.hmju.memo.utils.ImageFileProvider
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.ResourceProvider
 import io.reactivex.Flowable
+import io.reactivex.Scheduler
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import okhttp3.MultipartBody
 import java.io.File
 
@@ -55,7 +59,7 @@ class MemoDetailViewModel(
 
     private val isChanged: Boolean
         get() {
-            if(title.value.isEmpty() && contents.value.isEmpty()) return false
+            if (title.value.isEmpty() && contents.value.isEmpty()) return false
 
             return title.value != originData?.title ||
                     contents.value != originData?.contents ||
@@ -147,8 +151,8 @@ class MemoDetailViewModel(
     fun postMemo() {
         if (isChanged) {
             JLogger.d("변경된게 있습니다. ")
-            postMemo {isSuccess ->
-                if(isSuccess) {
+            postMemo { isSuccess ->
+                if (isSuccess) {
                     onSuccess()
                 } else {
                     onError()
@@ -184,7 +188,6 @@ class MemoDetailViewModel(
                 .doOnSubscribe { onLoading() }
                 .subscribe({
                     JLogger.d("PostMemo Success $it")
-
                     saveData()
 
                     // 메모를 새로 추가 하는 경우.
@@ -222,7 +225,12 @@ class MemoDetailViewModel(
         }
     }
 
+    /**
+     * 파일 업로드 함수.
+     * @param pathList File Path List
+     */
     fun addFileUpload(pathList: List<String>) {
+        // 메모를 새로 추가하는 경우. 메모 먼저 추가 후 이미지 업로드
         if (manageNo.value == -1) {
             postMemo { isSuccess ->
                 if (isSuccess) {
@@ -250,25 +258,25 @@ class MemoDetailViewModel(
                 }
                 JLogger.d("File Parser Thread ${Thread.currentThread()}")
                 return@fromCallable multiParts
-            }
+            }.compute()
                 .doOnSubscribe {
                     onLoading()
                 }
-                .compute()
-                .flatMap {
+                .nextIo()
+                .flatMap { partsList ->
                     apiService.uploadFile(
                         memoId = manageNo.value,
-                        files = it
-                    ).toFlowable().io()
+                        files = partsList
+                    ).toFlowable()
                 }
-                .ui()
+                .nextUi()
                 .subscribe({ response ->
                     JLogger.d("Success Thread ${Thread.currentThread()}")
                     addImageFileList(response.pathList)
                     tmpFileList.forEach { provider.deleteFile(it) }
                     onSuccess()
                 }, { error ->
-                    JLogger.d("Error ${error.message}")
+                    JLogger.d("Error ${error.message} Thread ${Thread.currentThread()}")
                     tmpFileList.forEach { provider.deleteFile(it) }
                     onError()
                 })

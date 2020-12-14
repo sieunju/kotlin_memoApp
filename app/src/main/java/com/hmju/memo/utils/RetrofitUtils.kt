@@ -91,35 +91,56 @@ fun headerInterceptor(pref: AccountPref): Interceptor {
 /**
  * create Client.
  */
-fun createOkHttpClient(interceptor: Interceptor): OkHttpClient {
-    val retrofitLogger = RetrofitLogger()
-    retrofitLogger.setLevel(RetrofitLogger.Level.BODY)
-    HttpLoggingInterceptor.Logger
-    return OkHttpClient.Builder()
-        .retryOnConnectionFailure(true)
-        .connectTimeout(5, TimeUnit.SECONDS)
-        .readTimeout(10, TimeUnit.SECONDS)
-        .writeTimeout(10, TimeUnit.SECONDS)
-        .connectionPool(ConnectionPool(5, 1, TimeUnit.SECONDS))
-        .addInterceptor(forbiddenInterceptor())
-        .addInterceptor(interceptor)
-        .addInterceptor(retrofitLogger)
-        .build()
+fun createHttpClient(interceptor: Interceptor): OkHttpClient {
+    val retrofitLogger = RetrofitLogger().apply { level = RetrofitLogger.Level.BODY }
+    return OkHttpClient.Builder().apply {
+        retryOnConnectionFailure(true)
+        connectTimeout(3, TimeUnit.SECONDS)
+        readTimeout(5, TimeUnit.SECONDS)
+        writeTimeout(5, TimeUnit.SECONDS)
+        connectionPool(ConnectionPool(5, 1, TimeUnit.SECONDS))
+        addInterceptor(forbiddenInterceptor())
+        addInterceptor(interceptor)
+        addInterceptor(retrofitLogger)
+    }.build()
 }
 
 /**
  * Http 통신하는 Retrofit 생성.
  */
 inline fun <reified T> createRetrofit(client: OkHttpClient): T {
-    val retrofit = Retrofit.Builder()
-        .baseUrl(NetInfo.BASE_URL)
-        .client(client)
-        .addConverterFactory(GsonConverterFactory.create())
-//        .addCallAdapterFactory(CoroutineCallAdapterFactory())
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-        .build()
-    return retrofit.create(T::class.java)
+    return Retrofit.Builder().apply {
+        baseUrl(NetInfo.BASE_URL)
+        client(client)
+        addConverterFactory(GsonConverterFactory.create())
+        addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+    }.build().create(T::class.java)
 }
+
+// [s] TEST Retrofit 함수들
+fun createTestClient(interceptor: Interceptor): OkHttpClient {
+    val retrofitLogger = RetrofitLogger().apply { level = RetrofitLogger.Level.BODY }
+    return OkHttpClient.Builder().apply {
+        retryOnConnectionFailure(true)
+        connectTimeout(3, TimeUnit.SECONDS)
+        readTimeout(5, TimeUnit.SECONDS)
+        writeTimeout(5, TimeUnit.SECONDS)
+        connectionPool(ConnectionPool(5, 1, TimeUnit.SECONDS))
+        addInterceptor(forbiddenInterceptor())
+        addInterceptor(interceptor)
+        addInterceptor(retrofitLogger)
+    }.build()
+}
+
+inline fun <reified T> createTestRetrofit(client: OkHttpClient): T {
+    return Retrofit.Builder().apply {
+        baseUrl("https://qtzz.synology.me:10")
+        client(client)
+        addConverterFactory(GsonConverterFactory.create())
+        addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+    }.build().create(T::class.java)
+}
+// [e] TEST Retrofit 함수들
 
 
 

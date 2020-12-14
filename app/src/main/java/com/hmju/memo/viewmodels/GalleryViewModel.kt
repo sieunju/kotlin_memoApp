@@ -117,7 +117,7 @@ class GalleryViewModel(
                 provider.fetchGallery(filterId = Etc.DEFAULT_GALLERY_FILTER_ID)
             }
                 .compute()
-                .ui()
+                .nextUi()
                 .doOnSubscribe { onLoading() }
                 .subscribe({
                     JLogger.d("Third ${Thread.currentThread()}")
@@ -142,7 +142,7 @@ class GalleryViewModel(
             Flowable.just(
                 provider.fetchGallery(filterId = selectedFilter.value!!.bucketId)
             ).compute()
-                .ui()
+                .nextUi()
                 .doOnSubscribe {
                     // 기존 남아 있는 커서 Exit
                     cursor.value?.close()

@@ -69,10 +69,13 @@ fun getUrl(url: String?): String {
             it.startsWith(NetInfo.IMG_PATH) -> {
                 String.format("%s/%s", NetInfo.BASE_URL, it)
             }
+            it.startsWith("/${NetInfo.IMG_PATH}") -> {
+                String.format("%s%s", NetInfo.BASE_URL, it)
+            }
             // 앞에 '/' 있는 경우
             it.startsWith("/") -> {
                 // www.example.com/resource/imgPath
-                String.format("%s/%s%s", NetInfo.BASE_URL, NetInfo.IMG_PATH, it)
+                String.format("%s%s%s", NetInfo.BASE_URL, NetInfo.IMG_PATH, it)
             }
             // 정상 적인 Path 값이 아닌경우
             else -> {

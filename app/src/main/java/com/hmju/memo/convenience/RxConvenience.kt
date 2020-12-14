@@ -8,6 +8,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subscribers.DisposableSubscriber
+import org.intellij.lang.annotations.Flow
 import java.util.concurrent.TimeUnit
 
 /**
@@ -31,23 +32,21 @@ import java.util.concurrent.TimeUnit
 // HandlerScheduler.from(handler) - 특정 핸들러 handler에 의존하여 동작합니다.
 
 // Observable 은 되도록 사용을 지양한다.
-
-// NetWork I/O
+// 아 여기...함수명들 맘에 안든다.. 나중에 좀 까리한걸로 변경해야겠음..
+// NetWork
 fun <T> Single<T>.netIo() = subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
 fun <T> Single<T>.io() = subscribeOn(Schedulers.io())
-fun <T> Maybe<T>.netIo() = subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-fun <T> Flowable<T>.io(): Flowable<T> = subscribeOn(Schedulers.io())
+fun <T> Single<T>.nextCompute() = observeOn(Schedulers.computation())
 
-// Local 에서 연산 작업 하는 경우 ex.) File Parsing
 fun <T> Flowable<T>.compute() = subscribeOn(Schedulers.computation())
+fun <T> Flowable<T>.nextIo() = observeOn(Schedulers.io()) // 다음 작업은 Network I/O
+fun <T> Flowable<T>.nextUi() = observeOn(AndroidSchedulers.mainThread()) // 다음 작업은 Ui
+fun <T> Flowable<T>.io() = subscribeOn(Schedulers.io())
 fun <T> Flowable<T>.computeOn() = observeOn(Schedulers.computation())
-fun <T> Flowable<T>.ui() = observeOn(AndroidSchedulers.mainThread())
-
-// 여러개의 API 를 한꺼번에 보내는 경우
-fun <T> Maybe<T>.multi() = subscribeOn(io())
 
 fun <T> Flowable<T>.to() = subscribeOn(Schedulers.io())
-fun <T> Flowable<T>.multiWith() = subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+fun <T> Flowable<T>.multiWith() =
+    subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
 
 fun <T> Observable<T>.to() = subscribeOn(io())
 fun <T> Observable<T>.toDelay(_delay: Int) =

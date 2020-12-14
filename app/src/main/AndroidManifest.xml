@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.hmju.memo">
 
+    <uses-feature android:required="false" android:name="android.hardware.camera2"/>
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -18,7 +20,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-
+        <activity android:name=".ui.test.TestActivity"/>
         <activity
             android:name=".ui.memo.MainActivity"
             android:launchMode="singleTop"
@@ -28,6 +30,7 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
@@ -39,49 +42,39 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.intro.IntroActivity"
             android:launchMode="singleTop" />
-
         <activity
             android:name=".ui.login.LoginActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Login"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name=".ui.memo.MemoDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.MemoDetail"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".ui.gallery.GalleryActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Gallery"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name=".ui.imageEdit.ImageEditActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Memo"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name=".ui.memo.ImageDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/FullscreenTheme">
-
-        </activity>
-
-        <!-- [s] 카메라 캡처 관련 -->
+            android:theme="@style/FullscreenTheme"/> <!-- [s] 카메라 캡처 관련 -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.hmju.memo"
@@ -90,19 +83,14 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
-        </provider>
-
-        <!-- Firebase Service -->
+        </provider> <!-- Firebase Service -->
         <service
             android:name=".fcm.MyFirebaseService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-
         </service>
-
-
     </application>
 
 </manifest>

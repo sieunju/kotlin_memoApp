@@ -29,6 +29,7 @@ import com.hmju.memo.R
 import com.hmju.memo.define.ToolBarDefine
 import com.hmju.memo.ui.memo.MainActivity
 import com.hmju.memo.ui.memo.MemoDetailActivity
+import com.hmju.memo.ui.test.TestActivity
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -573,7 +574,7 @@ class BottomToolbar(
      *
      * @sample
      * setOnItemReselectedListener { position ->
-     *     //TODO: Something
+     *
      * }
      */
     fun setOnItemReselectedListener(listener: (position: Int) -> Unit) {
@@ -665,12 +666,18 @@ class BottomToolbar(
     inner class ToolbarLifecycleObserver(val activity: AppCompatActivity) : LifecycleObserver {
 
         @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-        fun onResume(){
+        fun onResume() {
             // 각 페이지에 맞게 툴바 레이아웃 세팅.
-            if (activity is MainActivity) {
-                itemActiveIndex = ToolBarDefine.POS_HOME
-            } else if (activity is MemoDetailActivity) {
-                itemActiveIndex = ToolBarDefine.POS_ADD
+            when (activity) {
+                is MainActivity -> {
+                    itemActiveIndex = ToolBarDefine.POS_HOME
+                }
+                is MemoDetailActivity -> {
+                    itemActiveIndex = ToolBarDefine.POS_ADD
+                }
+                is TestActivity -> {
+                    itemActiveIndex = ToolBarDefine.POS_SEARCH
+                }
             }
         }
     }

@@ -3,9 +3,8 @@ package com.hmju.memo.di
 import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.repository.network.NetworkDataSource
 import com.hmju.memo.repository.network.NetworkDataSourceImpl
-import com.hmju.memo.utils.createOkHttpClient
-import com.hmju.memo.utils.createRetrofit
-import com.hmju.memo.utils.headerInterceptor
+import com.hmju.memo.repository.network.TestApiService
+import com.hmju.memo.utils.*
 import org.koin.dsl.module
 
 /**
@@ -23,7 +22,7 @@ val apiModule = module {
 
     // client
     single {
-        createOkHttpClient(get())
+        createHttpClient(get())
     }
 
     // API Network Service
@@ -34,7 +33,12 @@ val apiModule = module {
     // Network Data Source
     single<NetworkDataSource> {
         NetworkDataSourceImpl(
-            get(), get(), get()
+            get(), get(), get(), get()
         )
+    }
+
+    // Test Network
+    single<TestApiService> {
+        createTestRetrofit(createTestClient(get()))
     }
 }

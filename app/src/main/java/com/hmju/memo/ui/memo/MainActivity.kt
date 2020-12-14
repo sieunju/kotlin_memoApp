@@ -17,12 +17,15 @@ import com.hmju.memo.define.NetworkState
 import com.hmju.memo.define.RequestCode
 import com.hmju.memo.define.ToolBarDefine.POS_ADD
 import com.hmju.memo.define.ToolBarDefine.POS_HOME
+import com.hmju.memo.define.ToolBarDefine.POS_SEARCH
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.ui.adapter.MemoListAdapter
 import com.hmju.memo.ui.login.LoginActivity
+import com.hmju.memo.ui.test.TestActivity
 import com.hmju.memo.ui.toast.showToast
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.moveMemoDetail
+import com.hmju.memo.utils.startAct
 import com.hmju.memo.utils.startActResult
 import com.hmju.memo.viewmodels.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
@@ -93,7 +96,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(),
                             putExtra(ExtraCode.MEMO_DETAIL_ADD_ENTER, true)
                         }
                     }
-
+                    POS_SEARCH -> {
+                        // TEST 용 페이지 진입
+                        startAct<TestActivity>()
+                    }
                 }
             })
 
