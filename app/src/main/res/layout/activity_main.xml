@@ -57,7 +57,8 @@
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Title"
+            app:turtleClick="@{()->viewModel.moveLogin()}"
+            android:text="@{viewModel.isLogin == false ? @string/str_login_request : @string/str_user_info}"
             android:textColor="@color/colorTextPrimary"
             android:textSize="@dimen/text_size_20" />
 

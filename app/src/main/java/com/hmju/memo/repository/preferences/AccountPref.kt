@@ -3,12 +3,12 @@ package com.hmju.memo.repository.preferences
 import android.content.SharedPreferences
 
 /**
- * Description:
+ * Description: 사용자 관련 SharedPreferences
  *
  * Created by juhongmin on 2020/05/30
  */
 class AccountPref(
-    private val pref: SharedPreferences
+    pref: SharedPreferences
 ) : BasePref(pref) {
 
     val PREF_LOGIN_KEY = "login_key"

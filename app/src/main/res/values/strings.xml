@@ -9,6 +9,8 @@
     <string name="id_error_info">특수문자는 사용할 수 없습니다.</string>
     <string name="str_login">로그인</string>
     <string name="str_non_login">비 로그인</string>
+    <string name="str_login_request">로그인 하세요.</string>
+    <string name="str_user_info">안녕하세요.</string>
 
     <string name="str_title">제목</string>
     <string name="str_contents">내용</string>

@@ -7,10 +7,7 @@ import androidx.lifecycle.Transformations.switchMap
 import androidx.paging.PagedList
 import com.google.gson.JsonObject
 import com.hmju.memo.base.BaseViewModel
-import com.hmju.memo.convenience.SimpleDisposableSubscriber
-import com.hmju.memo.convenience.SingleLiveEvent
-import com.hmju.memo.convenience.io
-import com.hmju.memo.convenience.netIo
+import com.hmju.memo.convenience.*
 import com.hmju.memo.define.NetworkState
 import com.hmju.memo.fcm.FCMProvider
 import com.hmju.memo.model.form.MemoListParam
@@ -56,6 +53,8 @@ class MainViewModel(
         switchMap(pagingModel) { it.pagedList }
     val networkState: LiveData<NetworkState> =
         switchMap(pagingModel) { it.networkState }
+
+    val isLogin = NonNullMutableLiveData<Boolean>(false)
 
     private val params by lazy {
         MemoListParam(
@@ -103,12 +102,17 @@ class MainViewModel(
     fun start() {
         // 로그인 상태인경우 메모장 API 콜한다.
         if (actPref.getLoginKey().isNotEmpty()) {
+            isLogin.value = true
             pagingModel.postValue(networkDataSource.fetchMemoList(params))
         } else {
-            startLogin.call()
+            // 비로그인 상태일때는 DB로 추가하도록 처리..
+            isLogin.value = false
         }
     }
 
+    /**
+     * 메모 상세 페이지 진입.
+     */
     fun memoDetail(view: View, item: MemoItem, pos: Int) {
         startMemoDetail.value = Triple(view, item, pos)
     }
@@ -119,7 +123,16 @@ class MainViewModel(
         start()
     }
 
-    fun testStart(){
+    fun moveLogin() {
+        if (!isLogin.value) {
+            startLogin.call()
+        } else {
+            JLogger.d("로그인 상태입니다.")
+        }
+
+    }
+
+    fun testStart() {
         launch {
             Single.merge(
                 Flowable.fromArray(
@@ -128,7 +141,7 @@ class MainViewModel(
                 )
             ).subscribe({
 
-            },{
+            }, {
 
             })
         }

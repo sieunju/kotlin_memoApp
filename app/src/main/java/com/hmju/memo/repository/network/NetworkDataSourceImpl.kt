@@ -43,4 +43,8 @@ class NetworkDataSourceImpl(
             networkState = Transformations.switchMap(factory.sourceLiveData) { it.networkState }
         )
     }
+
+    override fun fetchNoMemberMemoList(params: MemoListParam): PagingModel<MemoItem> {
+        TODO("Not yet implemented")
+    }
 }

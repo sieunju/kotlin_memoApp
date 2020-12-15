@@ -13,4 +13,6 @@ import io.reactivex.Single
 interface NetworkDataSource {
 
     fun fetchMemoList(params: MemoListParam): PagingModel<MemoItem>
+
+    fun fetchNoMemberMemoList(params: MemoListParam) : PagingModel<MemoItem>
 }

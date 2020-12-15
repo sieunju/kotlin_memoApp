@@ -18,7 +18,7 @@ val prefModule = module {
         androidContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
     }
 
-    single{
+    single {
         AccountPref(get())
     }
 }
