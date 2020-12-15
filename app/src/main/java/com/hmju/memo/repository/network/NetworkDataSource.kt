@@ -2,8 +2,6 @@ package com.hmju.memo.repository.network
 
 import com.hmju.memo.model.form.MemoListParam
 import com.hmju.memo.model.memo.MemoItem
-import com.hmju.memo.model.test.TestResponse
-import com.hmju.memo.model.test.TestUiModel
 import com.hmju.memo.repository.network.paging.PagingModel
 import io.reactivex.Single
 
@@ -15,6 +13,4 @@ import io.reactivex.Single
 interface NetworkDataSource {
 
     fun fetchMemoList(params: MemoListParam): PagingModel<MemoItem>
-
-    fun fetchMainTest() : Single<ArrayList<TestUiModel>>
 }

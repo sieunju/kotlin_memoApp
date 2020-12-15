@@ -20,7 +20,6 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".ui.test.TestActivity"/>
         <activity
             android:name=".ui.memo.MainActivity"
             android:launchMode="singleTop"

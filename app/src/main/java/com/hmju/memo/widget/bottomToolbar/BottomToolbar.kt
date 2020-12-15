@@ -29,7 +29,6 @@ import com.hmju.memo.R
 import com.hmju.memo.define.ToolBarDefine
 import com.hmju.memo.ui.memo.MainActivity
 import com.hmju.memo.ui.memo.MemoDetailActivity
-import com.hmju.memo.ui.test.TestActivity
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -675,9 +674,7 @@ class BottomToolbar(
                 is MemoDetailActivity -> {
                     itemActiveIndex = ToolBarDefine.POS_ADD
                 }
-                is TestActivity -> {
-                    itemActiveIndex = ToolBarDefine.POS_SEARCH
-                }
+
             }
         }
     }

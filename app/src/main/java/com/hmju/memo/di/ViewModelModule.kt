@@ -48,6 +48,4 @@ val viewModelModule = module {
             pathList = list
         )
     }
-
-    viewModel { TestViewModel(get(), get()) }
 }

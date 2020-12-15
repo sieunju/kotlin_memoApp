@@ -21,7 +21,6 @@ import com.hmju.memo.define.ToolBarDefine.POS_SEARCH
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.ui.adapter.MemoListAdapter
 import com.hmju.memo.ui.login.LoginActivity
-import com.hmju.memo.ui.test.TestActivity
 import com.hmju.memo.ui.toast.showToast
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.moveMemoDetail
@@ -97,8 +96,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(),
                         }
                     }
                     POS_SEARCH -> {
-                        // TEST 용 페이지 진입
-                        startAct<TestActivity>()
+
                     }
                 }
             })
