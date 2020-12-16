@@ -2,6 +2,7 @@ package com.hmju.memo.di
 
 import com.hmju.memo.fcm.FCMProvider
 import com.hmju.memo.fcm.FCMProviderImpl
+import com.hmju.memo.repository.db.AppDataBase
 import com.hmju.memo.utils.*
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
@@ -37,5 +38,9 @@ val appModule = module {
 
     factory<GsonProvider> {
         GsonProviderImpl(androidContext())
+    }
+
+    single {
+        AppDataBase.instance(androidContext())
     }
 }
