@@ -30,10 +30,10 @@ import io.reactivex.subjects.Subject
  * Created by juhongmin on 2020/06/07
  */
 class MainViewModel(
-    private val actPref: AccountPref,
-    private val networkDataSource: NetworkDataSource,
-    private val apiService: ApiService,
-    private val fcmProvider: FCMProvider
+        private val actPref: AccountPref,
+        private val networkDataSource: NetworkDataSource,
+        private val apiService: ApiService,
+        private val fcmProvider: FCMProvider
 ) : BaseViewModel() {
 
     val startLogin = SingleLiveEvent<Unit>()
@@ -42,7 +42,7 @@ class MainViewModel(
     val finish = SingleLiveEvent<Boolean>()
 
     private val backButtonSubject: Subject<Long> =
-        BehaviorSubject.createDefault(0L).toSerialized()
+            BehaviorSubject.createDefault(0L).toSerialized()
 
     fun onBackPressed() {
         backButtonSubject.onNext(System.currentTimeMillis())
@@ -50,42 +50,44 @@ class MainViewModel(
 
     private val pagingModel = MutableLiveData<PagingModel<MemoItem>>()
     val memoList: LiveData<PagedList<MemoItem>> =
-        switchMap(pagingModel) { it.pagedList }
+            switchMap(pagingModel) { it.pagedList }
     val networkState: LiveData<NetworkState> =
-        switchMap(pagingModel) { it.networkState }
+            switchMap(pagingModel) { it.networkState }
+    val memoSize: LiveData<Int> =
+            switchMap(pagingModel) { it.pagedSize }
 
-    val isLogin = NonNullMutableLiveData<Boolean>(false)
+    val isLogin = NonNullMutableLiveData<Boolean>(false) // 로그인 상태 체크
 
     private val params by lazy {
         MemoListParam(
-            pageNo = 1
+                pageNo = 1
         )
     }
 
     init {
         addJob(backButtonSubject.toFlowable(BackpressureStrategy.BUFFER)
-            .observeOn(AndroidSchedulers.mainThread())
-            .buffer(2, 1)
-            .map { it[0] to it[1] }
-            .subscribeWith(object : SimpleDisposableSubscriber<Pair<Long, Long>>() {
-                override fun onNext(t: Pair<Long, Long>) {
-                    finish.value = t.second - t.first < 2000
-                }
-            })
+                .observeOn(AndroidSchedulers.mainThread())
+                .buffer(2, 1)
+                .map { it[0] to it[1] }
+                .subscribeWith(object : SimpleDisposableSubscriber<Pair<Long, Long>>() {
+                    override fun onNext(t: Pair<Long, Long>) {
+                        finish.value = t.second - t.first < 2000
+                    }
+                })
         )
         addJob(
-            fcmProvider
-                .createToken()
-                .netIo()
-                .subscribe({ token ->
-                    if (!token.isNullOrEmpty()) {
-                        JLogger.d("Token!!!! $token")
-                        actPref.setFcmToken(token)
-                    }
-                }, {
-                    JLogger.e("Error " + it.message)
+                fcmProvider
+                        .createToken()
+                        .netIo()
+                        .subscribe({ token ->
+                            if (!token.isNullOrEmpty()) {
+                                JLogger.d("Token!!!! $token")
+                                actPref.setFcmToken(token)
+                            }
+                        }, {
+                            JLogger.e("Error " + it.message)
 
-                })
+                        })
         )
     }
 
@@ -118,7 +120,6 @@ class MainViewModel(
     }
 
     fun refresh() {
-        startNetworkState.value = NetworkState.LOADING
         initData()
         start()
     }
@@ -127,7 +128,7 @@ class MainViewModel(
         if (!isLogin.value) {
             startLogin.call()
         } else {
-            JLogger.d("로그인 상태입니다.")
+            JLogger.d("로그인 상태입니다. ${memoList.value?.size}")
         }
 
     }
@@ -135,10 +136,10 @@ class MainViewModel(
     fun testStart() {
         launch {
             Single.merge(
-                Flowable.fromArray(
-                    apiService.fetchMainTest().io().onErrorReturnItem(JsonObject()),
-                    apiService.fetchMainTest()
-                )
+                    Flowable.fromArray(
+                            apiService.fetchMainTest().io().onErrorReturnItem(JsonObject()),
+                            apiService.fetchMainTest()
+                    )
             ).subscribe({
 
             }, {

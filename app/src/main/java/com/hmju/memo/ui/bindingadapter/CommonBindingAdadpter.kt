@@ -53,7 +53,7 @@ fun bindingHtmlText(
 @BindingAdapter("commaText")
 fun bindingCommaText(
     textView: AppCompatTextView,
-    number : Int
+    number: Int
 ) {
     val formatter = DecimalFormat("###,###")
     textView.text = formatter.format(number)
@@ -144,6 +144,7 @@ fun setVisibility(
     view: View,
     visible: Boolean
 ) {
+    JLogger.d("VISIBLE ${view} BOOL ${visible}")
     view.visibility = if (visible) View.VISIBLE else View.GONE
 }
 

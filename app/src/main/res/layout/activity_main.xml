@@ -37,6 +37,43 @@
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/refresh"
+            app:layout_constraintTop_toTopOf="@+id/refresh"
+            app:visibility="@{viewModel.memoSize == 0}">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:visibility="@{viewModel.memoSize == 0}">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imgEmpty"
+                    android:layout_width="@dimen/size_100"
+                    android:layout_height="@dimen/size_100"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/ic_error" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvEmpty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_size_10"
+                    android:text="@string/str_memo_empty_info"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="@dimen/text_size_15" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <!-- Header 영역 -->
         <com.hmju.memo.widget.blurView.BlurView
             android:id="@+id/headerBlurView"
@@ -57,10 +94,10 @@
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:turtleClick="@{()->viewModel.moveLogin()}"
             android:text="@{viewModel.isLogin == false ? @string/str_login_request : @string/str_user_info}"
             android:textColor="@color/colorTextPrimary"
-            android:textSize="@dimen/text_size_20" />
+            android:textSize="@dimen/text_size_20"
+            app:turtleClick="@{()->viewModel.moveLogin()}" />
 
         <!-- 프로필 이미지 뷰 -->
         <com.google.android.material.card.MaterialCardView
@@ -68,14 +105,16 @@
             android:layout_width="@dimen/size_50"
             android:layout_height="@dimen/size_50"
             app:cardCornerRadius="@dimen/size_25"
-            app:cardElevation="0dp">
+            app:cardElevation="0dp"
+            app:visibility="@{viewModel.isLogin}">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/temp1" />
+                android:src="@drawable/temp1"
+                app:visibility="@{viewModel.isLogin}" />
 
         </com.google.android.material.card.MaterialCardView>
 

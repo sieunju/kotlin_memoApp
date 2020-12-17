@@ -2,6 +2,7 @@ package com.hmju.memo.repository.network.paging
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
+import com.hmju.memo.convenience.NonNullMutableLiveData
 import com.hmju.memo.define.NetworkState
 import com.hmju.memo.model.form.MemoListParam
 import com.hmju.memo.model.memo.MemoItem
@@ -25,6 +26,11 @@ class MemoListPageDataSource(
 ) : PageKeyedDataSource<Int, MemoItem>() {
 
     var networkState = MutableLiveData<NetworkState>()
+    var size = MutableLiveData<Int>()
+
+    init {
+        size.postValue(-1)
+    }
 
     override fun loadInitial(
         params: LoadInitialParams<Int>,
@@ -40,7 +46,10 @@ class MemoListPageDataSource(
             pageNo = memoParams.pageNo
         ).enqueue(object : Callback<MemoListResponse> {
 
-            override fun onResponse(call: Call<MemoListResponse>, listResponse: Response<MemoListResponse>) {
+            override fun onResponse(
+                call: Call<MemoListResponse>,
+                listResponse: Response<MemoListResponse>
+            ) {
                 if (listResponse.isSuccessful) {
                     listResponse.body()?.let {
                         memoParams.pageNo++
@@ -54,21 +63,26 @@ class MemoListPageDataSource(
                             networkState.postValue(NetworkState.RESULT_EMPTY)
                         }
 
+                        // set Size..
+                        size.postValue(it.dataList.size)
+
                     } ?: run {
                         // Body Null
                         networkState.postValue(NetworkState.ERROR)
+                        size.postValue(0)
                     }
                 } else {
                     // Server Error
                     networkState.postValue(NetworkState.ERROR)
+                    size.postValue(0)
                 }
             }
 
             override fun onFailure(call: Call<MemoListResponse>, t: Throwable) {
                 JLogger.d("onFailure\t${t.message}")
                 networkState.postValue(NetworkState.ERROR)
+                size.postValue(0)
             }
-
         })
     }
 
@@ -79,13 +93,17 @@ class MemoListPageDataSource(
             pageNo = memoParams.pageNo
         ).enqueue(object : Callback<MemoListResponse> {
 
-            override fun onResponse(call: Call<MemoListResponse>, listResponse: Response<MemoListResponse>) {
+            override fun onResponse(
+                call: Call<MemoListResponse>,
+                listResponse: Response<MemoListResponse>
+            ) {
                 if (listResponse.isSuccessful) {
                     listResponse.body()?.let {
                         memoParams.pageNo++
 
                         callback.onResult(it.dataList, memoParams.pageNo)
                         networkState.postValue(NetworkState.SUCCESS)
+                        size.postValue(size.value?.plus(it.dataList.size))
                     } ?: run {
                         // Body Null
                         networkState.postValue(NetworkState.ERROR)

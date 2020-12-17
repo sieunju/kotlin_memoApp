@@ -81,6 +81,4 @@ object TestCardType {
     const val B0001 = "B0001"
     const val B0002 = "B0002"
     const val B0003 = "B0003"
-
-
 }

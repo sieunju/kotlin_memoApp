@@ -40,6 +40,7 @@ class NetworkDataSourceImpl(
 
         return PagingModel(
             pagedList = pagedList,
+            pagedSize = Transformations.switchMap(factory.sourceLiveData) { it.size },
             networkState = Transformations.switchMap(factory.sourceLiveData) { it.networkState }
         )
     }

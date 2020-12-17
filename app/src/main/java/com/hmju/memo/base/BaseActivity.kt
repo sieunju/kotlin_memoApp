@@ -1,6 +1,8 @@
 package com.hmju.memo.base
 
 import android.graphics.Color
+import android.net.ConnectivityManager
+import android.net.Network
 import android.os.Build
 import android.os.Bundle
 import android.view.View
