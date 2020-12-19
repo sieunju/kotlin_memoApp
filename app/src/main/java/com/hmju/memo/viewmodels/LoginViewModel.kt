@@ -39,7 +39,7 @@ class LoginViewModel(
         }
 
         launch {
-            apiService.signIn(
+            apiService.fetchUser(
                 LoginForm(
                     id = strId.value!!.trim(),
                     pw = strPw.value!!.trim()

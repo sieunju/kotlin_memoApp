@@ -29,10 +29,13 @@ interface ApiService {
      *  "user_pw" : 비번
      * }
      */
-    @POST("/api/signin")
-    fun signIn(
+    @POST("/api/signIn")
+    fun fetchUser(
         @Body body: LoginForm
     ): Single<LoginResponse>
+
+    @POST("/api/signIn")
+    fun fetchUser(): Single<LoginResponse>
 
     /**
      * 메모장 데이터 가져오는 API

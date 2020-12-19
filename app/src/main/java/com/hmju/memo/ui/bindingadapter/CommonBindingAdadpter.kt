@@ -144,7 +144,6 @@ fun setVisibility(
     view: View,
     visible: Boolean
 ) {
-    JLogger.d("VISIBLE ${view} BOOL ${visible}")
     view.visibility = if (visible) View.VISIBLE else View.GONE
 }
 
