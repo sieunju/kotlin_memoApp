@@ -146,10 +146,10 @@ dependencies {
     implementation "androidx.paging:paging-runtime-ktx:$rootProject.pagingVersion"
 
     // alternatively - without Android dependencies for testing
-    testImplementation "androidx.paging:paging-common:$rootProject.pagingVersion" // For Kotlin use paging-common-ktx
+    testImplementation "androidx.paging:paging-common-ktx:$rootProject.pagingVersion" // For Kotlin use paging-common-ktx
 
     // optional - RxJava support
-    implementation "androidx.paging:paging-rxjava2:$rootProject.pagingVersion" // For Kotlin use paging-rxjava2-ktx
+    implementation "androidx.paging:paging-rxjava2-ktx:$rootProject.pagingVersion" // For Kotlin use paging-rxjava2-ktx
 
     // FireBase
     implementation "com.google.firebase:firebase-core:$rootProject.firebaseCoreVersion"

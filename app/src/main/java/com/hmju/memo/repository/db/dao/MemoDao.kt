@@ -1,8 +1,6 @@
 package com.hmju.memo.repository.db.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.hmju.memo.repository.db.dto.Memo
 import io.reactivex.Single
 
@@ -15,8 +13,14 @@ import io.reactivex.Single
 interface MemoDao {
 
     @Insert
-    fun insert(memo: Memo)
+    fun insertMemo(memo: Memo) : Long
+
+    @Update
+    fun updateMemo(memo: Memo) : Int
 
     @Query("SELECT * FROM MEMO")
-    fun fetchMemoList() : Single<Memo>
+    fun fetchMemoList(): Single<List<Memo>>
+
+    @Query("DELETE FROM MEMO WHERE manageNo = :manageNo")
+    fun deleteMemo(manageNo: Int) : Int
 }

@@ -17,5 +17,5 @@ data class MemoImage(
     @PrimaryKey(autoGenerate = true) val manageNo: Int,
     @ColumnInfo(name = "MEMO_ID") val memoId : Int,
     @ColumnInfo(name = "IMG_PATH") val path: String,
-    @ColumnInfo(name = "REGISTER_DATE") val date : Date
+    @ColumnInfo(name = "REGISTER_DATE") val date : String
 )

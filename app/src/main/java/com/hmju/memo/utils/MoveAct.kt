@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityOptions
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -18,6 +19,7 @@ import com.hmju.memo.define.Etc
 import com.hmju.memo.define.ExtraCode
 import com.hmju.memo.define.RequestCode
 import com.hmju.memo.model.memo.MemoItem
+import com.hmju.memo.ui.memo.MainActivity
 import com.hmju.memo.ui.memo.MemoDetailActivity
 import org.koin.android.ext.android.inject
 import java.io.File
@@ -53,6 +55,13 @@ inline fun <reified T : Activity> Activity.startActResult(
     val intent = Intent(this, T::class.java)
     intent.data()
     startActivityForResult(intent, requestCode)
+}
+
+fun Activity.moveMain() {
+    startAct<MainActivity>{
+        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+    }
 }
 
 fun Activity.moveMemoDetail(

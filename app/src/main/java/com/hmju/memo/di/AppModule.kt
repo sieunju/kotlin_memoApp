@@ -3,13 +3,15 @@ package com.hmju.memo.di
 import com.hmju.memo.fcm.FCMProvider
 import com.hmju.memo.fcm.FCMProviderImpl
 import com.hmju.memo.repository.db.AppDataBase
+import com.hmju.memo.repository.network.login.LoginManager
+import com.hmju.memo.repository.network.login.LoginManagerImpl
 import com.hmju.memo.utils.*
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 /**
- * Description : App 관련 Module
+ * Description : Util Module
  * Resource, Device 정보
  *
  * Created by juhongmin on 2020/09/05
@@ -38,9 +40,5 @@ val appModule = module {
 
     factory<GsonProvider> {
         GsonProviderImpl(androidContext())
-    }
-
-    single {
-        AppDataBase.instance(androidContext())
     }
 }

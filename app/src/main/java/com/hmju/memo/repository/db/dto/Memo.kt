@@ -12,9 +12,10 @@ import java.util.*
  */
 @Entity(tableName = "MEMO")
 data class Memo(
-    @PrimaryKey(autoGenerate = true) val manageNo: Int,
-    @ColumnInfo(name = "TAG") val tag: String,
+    @PrimaryKey(autoGenerate = true) val manageNo: Int? = null,
+    @ColumnInfo(name = "TAG") val tag: Int,
     @ColumnInfo(name = "TITLE") val title: String,
     @ColumnInfo(name= "CONTENTS") val contents: String,
-    @ColumnInfo(name="REGISTER_DATE") val date: Date
+    @ColumnInfo(name="REGISTER_DATE") val date: Long? = System.currentTimeMillis(),
+    @ColumnInfo(name = "TEST") val test: String? = null
 )

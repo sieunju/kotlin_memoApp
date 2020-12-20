@@ -14,8 +14,8 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
 
-    viewModel { MainViewModel(get(), get(), get(), get()) }
-    viewModel { LoginViewModel(get(), get()) }
+    viewModel { MainViewModel(get(), get(), get(), get(),get()) }
+    viewModel { LoginViewModel(get()) }
 
     viewModel { (limitSize: Int) ->
         GalleryViewModel(
@@ -38,7 +38,9 @@ val viewModelModule = module {
             originData = item,
             apiService = get(),
             provider = get(),
-            resProvider = get()
+            resProvider = get(),
+            loginManager = get(),
+            roomDataSource = get()
         )
     }
 

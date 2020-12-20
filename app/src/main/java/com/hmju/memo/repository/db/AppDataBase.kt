@@ -2,6 +2,7 @@ package com.hmju.memo.repository.db
 
 import android.content.Context
 import androidx.room.*
+import com.hmju.memo.repository.MIGRATION_1_2
 import com.hmju.memo.repository.db.dao.MemoDao
 import com.hmju.memo.repository.db.dao.MemoImgDao
 import com.hmju.memo.repository.db.dto.Memo
@@ -14,10 +15,11 @@ import com.hmju.memo.repository.db.dto.MemoImage
  */
 @Database(
     entities = [Memo::class, MemoImage::class],
-    version = 1, exportSchema = false
+    version = 2, exportSchema = false
 )
 @TypeConverters(Converters::class)
 abstract class AppDataBase : RoomDatabase() {
+
     abstract fun memoDao(): MemoDao
     abstract fun memoImgDao(): MemoImgDao
 
@@ -27,7 +29,9 @@ abstract class AppDataBase : RoomDatabase() {
             return Room.databaseBuilder(
                 context.applicationContext,
                 AppDataBase::class.java, "memo_database"
-            ).build()
+            )
+                .addMigrations(MIGRATION_1_2)
+                .build()
         }
     }
 }

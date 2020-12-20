@@ -30,12 +30,12 @@ interface ApiService {
      * }
      */
     @POST("/api/signIn")
-    fun fetchUser(
+    fun loginIn(
         @Body body: LoginForm
     ): Single<LoginResponse>
 
     @POST("/api/signIn")
-    fun fetchUser(): Single<LoginResponse>
+    fun loginCheck(): Single<LoginResponse>
 
     /**
      * 메모장 데이터 가져오는 API

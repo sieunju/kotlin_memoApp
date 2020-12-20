@@ -9,10 +9,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
-import com.hmju.memo.di.apiModule
-import com.hmju.memo.di.appModule
-import com.hmju.memo.di.prefModule
-import com.hmju.memo.di.viewModelModule
+import com.hmju.memo.di.*
 import com.hmju.memo.fcm.FCMProvider
 import com.hmju.memo.ui.memo.MainActivity
 import com.hmju.memo.ui.toast.showToast
@@ -43,25 +40,21 @@ class MainApplication : MultiDexApplication() {
             androidContext(this@MainApplication)
             modules(
                 prefModule +
+                        apiModule +
                         appModule +
-                        viewModelModule +
-                        apiModule
+                        dataModule +
+                        viewModelModule
             )
         }
 
-        // 테스트 코드 추가.
-//        val pref : AccountPref by inject()
-//        pref.setLoginKey("")
-
         initRxJava()
-
         setTheme()
 
         registerActivityLifecycleCallbacks(activityLifecycleCallbacks)
         registerComponentCallbacks(componentCallbacks)
 
         // FCM Channel
-        val fcmProvider : FCMProvider by inject()
+        val fcmProvider: FCMProvider by inject()
         fcmProvider.createNotificationChannel()
     }
 
@@ -139,7 +132,7 @@ class MainApplication : MultiDexApplication() {
         override fun onConfigurationChanged(newConfig: Configuration) {
 //            JLogger.d("onConfigurationChanged $newConfig")
             // 화면 스타일 변경시 앱 재시작.
-            activityLifecycleCallbacks.currentActivity?.get()?.let{
+            activityLifecycleCallbacks.currentActivity?.get()?.let {
                 it.showToast(R.string.str_ui_mode_changed_info, Toast.LENGTH_LONG)
                 it.applicationRestart()
             }

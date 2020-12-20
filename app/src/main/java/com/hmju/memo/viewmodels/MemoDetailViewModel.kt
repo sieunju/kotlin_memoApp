@@ -11,7 +11,9 @@ import com.hmju.memo.define.TagType
 import com.hmju.memo.model.form.MemoItemForm
 import com.hmju.memo.model.memo.FileItem
 import com.hmju.memo.model.memo.MemoItem
+import com.hmju.memo.repository.db.RoomDataSource
 import com.hmju.memo.repository.network.ApiService
+import com.hmju.memo.repository.network.login.LoginManager
 import com.hmju.memo.utils.ImageFileProvider
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.ResourceProvider
@@ -22,6 +24,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import okhttp3.MultipartBody
 import java.io.File
+import java.util.concurrent.Callable
 
 /**
  * Description : 메모 상세 페이지 ViewModel Class
@@ -32,7 +35,9 @@ class MemoDetailViewModel(
     private var originData: MemoItem? = null,
     private val apiService: ApiService,
     private val provider: ImageFileProvider,
-    private val resProvider: ResourceProvider
+    private val resProvider: ResourceProvider,
+    private val loginManager: LoginManager,
+    private val roomDataSource: RoomDataSource
 ) : BaseViewModel() {
 
     private val _manageNo = NonNullMutableLiveData(originData?.manageNo ?: -1)
@@ -149,18 +154,36 @@ class MemoDetailViewModel(
     }
 
     fun postMemo() {
-        if (isChanged) {
-            JLogger.d("변경된게 있습니다. ")
-            postMemo { isSuccess ->
-                if (isSuccess) {
-                    onSuccess()
-                } else {
-                    onError()
-                }
+        launch {
+            Single.fromCallable {
+                val id = roomDataSource.insertMemo(
+                    MemoItemForm(
+                        tag = selectTag.value,
+                        title = title.value,
+                        contents = contents.value
+                    )
+                )
+                return@fromCallable id
             }
-        } else {
-            JLogger.d("변경점이 없습니다.!")
+                .netIo()
+                .subscribe({
+                    JLogger.d("Success $it")
+                }, {
+                    JLogger.d("Error ${it.message}")
+                })
         }
+//        if (isChanged) {
+//            JLogger.d("변경된게 있습니다. ")
+//            postMemo { isSuccess ->
+//                if (isSuccess) {
+//                    onSuccess()
+//                } else {
+//                    onError()
+//                }
+//            }
+//        } else {
+//            JLogger.d("변경점이 없습니다.!")
+//        }
     }
 
     /**

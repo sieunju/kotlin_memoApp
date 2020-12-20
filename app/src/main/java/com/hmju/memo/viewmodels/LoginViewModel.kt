@@ -7,6 +7,7 @@ import com.hmju.memo.convenience.netIo
 import com.hmju.memo.model.form.LoginForm
 import com.hmju.memo.model.login.LoginResponse
 import com.hmju.memo.repository.network.ApiService
+import com.hmju.memo.repository.network.login.LoginManager
 import com.hmju.memo.repository.preferences.AccountPref
 import com.hmju.memo.utils.JLogger
 
@@ -16,8 +17,7 @@ import com.hmju.memo.utils.JLogger
  * Created by juhongmin on 2020/06/04
  */
 class LoginViewModel(
-    private val apiService: ApiService,
-    private val actPref: AccountPref
+    private val loginManager: LoginManager
 ) : BaseViewModel() {
 
     val data = MutableLiveData<LoginResponse>()
@@ -33,27 +33,24 @@ class LoginViewModel(
      */
     fun startLogin() {
         JLogger.d("Id ${strId.value} Pw ${strPw.value}")
-        if(strId.value.isNullOrEmpty() || strPw.value.isNullOrEmpty()) {
+        if (strId.value.isNullOrEmpty() || strPw.value.isNullOrEmpty()) {
             startErrorDialog.value = "제대로 값을 기입 하십시오."
             return
         }
 
         launch {
-            apiService.fetchUser(
+            loginManager.loginIn(
                 LoginForm(
                     id = strId.value!!.trim(),
                     pw = strPw.value!!.trim()
                 )
-            ).netIo()
+            )
                 .subscribe({
-                    JLogger.d("Result$it")
-                    it.loginKey?.let { loginKey ->
-                        actPref.setLoginKey(loginKey)
-                        startFinish.value = true
-                    }
+                    JLogger.d("성공 $it")
+                    startFinish.value = true
                 }, {
-                    JLogger.d("로그인에 실패했습니다.")
-                    startErrorDialog.value = "로그인 실패!"
+                    JLogger.d("실패 $it")
+                    startErrorDialog.value = "로그인 실패"
                 })
         }
     }

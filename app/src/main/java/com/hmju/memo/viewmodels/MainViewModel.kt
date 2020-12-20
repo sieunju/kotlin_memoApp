@@ -14,6 +14,8 @@ import com.hmju.memo.model.form.MemoListParam
 import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.repository.network.NetworkDataSource
+import com.hmju.memo.repository.network.login.LoginManager
+import com.hmju.memo.repository.network.login.LoginManagerImpl
 import com.hmju.memo.repository.network.paging.PagingModel
 import com.hmju.memo.repository.preferences.AccountPref
 import com.hmju.memo.utils.JLogger
@@ -33,7 +35,8 @@ class MainViewModel(
     private val actPref: AccountPref,
     private val networkDataSource: NetworkDataSource,
     private val apiService: ApiService,
-    private val fcmProvider: FCMProvider
+    private val fcmProvider: FCMProvider,
+    private val loginManager: LoginManager
 ) : BaseViewModel() {
 
     val startLogin = SingleLiveEvent<Unit>()
@@ -56,7 +59,10 @@ class MainViewModel(
     val memoSize: LiveData<Int> =
         switchMap(pagingModel) { it.pagedSize }
 
-    val isLogin = NonNullMutableLiveData<Boolean>(false) // 로그인 상태 체크
+    val user: MutableLiveData<LoginManager.UserInfo>
+        get() = loginManager.user()
+    val isLogin: MutableLiveData<Boolean>
+        get() = loginManager.isLogin()
 
     private val params by lazy {
         MemoListParam(
@@ -89,6 +95,9 @@ class MainViewModel(
 
                 })
         )
+        addJob(
+            loginManager.loginCheck().subscribe()
+        )
     }
 
     /**
@@ -103,22 +112,8 @@ class MainViewModel(
 
     fun start() {
         // 로그인 상태인경우 메모장 API 콜한다.
-        if (actPref.getLoginKey().isNotEmpty()) {
-            isLogin.value = true
+        if (isLogin.value == true) {
             pagingModel.postValue(networkDataSource.fetchMemoList(params))
-
-            launch {
-                apiService.fetchUser()
-                    .netIo()
-                    .subscribe({
-                        JLogger.d("LoginResponse $it")
-                    }, {
-                        JLogger.d("Error ${it.message}")
-                    })
-            }
-        } else {
-            // 비로그인 상태일때는 DB로 추가하도록 처리..
-            isLogin.value = false
         }
     }
 
@@ -135,7 +130,7 @@ class MainViewModel(
     }
 
     fun moveLogin() {
-        if (!isLogin.value) {
+        if (isLogin.value == false) {
             startLogin.call()
         } else {
             JLogger.d("로그인 상태입니다. ${memoList.value?.size}")

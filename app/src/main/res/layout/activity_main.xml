@@ -94,7 +94,7 @@
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.isLogin == false ? @string/str_login_request : @string/str_user_info}"
+            android:text="@{viewModel.isLogin == false ? @string/str_login_request : @string/fmt_hello_user(viewModel.user.userName)}"
             android:textColor="@color/colorTextPrimary"
             android:textSize="@dimen/text_size_20"
             app:turtleClick="@{()->viewModel.moveLogin()}" />
@@ -113,7 +113,7 @@
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/temp1"
+                app:bindImg="@{viewModel.user.profPath}"
                 app:visibility="@{viewModel.isLogin}" />
 
         </com.google.android.material.card.MaterialCardView>

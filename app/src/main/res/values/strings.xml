@@ -10,7 +10,7 @@
     <string name="str_login">로그인</string>
     <string name="str_non_login">비 로그인</string>
     <string name="str_login_request">로그인 하세요.</string>
-    <string name="str_user_info">안녕하세요.</string>
+    <string name="fmt_hello_user">안녕하세요. %s</string>
 
     <string name="str_title">제목</string>
     <string name="str_contents">내용</string>
