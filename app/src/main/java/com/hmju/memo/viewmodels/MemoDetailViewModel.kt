@@ -4,6 +4,7 @@ import androidx.annotation.IdRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.hmju.memo.R
+import com.hmju.memo.base.BaseResponse
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.convenience.*
 import com.hmju.memo.define.Etc
@@ -11,20 +12,15 @@ import com.hmju.memo.define.TagType
 import com.hmju.memo.model.form.MemoItemForm
 import com.hmju.memo.model.memo.FileItem
 import com.hmju.memo.model.memo.MemoItem
-import com.hmju.memo.repository.db.RoomDataSource
+import com.hmju.memo.repository.DataSource
 import com.hmju.memo.repository.network.ApiService
-import com.hmju.memo.repository.network.login.LoginManager
 import com.hmju.memo.utils.ImageFileProvider
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.ResourceProvider
 import io.reactivex.Flowable
-import io.reactivex.Scheduler
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import okhttp3.MultipartBody
 import java.io.File
-import java.util.concurrent.Callable
 
 /**
  * Description : 메모 상세 페이지 ViewModel Class
@@ -32,12 +28,11 @@ import java.util.concurrent.Callable
  * Created by juhongmin on 2020/10/25
  */
 class MemoDetailViewModel(
-    private var originData: MemoItem? = null,
-    private val apiService: ApiService,
-    private val provider: ImageFileProvider,
-    private val resProvider: ResourceProvider,
-    private val loginManager: LoginManager,
-    private val roomDataSource: RoomDataSource
+        private var originData: MemoItem? = null,
+        private val apiService: ApiService,
+        private val provider: ImageFileProvider,
+        private val resProvider: ResourceProvider,
+        private val dataSource: DataSource
 ) : BaseViewModel() {
 
     private val _manageNo = NonNullMutableLiveData(originData?.manageNo ?: -1)
@@ -154,36 +149,18 @@ class MemoDetailViewModel(
     }
 
     fun postMemo() {
-        launch {
-            Single.fromCallable {
-                val id = roomDataSource.insertMemo(
-                    MemoItemForm(
-                        tag = selectTag.value,
-                        title = title.value,
-                        contents = contents.value
-                    )
-                )
-                return@fromCallable id
+        if (isChanged) {
+            JLogger.d("변경된게 있습니다. ")
+            postMemo { isSuccess ->
+                if (isSuccess) {
+                    onSuccess()
+                } else {
+                    onError()
+                }
             }
-                .netIo()
-                .subscribe({
-                    JLogger.d("Success $it")
-                }, {
-                    JLogger.d("Error ${it.message}")
-                })
+        } else {
+            JLogger.d("변경점이 없습니다.!")
         }
-//        if (isChanged) {
-//            JLogger.d("변경된게 있습니다. ")
-//            postMemo { isSuccess ->
-//                if (isSuccess) {
-//                    onSuccess()
-//                } else {
-//                    onError()
-//                }
-//            }
-//        } else {
-//            JLogger.d("변경점이 없습니다.!")
-//        }
     }
 
     /**
@@ -191,42 +168,66 @@ class MemoDetailViewModel(
      * @param callBack Api Success CallBack.
      */
     private fun postMemo(callBack: (Boolean) -> Unit) {
+//        launch {
+//            if (manageNo.value == -1) apiService.postMemo(
+//                    MemoItemForm(
+//                            tag = selectTag.value,
+//                            title = title.value,
+//                            contents = contents.value
+//                    )
+//            ) else {
+//                apiService.updateMemo(
+//                        MemoItemForm(
+//                                manageNo = manageNo.value,
+//                                tag = selectTag.value,
+//                                title = title.value,
+//                                contents = contents.value
+//                        )
+//                )
+//            }.netIo()
+//                    .doOnSubscribe { onLoading() }
+//                    .subscribe({
+//                        JLogger.d("PostMemo Success $it")
+//                        saveData()
+//
+//                        // 메모를 새로 추가 하는 경우.
+//                        if (manageNo.value == -1 && it.manageNo != 0) {
+//                            JLogger.d("Add Memo")
+//                            _manageNo.value = it.manageNo
+//                        } else {
+//                            // Update 경우
+//                            JLogger.d("Update Memo")
+//                        }
+//                        callBack.invoke(true)
+//                    }, {
+//                        JLogger.d("PostMemo Error ${it.message}")
+//                        callBack.invoke(false)
+//                    })
+//        }
+
         launch {
-            if (manageNo.value == -1) apiService.postMemo(
-                MemoItemForm(
-                    tag = selectTag.value,
-                    title = title.value,
-                    contents = contents.value
-                )
-            ) else {
-                apiService.updateMemo(
+            dataSource.postMemo(
                     MemoItemForm(
-                        manageNo = manageNo.value,
-                        tag = selectTag.value,
-                        title = title.value,
-                        contents = contents.value
+                            manageNo = if (manageNo.value == -1) null else manageNo.value,
+                            tag = selectTag.value,
+                            title = title.value,
+                            contents = contents.value
                     )
-                )
-            }.netIo()
-                .doOnSubscribe { onLoading() }
-                .subscribe({
-                    JLogger.d("PostMemo Success $it")
-                    saveData()
+            )
+                    .doOnSubscribe { onLoading() }
+                    .netIo()
+                    .subscribe({
+                        saveData()
+                        if (manageNo.value == -1 && it.manageNo != 0) {
+                            _manageNo.value = it.manageNo
+                        }
 
-                    // 메모를 새로 추가 하는 경우.
-                    if (manageNo.value == -1 && it.manageNo != 0) {
-                        JLogger.d("Add Memo")
-                        _manageNo.value = it.manageNo
-                    } else {
-                        // Update 경우
-                        JLogger.d("Update Memo")
-
-                    }
-                    callBack.invoke(true)
-                }, {
-                    JLogger.d("PostMemo Error ${it.message}")
-                    callBack.invoke(false)
-                })
+                        JLogger.d("onSuccess $it")
+                        callBack.invoke(true)
+                    }, {
+                        JLogger.d("Error ${it.message}")
+                        callBack.invoke(false)
+                    })
         }
     }
 
@@ -236,10 +237,10 @@ class MemoDetailViewModel(
     private fun saveData() {
         if (originData == null) {
             originData = MemoItem(
-                manageNo = manageNo.value,
-                tag = selectTag.value,
-                title = title.value,
-                contents = contents.value
+                    manageNo = manageNo.value,
+                    tag = selectTag.value,
+                    title = title.value,
+                    contents = contents.value
             )
         } else {
             originData?.tag = selectTag.value
@@ -263,46 +264,24 @@ class MemoDetailViewModel(
             return
         }
 
-        val tmpFileList = arrayListOf<File>()
         launch {
-            Flowable.fromCallable {
-                val multiParts = arrayListOf<MultipartBody.Part>()
-                for (path in pathList) {
-                    provider.createMultiPartBody(path)?.let {
-                        multiParts.add(
-                            MultipartBody.Part.createFormData(
-                                name = "files",
-                                filename = it.second.name,
-                                body = it.first
-                            )
-                        )
-                        tmpFileList.add(it.second)
-                    }
-                }
-                JLogger.d("File Parser Thread ${Thread.currentThread()}")
-                return@fromCallable multiParts
-            }.compute()
-                .doOnSubscribe {
-                    onLoading()
-                }
-                .nextIo()
-                .flatMap { partsList ->
-                    apiService.uploadFile(
-                        memoId = manageNo.value,
-                        files = partsList
-                    ).toFlowable()
-                }
-                .nextUi()
-                .subscribe({ response ->
-                    JLogger.d("Success Thread ${Thread.currentThread()}")
-                    addImageFileList(response.pathList)
-                    tmpFileList.forEach { provider.deleteFile(it) }
-                    onSuccess()
-                }, { error ->
-                    JLogger.d("Error ${error.message} Thread ${Thread.currentThread()}")
-                    tmpFileList.forEach { provider.deleteFile(it) }
-                    onError()
-                })
+            dataSource.postMemoImages(
+                    manageNo = manageNo.value,
+                    pathList = pathList
+            )
+                    .doOnSubscribe { onLoading() }
+                    .subscribe({ response ->
+                        JLogger.d("Success Thread ${Thread.currentThread()}")
+//                        addImageFileList(response.pathList)
+                        // 업로드된 파일 갱신 처리 함수.
+                        response.pathList?.let {
+                            _fileList.postAddAll(it)
+                        }
+                        onSuccess()
+                    }, { error ->
+                        JLogger.d("Error ${error.message} Thread ${Thread.currentThread()}")
+                        onError()
+                    })
         }
     }
 
@@ -325,18 +304,18 @@ class MemoDetailViewModel(
     fun deleteImage(fileItem: FileItem) {
         launch {
             apiService.deleteFile(
-                manageNo = fileItem.manageNo,
-                path = fileItem.filePath
+                    manageNo = fileItem.manageNo,
+                    path = fileItem.filePath
             ).netIo()
-                .doOnSubscribe { onLoading() }
-                .subscribe({
-                    JLogger.d("Delete Image Success $it")
-                    _fileList.postRemove(fileItem)
-                    onSuccess()
-                }, {
-                    JLogger.e("Delete Image Error ${it.message}")
-                    onError()
-                })
+                    .doOnSubscribe { onLoading() }
+                    .subscribe({
+                        JLogger.d("Delete Image Success $it")
+                        _fileList.postRemove(fileItem)
+                        onSuccess()
+                    }, {
+                        JLogger.e("Delete Image Error ${it.message}")
+                        onError()
+                    })
         }
     }
 
@@ -360,18 +339,16 @@ class MemoDetailViewModel(
      */
     private fun deleteAllImages(callBack: () -> Unit) {
         launch {
-            apiService.deleteFiles(
-                manageNoList = fileList.value.map { it.manageNo }.toList(),
-                pathList = fileList.value.map { it.filePath }.toList()
-            ).netIo()
-                .doOnSubscribe { onLoading() }
-                .subscribe({
-                    JLogger.d("Delete All Images Success $it")
-                    callBack.invoke()
-                }, {
-                    JLogger.d("Delete All Images Error ${it.message}")
-                    callBack.invoke()
-                })
+            dataSource.deleteMemoImages(fileList.value)
+                    .netIo()
+                    .doOnSubscribe { onLoading() }
+                    .subscribe({
+                        JLogger.d("Delete All Images Success $it")
+                        callBack.invoke()
+                    }, {
+                        JLogger.d("Delete All Images Error ${it.message}")
+                        callBack.invoke()
+                    })
         }
     }
 
@@ -379,21 +356,39 @@ class MemoDetailViewModel(
      * Delete Memo Func..
      */
     private fun deleteMemo() {
+        //        launch {
+//            apiService.deleteMemo(
+//                    memoId = manageNo.value
+//            ).netIo()
+//                    .doOnSubscribe { onLoading() }
+//                    .subscribe({
+//                        JLogger.d("Delete Memo Success $it")
+//                        onSuccess()
+//                        isDelete = true
+//                        startFinish.value = true
+//                    }, {
+//                        JLogger.d("Delete Memo Error ${it.message}")
+//                        onError()
+//                        startFinish.value = true
+//                    })
+//        }
+
         launch {
-            apiService.deleteMemo(
-                memoId = manageNo.value
-            ).netIo()
-                .doOnSubscribe { onLoading() }
-                .subscribe({
-                    JLogger.d("Delete Memo Success $it")
-                    onSuccess()
-                    isDelete = true
-                    startFinish.value = true
-                }, {
-                    JLogger.d("Delete Memo Error ${it.message}")
-                    onError()
-                    startFinish.value = true
-                })
+            dataSource.deleteMemo(manageNo = manageNo.value)
+                    .netIo()
+                    .doOnSubscribe {
+                        onLoading()
+                    }
+                    .subscribe({
+                        JLogger.d("Delete Memo Success $it")
+                        onSuccess()
+                        isDelete = true
+                        startFinish.value = true
+                    }, {
+                        JLogger.d("Delete Memo Error ${it.message}")
+                        onError()
+                        startFinish.value = true
+                    })
         }
     }
 

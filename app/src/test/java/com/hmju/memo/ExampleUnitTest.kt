@@ -128,12 +128,12 @@ class ExampleUnitTest {
 
         temp = null
 
-        val idStr = temp?.let { it.id } ?: "Nullaa"
-
-        println(resultFirst)
-        println(resultStr)
-        println(resultUnit)
-        println(idStr)
+//        val idStr = temp?.let { it.id } ?: "Nullaa"
+//
+//        println(resultFirst)
+//        println(resultStr)
+//        println(resultUnit)
+//        println(idStr)
 
         val temp1 : Struct? = Struct("qq",11)
 

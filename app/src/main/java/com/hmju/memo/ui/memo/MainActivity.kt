@@ -29,6 +29,7 @@ import com.hmju.memo.utils.startActResult
 import com.hmju.memo.viewmodels.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
+import kotlin.system.exitProcess
 
 /**
  * Description : 메인 페이지
@@ -108,7 +109,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(),
             finish.observe(this@MainActivity, Observer {
                 // 앱 종료.
                 if (it) {
-                    ActivityCompat.finishAffinity(this@MainActivity)
+                    moveTaskToBack(true)
+                    finishAndRemoveTask()
+                    exitProcess(0)
                 } else {
                     showToast(R.string.str_back_press_info)
                 }
@@ -121,7 +124,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(),
             // API 호출.
             start()
 
-            pushDeepLink(intent)
+//            pushDeepLink(intent)
         }
     }
 

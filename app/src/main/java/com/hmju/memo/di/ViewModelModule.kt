@@ -14,40 +14,39 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
 
-    viewModel { MainViewModel(get(), get(), get(), get(),get()) }
+    viewModel { MainViewModel(get(), get(), get(), get(), get()) }
     viewModel { LoginViewModel(get()) }
 
     viewModel { (limitSize: Int) ->
         GalleryViewModel(
-            limitImageSize = limitSize,
-            provider = get(),
-            fileProvider = get(),
-            resProvider = get()
+                limitImageSize = limitSize,
+                provider = get(),
+                fileProvider = get(),
+                resProvider = get()
         )
     }
 
     viewModel { (list: ArrayList<String>) ->
         ImageEditViewModel(
-            photoList = list,
-            provider = get()
+                photoList = list,
+                provider = get()
         )
     }
 
     viewModel { (item: MemoItem?) ->
         MemoDetailViewModel(
-            originData = item,
-            apiService = get(),
-            provider = get(),
-            resProvider = get(),
-            loginManager = get(),
-            roomDataSource = get()
+                originData = item,
+                apiService = get(),
+                provider = get(),
+                resProvider = get(),
+                dataSource = get()
         )
     }
 
     viewModel { (pos: Int, list: ArrayList<FileItem>) ->
         ImageDetailViewModel(
-            pos = pos,
-            pathList = list
+                pos = pos,
+                pathList = list
         )
     }
 }

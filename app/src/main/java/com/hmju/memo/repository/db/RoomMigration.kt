@@ -1,4 +1,4 @@
-package com.hmju.memo.repository
+package com.hmju.memo.repository.db
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase

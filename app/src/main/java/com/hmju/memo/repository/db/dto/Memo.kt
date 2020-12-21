@@ -16,6 +16,5 @@ data class Memo(
     @ColumnInfo(name = "TAG") val tag: Int,
     @ColumnInfo(name = "TITLE") val title: String,
     @ColumnInfo(name= "CONTENTS") val contents: String,
-    @ColumnInfo(name="REGISTER_DATE") val date: Long? = System.currentTimeMillis(),
-    @ColumnInfo(name = "TEST") val test: String? = null
+    @ColumnInfo(name="REGISTER_DATE") val date: Long? = System.currentTimeMillis()
 )

@@ -4,6 +4,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.BindingAdapter
 import com.hmju.memo.R
 import com.hmju.memo.define.NetInfo
+import com.hmju.memo.utils.JLogger
 import com.hmju.memo.widget.glide.GlideUtil
 
 /**
@@ -67,20 +68,20 @@ fun getUrl(url: String?): String {
                 it
             }
             it.startsWith(NetInfo.IMG_PATH) -> {
+                // resource/img Type
                 String.format("%s/%s", NetInfo.BASE_URL, it)
             }
             it.startsWith("/${NetInfo.IMG_PATH}") -> {
+                // /resource/img Type
                 String.format("%s%s", NetInfo.BASE_URL, it)
             }
-            // 앞에 '/' 있는 경우
-            it.startsWith("/") -> {
-                // www.example.com/resource/imgPath
-                String.format("%s%s%s", NetInfo.BASE_URL, NetInfo.IMG_PATH, it)
+            it.startsWith("content://") -> {
+                // Local File Path
+                it
             }
-            // 정상 적인 Path 값이 아닌경우
             else -> {
-                // www.example.com/resource/imagePath
-                String.format("%s/%s/%s", NetInfo.BASE_URL, NetInfo.IMG_PATH, it)
+                // 나머지는 빈값으로 리턴
+                ""
             }
         }
     } ?: run {

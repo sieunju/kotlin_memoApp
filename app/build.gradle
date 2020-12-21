@@ -22,6 +22,8 @@ android {
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-debug.pro'
+
+            resValue("string","PORT_NUMBER","7114")
         }
 
         release {
@@ -168,5 +170,8 @@ dependencies {
 
     // Gson Lib
     implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
+
+    // Room Data Viewer
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 
 }

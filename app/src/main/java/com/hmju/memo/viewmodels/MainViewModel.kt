@@ -87,7 +87,7 @@ class MainViewModel(
                 .netIo()
                 .subscribe({ token ->
                     if (!token.isNullOrEmpty()) {
-                        JLogger.d("Token!!!! $token")
+                        JLogger.d("FCM Token $token")
                         actPref.setFcmToken(token)
                     }
                 }, {

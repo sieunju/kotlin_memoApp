@@ -1,8 +1,8 @@
 package com.hmju.memo.di
 
+import com.hmju.memo.repository.DataSource
+import com.hmju.memo.repository.DataSourceImpl
 import com.hmju.memo.repository.db.AppDataBase
-import com.hmju.memo.repository.db.RoomDataSource
-import com.hmju.memo.repository.db.RoomDataSourceImpl
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -17,7 +17,12 @@ val dataModule = module {
         AppDataBase.instance(androidContext())
     }
 
-    single<RoomDataSource> {
-        RoomDataSourceImpl(get())
+    single<DataSource> {
+        DataSourceImpl(
+            loginManager = get(),
+            imgFileProvider = get(),
+            dataBase = get(),
+            apiService = get()
+        )
     }
 }
