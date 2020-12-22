@@ -28,11 +28,11 @@ import java.io.File
  * Created by juhongmin on 2020/10/25
  */
 class MemoDetailViewModel(
-        private var originData: MemoItem? = null,
-        private val apiService: ApiService,
-        private val provider: ImageFileProvider,
-        private val resProvider: ResourceProvider,
-        private val dataSource: DataSource
+    private var originData: MemoItem? = null,
+    private val apiService: ApiService,
+    private val provider: ImageFileProvider,
+    private val resProvider: ResourceProvider,
+    private val dataSource: DataSource
 ) : BaseViewModel() {
 
     private val _manageNo = NonNullMutableLiveData(originData?.manageNo ?: -1)
@@ -207,27 +207,27 @@ class MemoDetailViewModel(
 
         launch {
             dataSource.postMemo(
-                    MemoItemForm(
-                            manageNo = if (manageNo.value == -1) null else manageNo.value,
-                            tag = selectTag.value,
-                            title = title.value,
-                            contents = contents.value
-                    )
+                MemoItemForm(
+                    manageNo = if (manageNo.value == -1) null else manageNo.value,
+                    tag = selectTag.value,
+                    title = title.value,
+                    contents = contents.value
+                )
             )
-                    .doOnSubscribe { onLoading() }
-                    .netIo()
-                    .subscribe({
-                        saveData()
-                        if (manageNo.value == -1 && it.manageNo != 0) {
-                            _manageNo.value = it.manageNo
-                        }
+                .withIo()
+                .doOnSubscribe { onLoading() }
+                .subscribe({
+                    saveData()
+                    if (manageNo.value == -1 && it.manageNo != 0) {
+                        _manageNo.value = it.manageNo
+                    }
 
-                        JLogger.d("onSuccess $it")
-                        callBack.invoke(true)
-                    }, {
-                        JLogger.d("Error ${it.message}")
-                        callBack.invoke(false)
-                    })
+                    JLogger.d("onSuccess $it")
+                    callBack.invoke(true)
+                }, {
+                    JLogger.d("Error ${it.message}")
+                    callBack.invoke(false)
+                })
         }
     }
 
@@ -237,10 +237,10 @@ class MemoDetailViewModel(
     private fun saveData() {
         if (originData == null) {
             originData = MemoItem(
-                    manageNo = manageNo.value,
-                    tag = selectTag.value,
-                    title = title.value,
-                    contents = contents.value
+                manageNo = manageNo.value,
+                tag = selectTag.value,
+                title = title.value,
+                contents = contents.value
             )
         } else {
             originData?.tag = selectTag.value
@@ -266,22 +266,22 @@ class MemoDetailViewModel(
 
         launch {
             dataSource.postMemoImages(
-                    manageNo = manageNo.value,
-                    pathList = pathList
+                manageNo = manageNo.value,
+                pathList = pathList
             )
-                    .doOnSubscribe { onLoading() }
-                    .subscribe({ response ->
-                        JLogger.d("Success Thread ${Thread.currentThread()}")
+                .doOnSubscribe { onLoading() }
+                .subscribe({ response ->
+                    JLogger.d("Success Thread ${Thread.currentThread()}")
 //                        addImageFileList(response.pathList)
-                        // 업로드된 파일 갱신 처리 함수.
-                        response.pathList?.let {
-                            _fileList.postAddAll(it)
-                        }
-                        onSuccess()
-                    }, { error ->
-                        JLogger.d("Error ${error.message} Thread ${Thread.currentThread()}")
-                        onError()
-                    })
+                    // 업로드된 파일 갱신 처리 함수.
+                    response.pathList?.let {
+                        _fileList.postAddAll(it)
+                    }
+                    onSuccess()
+                }, { error ->
+                    JLogger.d("Error ${error.message} Thread ${Thread.currentThread()}")
+                    onError()
+                })
         }
     }
 
@@ -304,18 +304,18 @@ class MemoDetailViewModel(
     fun deleteImage(fileItem: FileItem) {
         launch {
             apiService.deleteFile(
-                    manageNo = fileItem.manageNo,
-                    path = fileItem.filePath
-            ).netIo()
-                    .doOnSubscribe { onLoading() }
-                    .subscribe({
-                        JLogger.d("Delete Image Success $it")
-                        _fileList.postRemove(fileItem)
-                        onSuccess()
-                    }, {
-                        JLogger.e("Delete Image Error ${it.message}")
-                        onError()
-                    })
+                manageNo = fileItem.manageNo,
+                path = fileItem.filePath
+            ).withIo()
+                .doOnSubscribe { onLoading() }
+                .subscribe({
+                    JLogger.d("Delete Image Success $it")
+                    _fileList.postRemove(fileItem)
+                    onSuccess()
+                }, {
+                    JLogger.e("Delete Image Error ${it.message}")
+                    onError()
+                })
         }
     }
 
@@ -340,15 +340,15 @@ class MemoDetailViewModel(
     private fun deleteAllImages(callBack: () -> Unit) {
         launch {
             dataSource.deleteMemoImages(fileList.value)
-                    .netIo()
-                    .doOnSubscribe { onLoading() }
-                    .subscribe({
-                        JLogger.d("Delete All Images Success $it")
-                        callBack.invoke()
-                    }, {
-                        JLogger.d("Delete All Images Error ${it.message}")
-                        callBack.invoke()
-                    })
+                .withIo()
+                .doOnSubscribe { onLoading() }
+                .subscribe({
+                    JLogger.d("Delete All Images Success $it")
+                    callBack.invoke()
+                }, {
+                    JLogger.d("Delete All Images Error ${it.message}")
+                    callBack.invoke()
+                })
         }
     }
 
@@ -359,7 +359,7 @@ class MemoDetailViewModel(
         //        launch {
 //            apiService.deleteMemo(
 //                    memoId = manageNo.value
-//            ).netIo()
+//            ).withIo()
 //                    .doOnSubscribe { onLoading() }
 //                    .subscribe({
 //                        JLogger.d("Delete Memo Success $it")
@@ -375,20 +375,20 @@ class MemoDetailViewModel(
 
         launch {
             dataSource.deleteMemo(manageNo = manageNo.value)
-                    .netIo()
-                    .doOnSubscribe {
-                        onLoading()
-                    }
-                    .subscribe({
-                        JLogger.d("Delete Memo Success $it")
-                        onSuccess()
-                        isDelete = true
-                        startFinish.value = true
-                    }, {
-                        JLogger.d("Delete Memo Error ${it.message}")
-                        onError()
-                        startFinish.value = true
-                    })
+                .withIo()
+                .doOnSubscribe {
+                    onLoading()
+                }
+                .subscribe({
+                    JLogger.d("Delete Memo Success $it")
+                    onSuccess()
+                    isDelete = true
+                    startFinish.value = true
+                }, {
+                    JLogger.d("Delete Memo Error ${it.message}")
+                    onError()
+                    startFinish.value = true
+                })
         }
     }
 

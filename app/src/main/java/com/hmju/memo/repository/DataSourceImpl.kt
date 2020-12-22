@@ -1,7 +1,9 @@
 package com.hmju.memo.repository
 
 import com.hmju.memo.base.BaseResponse
-import com.hmju.memo.convenience.netIo
+import com.hmju.memo.convenience.io
+import com.hmju.memo.convenience.ui
+import com.hmju.memo.convenience.withIo
 import com.hmju.memo.model.form.MemoItemForm
 import com.hmju.memo.model.form.MemoListParam
 import com.hmju.memo.model.memo.FileItem
@@ -34,10 +36,10 @@ import java.util.*
  * Created by hmju on 2020-12-21
  */
 class DataSourceImpl(
-        private val loginManager: LoginManager,
-        private val imgFileProvider: ImageFileProvider,
-        private val dataBase: AppDataBase,
-        private val apiService: ApiService
+    private val loginManager: LoginManager,
+    private val imgFileProvider: ImageFileProvider,
+    private val dataBase: AppDataBase,
+    private val apiService: ApiService
 ) : DataSource {
 
     /**
@@ -60,31 +62,32 @@ class DataSourceImpl(
             // Local Data Base
             val memoDataBase = if (form.manageNo == null)
                 Memo(
-                        tag = form.tag,
-                        title = form.title,
-                        contents = form.contents
+                    tag = form.tag,
+                    title = form.title,
+                    contents = form.contents
                 )
             else
                 Memo(
-                        manageNo = form.manageNo,
-                        tag = form.tag,
-                        title = form.title,
-                        contents = form.contents
+                    manageNo = form.manageNo,
+                    tag = form.tag,
+                    title = form.title,
+                    contents = form.contents
                 )
 
             return if (form.manageNo == null) {
                 dataBase.memoDao().insertMemo(memoDataBase)
             } else {
                 dataBase.memoDao().updateMemo(memoDataBase)
-            }.flatMap { id ->
-                Single.create<MemoResponse> {
-                    if (id.toInt() > 0) {
-                        it.onSuccess(MemoResponse(status = true, manageNo = id.toInt()))
-                    } else {
-                        it.onError(Throwable("Room Database Insert And Update Fail.."))
+            }
+                .flatMap { id ->
+                    Single.create<MemoResponse> {
+                        if (id.toInt() > 0) {
+                            it.onSuccess(MemoResponse(status = true, manageNo = id.toInt()))
+                        } else {
+                            it.onError(Throwable("Room Database Insert And Update Fail.."))
+                        }
                     }
                 }
-            }
         }
     }
 
@@ -128,52 +131,55 @@ class DataSourceImpl(
                 for (path in pathList) {
                     imgFileProvider.createMultiPartBody(path)?.also {
                         multiParts.add(
-                                MultipartBody.Part.createFormData(
-                                        name = "files",
-                                        filename = it.second.name,
-                                        body = it.first
-                                )
+                            MultipartBody.Part.createFormData(
+                                name = "files",
+                                filename = it.second.name,
+                                body = it.first
+                            )
                         )
                         // TmpFile Add.
                         tmpFileList.add(it.second)
                     }
                 }
                 return@fromCallable multiParts
-            }.subscribeOn(Schedulers.computation())
-                    .observeOn(Schedulers.io())
-                    .flatMap { parts ->
-                        apiService.uploadFile(memoId = manageNo, files = parts)
-                    }
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSuccess { tmpFileList.forEach { imgFileProvider.deleteFile(it) } }
-                    .doOnError { tmpFileList.forEach { imgFileProvider.deleteFile(it) } }
+            }.io()
+                .flatMap { parts ->
+                    apiService.uploadFile(memoId = manageNo, files = parts)
+                }
+                .ui()
+                .doOnSuccess { tmpFileList.forEach { imgFileProvider.deleteFile(it) } }
+                .doOnError { tmpFileList.forEach { imgFileProvider.deleteFile(it) } }
         } else {
             // Room DataBase
-            return Flowable.fromIterable(pathList).flatMap { path ->
-                val id = dataBase.memoDao().insertMemoImage(
+            return Single.fromCallable {
+                val list = arrayListOf<FileItem>()
+                pathList.forEach { path ->
+                    val id = dataBase.memoDao().insertMemoImage(
                         MemoImage(
-                                memoId = manageNo,
-                                path = path
+                            memoId = manageNo,
+                            path = path
                         )
-                )
-                return@flatMap Flowable.just(FileItem(manageNo = id.toInt(), filePath = path))
-            }
-                    .subscribeOn(Schedulers.computation())
-                    .toList()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .flatMap { list ->
-                        val fileList = arrayListOf<FileItem>()
-                        fileList.addAll(list)
-                        Single.create<MemoFileResponse> {
-                            it.onSuccess(
-                                    MemoFileResponse(
-                                            status = true,
-                                            successMsg = "Room Database Success Insert",
-                                            pathList = fileList
-                                    )
+                    )
+                    list.add(FileItem(manageNo = id.toInt(), filePath = path))
+                }
+                return@fromCallable list
+            }.withIo().flatMap { list ->
+                Single.create<MemoFileResponse> {
+                    if (list.size == pathList.size) {
+                        it.onSuccess(
+                            MemoFileResponse(
+                                status = true,
+                                successMsg = "Room Database Success Insert",
+                                pathList = list
                             )
-                        }
+                        )
+                    } else {
+                        // DB Delete 처리로직 추가.
+                        it.onError(Throwable("Room DataBase Fail Insert"))
                     }
+
+                }
+            }
         }
     }
 
@@ -187,8 +193,8 @@ class DataSourceImpl(
         // Api Call..
         return if (loginManager.isLogin().value == true) {
             apiService.deleteFiles(
-                    manageNoList = files.map { it.manageNo }.toList(),
-                    pathList = files.map { it.filePath }.toList()
+                manageNoList = files.map { it.manageNo }.toList(),
+                pathList = files.map { it.filePath }.toList()
             )
         } else {
             // Room DataBase

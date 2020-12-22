@@ -19,6 +19,7 @@ import com.hmju.memo.utils.ImageFileProvider
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.ResourceProvider
 import io.reactivex.Flowable
+import io.reactivex.Single
 import java.lang.ref.WeakReference
 
 /**
@@ -40,10 +41,10 @@ class GalleryViewModel(
 
     @SuppressLint("HandlerLeak")
     inner class LastExecute(viewModel: BaseViewModel) : Handler() {
-        private val weakRef : WeakReference<BaseViewModel> = WeakReference<BaseViewModel>(viewModel)
+        private val weakRef: WeakReference<BaseViewModel> = WeakReference<BaseViewModel>(viewModel)
 
         override fun handleMessage(msg: Message) {
-            if(weakRef.get() == null ) return
+            if (weakRef.get() == null) return
 
             if (msg.what == MSG_GALLERY_UPDATE) {
                 fetchFilter()
@@ -105,19 +106,17 @@ class GalleryViewModel(
      */
     private fun fetchFilter() {
         launch {
-            Flowable.fromCallable {
+            Single.fromCallable {
                 val filterList = provider.fetchGalleryFilter()
-                // 초기값 세팅.
+                // 초기값 세팅
                 filterList.find { it.bucketId == Etc.DEFAULT_GALLERY_FILTER_ID }
                     ?.let { selectedItem ->
                         _selectedFilter.postValue(selectedItem)
                     }
                 _filterList.postValue(filterList)
-
                 provider.fetchGallery(filterId = Etc.DEFAULT_GALLERY_FILTER_ID)
             }
-                .compute()
-                .nextUi()
+                .withIo()
                 .doOnSubscribe { onLoading() }
                 .subscribe({
                     JLogger.d("Third ${Thread.currentThread()}")
@@ -139,10 +138,8 @@ class GalleryViewModel(
      */
     fun fetchGallery() {
         launch {
-            Flowable.just(
-                provider.fetchGallery(filterId = selectedFilter.value!!.bucketId)
-            ).compute()
-                .nextUi()
+            Single.just(provider.fetchGallery(filterId = selectedFilter.value!!.bucketId))
+                .withIo()
                 .doOnSubscribe {
                     // 기존 남아 있는 커서 Exit
                     cursor.value?.close()

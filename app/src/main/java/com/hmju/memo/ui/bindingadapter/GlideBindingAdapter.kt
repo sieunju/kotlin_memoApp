@@ -6,6 +6,7 @@ import com.hmju.memo.R
 import com.hmju.memo.define.NetInfo
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.widget.glide.GlideUtil
+import com.hmju.memo.widget.glide.transformation.BaseTransformation
 
 /**
  * Http Url 로 이미지 가져오는 경우
@@ -80,8 +81,7 @@ fun getUrl(url: String?): String {
                 it
             }
             else -> {
-                // 나머지는 빈값으로 리턴
-                ""
+                String.format("%s/%s/%s",NetInfo.BASE_URL,NetInfo.IMG_PATH,it)
             }
         }
     } ?: run {

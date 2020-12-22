@@ -7,7 +7,7 @@ import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.convenience.NonNullMutableLiveData
 import com.hmju.memo.convenience.SingleLiveEvent
-import com.hmju.memo.convenience.to
+import com.hmju.memo.convenience.io
 import com.hmju.memo.utils.ImageFileProvider
 import com.hmju.memo.utils.JLogger
 import io.reactivex.Observable
@@ -46,11 +46,11 @@ class ImageEditViewModel(
                             Bitmap.Config.ARGB_8888
                         )
                     )
-                }.to()
+                }.io()
                 .flatMap {
                     view.draw(Canvas(it))
                     Observable.just(provider.bitmapToFile(it))
-                }.to()
+                }.io()
                 .doOnComplete { onSuccess() }
                 .subscribe({
                     it?.let { file ->
