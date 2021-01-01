@@ -4,9 +4,8 @@ import androidx.annotation.IdRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.hmju.memo.R
-import com.hmju.memo.base.BaseResponse
 import com.hmju.memo.base.BaseViewModel
-import com.hmju.memo.convenience.*
+import com.hmju.memo.extension.*
 import com.hmju.memo.define.Etc
 import com.hmju.memo.define.TagType
 import com.hmju.memo.model.form.MemoItemForm
@@ -17,10 +16,6 @@ import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.utils.ImageFileProvider
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.ResourceProvider
-import io.reactivex.Flowable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import okhttp3.MultipartBody
-import java.io.File
 
 /**
  * Description : 메모 상세 페이지 ViewModel Class

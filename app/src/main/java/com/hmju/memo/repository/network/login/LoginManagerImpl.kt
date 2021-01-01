@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import com.hmju.memo.base.BaseResponse
-import com.hmju.memo.convenience.netIo
+import com.hmju.memo.extension.netIo
 import com.hmju.memo.model.form.LoginForm
 import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.repository.preferences.AccountPref

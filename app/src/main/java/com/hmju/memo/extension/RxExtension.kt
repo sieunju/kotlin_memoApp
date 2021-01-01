@@ -1,18 +1,16 @@
-package com.hmju.memo.convenience
+package com.hmju.memo.extension
 
 import io.reactivex.Flowable
-import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subscribers.DisposableSubscriber
-import org.intellij.lang.annotations.Flow
 import java.util.concurrent.TimeUnit
 
 /**
- * Description : Reactive X 편의성을 위한 정의한곳
+ * Description : Reactive X 확장 함수
  *
  * Created by hmju on 2020-06-09
  */

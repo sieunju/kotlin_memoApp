@@ -2,7 +2,6 @@ package com.hmju.memo.repository.network.paging
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
-import com.hmju.memo.convenience.NonNullMutableLiveData
 import com.hmju.memo.define.NetworkState
 import com.hmju.memo.model.form.MemoListParam
 import com.hmju.memo.model.memo.MemoItem

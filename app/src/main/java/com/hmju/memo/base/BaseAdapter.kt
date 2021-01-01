@@ -2,7 +2,6 @@ package com.hmju.memo.base
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.hmju.memo.convenience.ListMutableLiveData
 
 /**
  * Description : BaseAdapter Class

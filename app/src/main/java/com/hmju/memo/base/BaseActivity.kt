@@ -1,8 +1,5 @@
 package com.hmju.memo.base
 
-import android.graphics.Color
-import android.net.ConnectivityManager
-import android.net.Network
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -14,22 +11,23 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.LifecycleObserver
 import com.google.android.material.transition.platform.MaterialArcMotion
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import com.hmju.memo.R
 import com.hmju.memo.dialog.LoadingDialog
-import com.hmju.memo.utils.JLogger
 
 /**
  * Description: BaseActivity Class
  *
  * Created by juhongmin on 2020/06/04
  */
-abstract class BaseActivity<T : ViewDataBinding, VM : BaseViewModel>
-    : AppCompatActivity() {
+abstract class BaseActivity<B : ViewDataBinding, VM : BaseViewModel>
+    : AppCompatActivity(), LifecycleObserver {
 
-    private lateinit var binding: T
+    private var _binding: B? = null
+    val binding get() = _binding
 
     abstract val layoutId: Int
     abstract val viewModel: VM
@@ -43,13 +41,25 @@ abstract class BaseActivity<T : ViewDataBinding, VM : BaseViewModel>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        performDataBinding()
+        DataBindingUtil.setContentView<B>(this, layoutId).apply {
+            lifecycleOwner = this@BaseActivity
+            setVariable(bindingVariable, viewModel)
+            _binding = this
+        }
     }
 
-    private fun performDataBinding() {
-        binding = DataBindingUtil.setContentView(this, layoutId)
-        binding.lifecycleOwner = this
-        binding.setVariable(bindingVariable, viewModel)
+    override fun onRestart() {
+        super.onRestart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Binding Memory Leak 방어 코드.
+        _binding = null
     }
 
     protected fun setWindowFlag(bits: Int, on: Boolean) {
@@ -74,16 +84,25 @@ abstract class BaseActivity<T : ViewDataBinding, VM : BaseViewModel>
     }
 
     protected fun setFitsWindowsKeyboard() {
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
         window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN)
     }
 
+    /**
+     * Material Design Activity Animation Func..
+     */
     protected fun onTransFormationStartContainer() {
         window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
         setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())
         window.sharedElementsUseOverlay = false
     }
 
+    /**
+     * Material Design Activity Animation Func..
+     */
     protected fun onTransFormationEndContainer() {
         window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
         ViewCompat.setTransitionName(findViewById(android.R.id.content), TRANSITIONNAME)
@@ -92,6 +111,9 @@ abstract class BaseActivity<T : ViewDataBinding, VM : BaseViewModel>
         window.sharedElementReturnTransition = customMaterialContainerTransform()
     }
 
+    /**
+     * Material Design Activity Animation Func..
+     */
     private fun customMaterialContainerTransform(): MaterialContainerTransform {
         return MaterialContainerTransform().apply {
             addTarget(android.R.id.content)
@@ -104,14 +126,6 @@ abstract class BaseActivity<T : ViewDataBinding, VM : BaseViewModel>
             fadeMode = MaterialContainerTransform.FADE_MODE_CROSS
             fitMode = MaterialContainerTransform.FIT_MODE_AUTO
         }
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-    }
-
-    override fun onStop() {
-        super.onStop()
     }
 
     /**
@@ -133,7 +147,7 @@ abstract class BaseActivity<T : ViewDataBinding, VM : BaseViewModel>
     }
 
     /**
-     * 로딩 화면 비노
+     * 로딩 화면 숨김.
      */
     fun dismissLoadingDialog() {
         loadingDialog?.let {

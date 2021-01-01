@@ -1,13 +1,14 @@
 package com.hmju.memo.viewmodels
 
 import android.view.View
+import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations.switchMap
 import androidx.paging.PagedList
 import com.google.gson.JsonObject
 import com.hmju.memo.base.BaseViewModel
-import com.hmju.memo.convenience.*
+import com.hmju.memo.extension.*
 import com.hmju.memo.define.NetworkState
 import com.hmju.memo.fcm.FCMProvider
 import com.hmju.memo.model.form.MemoListParam
@@ -15,7 +16,6 @@ import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.repository.network.NetworkDataSource
 import com.hmju.memo.repository.network.login.LoginManager
-import com.hmju.memo.repository.network.login.LoginManagerImpl
 import com.hmju.memo.repository.network.paging.PagingModel
 import com.hmju.memo.repository.preferences.AccountPref
 import com.hmju.memo.utils.JLogger
@@ -23,6 +23,8 @@ import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 
@@ -151,6 +153,50 @@ class MainViewModel(
 
             })
         }
+    }
+
+    var loading = ObservableField<Boolean>()
+    var showNoDataAvailable = ObservableField<Boolean>(false)
+    var elements = ObservableField<List<MemoItem>>(emptyList())
+
+    val disposable_: CompositeDisposable = CompositeDisposable()
+    var notifyError: (Throwable) -> Unit = {}
+    var isCleared = ObservableField<Boolean>(false)
+
+    fun test() {
+        disposable_.add(
+            apiService.fetchItems()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe {
+                    loading.set(true)
+                }
+                .subscribe({ list ->
+                    // 성공.
+                    if (list.isEmpty()) {
+                        showNoDataAvailable.set(true)
+                    } else {
+                        elements.set(list)
+                    }
+                    loading.set(false)
+                }, {
+                    // 에러 리턴.
+                    if(isCleared.get() == false) {
+                        notifyError.invoke(it)
+                        showNoDataAvailable.set(true)
+                        loading.set(false)
+                    }
+                })
+        )
+    }
+
+    fun error(error: Throwable?) {
+
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        isCleared.set(true)
     }
 }
 

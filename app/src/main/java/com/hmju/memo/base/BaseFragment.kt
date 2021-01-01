@@ -7,16 +7,19 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleObserver
 
 /**
  * Description : BaseFragment Class
  *
  * Created by juhongmin on 2020/06/08
  */
-abstract class BaseFragment<T : ViewDataBinding, VM : BaseViewModel>
-    : Fragment() {
+abstract class BaseFragment<B : ViewDataBinding, VM : BaseViewModel>
+    : Fragment(), LifecycleObserver {
 
-    protected lateinit var binding: T
+    private var _binding: B? = null
+    val binding get() = _binding
+
     abstract val layoutId: Int
     abstract val viewModel: VM
     abstract val bindingVariable: Int
@@ -26,15 +29,21 @@ abstract class BaseFragment<T : ViewDataBinding, VM : BaseViewModel>
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return DataBindingUtil.inflate<T>(
+        return DataBindingUtil.inflate<B>(
             inflater,
             layoutId,
             container,
             false
         ).apply {
-            binding = this
-            binding.lifecycleOwner = this@BaseFragment
-            binding.setVariable(bindingVariable, viewModel)
+            lifecycleOwner = this@BaseFragment
+            setVariable(bindingVariable, viewModel)
+            _binding = this
         }.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // Binding Memory Leak 방어 코드.
+        _binding = null
     }
 }

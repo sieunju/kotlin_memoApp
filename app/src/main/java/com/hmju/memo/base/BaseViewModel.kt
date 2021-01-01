@@ -1,12 +1,10 @@
 package com.hmju.memo.base
 
 import androidx.lifecycle.ViewModel
-import com.hmju.memo.convenience.SingleLiveEvent
+import com.hmju.memo.extension.SingleLiveEvent
 import com.hmju.memo.define.NetworkState
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import kotlinx.coroutines.*
-import kotlin.coroutines.coroutineContext
 
 /**
  * Description: BaseViewModel Class

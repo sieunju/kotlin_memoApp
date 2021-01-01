@@ -2,13 +2,10 @@ package com.hmju.memo.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import com.hmju.memo.base.BaseViewModel
-import com.hmju.memo.convenience.SingleLiveEvent
-import com.hmju.memo.convenience.netIo
+import com.hmju.memo.extension.SingleLiveEvent
 import com.hmju.memo.model.form.LoginForm
 import com.hmju.memo.model.login.LoginResponse
-import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.repository.network.login.LoginManager
-import com.hmju.memo.repository.preferences.AccountPref
 import com.hmju.memo.utils.JLogger
 
 /**

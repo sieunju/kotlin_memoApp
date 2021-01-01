@@ -6,6 +6,7 @@ import com.hmju.memo.model.form.LoginForm
 import com.hmju.memo.model.form.MemoItemForm
 import com.hmju.memo.model.login.LoginResponse
 import com.hmju.memo.model.memo.MemoFileResponse
+import com.hmju.memo.model.memo.MemoItem
 import com.hmju.memo.model.memo.MemoListResponse
 import com.hmju.memo.model.memo.MemoResponse
 import io.reactivex.Maybe
@@ -134,4 +135,6 @@ interface ApiService {
 
     @GET("/api/mainTest")
     fun fetchMainTest() : Single<JsonObject>
+
+    fun fetchItems(): Single<List<MemoItem>>
 }
