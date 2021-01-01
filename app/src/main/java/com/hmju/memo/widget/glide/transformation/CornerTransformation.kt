@@ -226,7 +226,7 @@ class CornerTransformation(@CornerType type: Int) : BaseTransformation(type) {
             path.moveTo(lineMiddle, mCornerRadius.toFloat())
 
             // Round Top Left
-            if (mType and BaseTransformationTEST.TOP_LEFT == BaseTransformationTEST.TOP_LEFT) {
+            if (mType and TOP_LEFT == TOP_LEFT) {
                 path.quadTo(
                     lineMiddle,
                     lineMiddle,
@@ -306,5 +306,12 @@ class CornerTransformation(@CornerType type: Int) : BaseTransformation(type) {
 
     override fun updateDiskCacheKey(messageDigest: MessageDigest) {
         messageDigest.update((ID + mCornerRadius + mBorderWidth + mBorderColor).toByteArray(CHARSET))
+    }
+
+    override fun hashCode(): Int {
+        var result = mCornerRadius
+        result = 31 * result + mBorderWidth
+        result = 31 * result + mBorderColor
+        return result
     }
 }

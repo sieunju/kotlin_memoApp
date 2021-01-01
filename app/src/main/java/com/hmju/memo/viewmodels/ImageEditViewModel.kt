@@ -7,7 +7,7 @@ import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewModel
 import com.hmju.memo.extension.NonNullMutableLiveData
 import com.hmju.memo.extension.SingleLiveEvent
-import com.hmju.memo.extension.to
+import com.hmju.memo.extension.io
 import com.hmju.memo.utils.ImageFileProvider
 import com.hmju.memo.utils.JLogger
 import io.reactivex.Observable

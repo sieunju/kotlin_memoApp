@@ -4,10 +4,7 @@ import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.view.Window
 import androidx.appcompat.app.AppCompatDialog
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.hmju.memo.R
-import kotlinx.android.synthetic.main.dialog_loading.*
 
 /**
  * Description :

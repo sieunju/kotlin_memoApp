@@ -27,7 +27,7 @@ abstract class BaseActivity<B : ViewDataBinding, VM : BaseViewModel>
     : AppCompatActivity(), LifecycleObserver {
 
     private var _binding: B? = null
-    val binding get() = _binding
+    val binding get() = _binding!!
 
     abstract val layoutId: Int
     abstract val viewModel: VM

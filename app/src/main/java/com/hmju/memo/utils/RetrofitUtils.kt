@@ -1,11 +1,8 @@
 package com.hmju.memo.utils
 
-import com.hmju.memo.BuildConfig
 import com.hmju.memo.define.NetInfo
 import com.hmju.memo.repository.preferences.AccountPref
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.*
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory

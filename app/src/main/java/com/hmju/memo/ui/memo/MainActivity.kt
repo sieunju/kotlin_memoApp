@@ -4,7 +4,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -24,10 +23,8 @@ import com.hmju.memo.ui.login.LoginActivity
 import com.hmju.memo.ui.toast.showToast
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.moveMemoDetail
-import com.hmju.memo.utils.startAct
 import com.hmju.memo.utils.startActResult
 import com.hmju.memo.viewmodels.MainViewModel
-import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import kotlin.system.exitProcess
 
@@ -85,9 +82,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(),
                 when (toolBarPos) {
                     POS_HOME -> {
                         // 맨위로 올리고 초기화.
-                        rvContents.scrollToPosition(0)
-                        motionRootLayout.post {
-                            motionRootLayout.progress = 0.0F
+                        binding.rvContents.scrollToPosition(0)
+                        binding.motionRootLayout.post {
+                            binding.motionRootLayout.progress = 0.0F
                         }
                     }
                     POS_ADD -> {
@@ -118,11 +115,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(),
             })
 
             // ToolBar Setting
-            bottomToolBar.lifeCycle = lifecycle
-            refresh.setOnRefreshListener(this@MainActivity)
+            binding.bottomToolBar.lifeCycle = lifecycle
+            binding.refresh.setOnRefreshListener(this@MainActivity)
 
-            // API 호출.
-            bottomToolBar
             start()
 
 //            pushDeepLink(intent)
@@ -162,7 +157,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(),
                             } else {
                                 val changedItem =
                                     it.getSerializableExtra(ExtraCode.MEMO_DETAIL) as MemoItem
-                                rvContents.adapter?.let { adapter ->
+                                binding.rvContents.adapter?.let { adapter ->
                                     if (adapter is MemoListAdapter) {
                                         adapter.setChangedData(clickPos, changedItem)
                                     }
@@ -179,9 +174,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(),
     override fun onRefresh() {
         JLogger.d("onRefresh!!")
         with(viewModel) {
-            rvContents.scrollToPosition(0)
+            binding.rvContents.scrollToPosition(0)
             refresh()
-            refresh.isRefreshing = false
+            binding.refresh.isRefreshing = false
         }
     }
 }

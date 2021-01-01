@@ -19,12 +19,10 @@ import com.hmju.memo.ui.bottomsheet.MemoMoreDialog
 import com.hmju.memo.ui.gallery.GalleryActivity
 import com.hmju.memo.ui.toast.showToast
 import com.hmju.memo.utils.JLogger
-import com.hmju.memo.utils.startAct
 import com.hmju.memo.utils.startActBundle
 import com.hmju.memo.utils.startActResult
 import com.hmju.memo.viewmodels.MemoDetailViewModel
 import com.hmju.memo.widget.keyboard.FluidContentResize
-import kotlinx.android.synthetic.main.activity_memo_detail.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -78,8 +76,8 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoDetailVie
             startSelectedTagColor.observe(this@MemoDetailActivity, Observer { color ->
                 // 상태바 색상 변경.
                 window.statusBarColor = color
-                vSelectedTag.setBackgroundColor(color)
-                ObjectAnimator.ofFloat(vSelectedTag, View.ALPHA, 0.25F, 1.0F).apply {
+                binding.vSelectedTag.setBackgroundColor(color)
+                ObjectAnimator.ofFloat(binding.vSelectedTag, View.ALPHA, 0.25F, 1.0F).apply {
                     duration = 500
                     start()
                 }

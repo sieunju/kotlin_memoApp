@@ -1,6 +1,9 @@
 package com.hmju.memo.repository
 
 import com.hmju.memo.base.BaseResponse
+import com.hmju.memo.extension.io
+import com.hmju.memo.extension.ui
+import com.hmju.memo.extension.withIo
 import com.hmju.memo.model.form.MemoItemForm
 import com.hmju.memo.model.form.MemoListParam
 import com.hmju.memo.model.memo.FileItem
@@ -16,8 +19,6 @@ import com.hmju.memo.repository.network.paging.PagingModel
 import com.hmju.memo.utils.ImageFileProvider
 import io.reactivex.Flowable
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import okhttp3.MultipartBody
 import java.io.File
 import java.util.*

@@ -12,7 +12,6 @@ import com.hmju.memo.databinding.ActivityImageEditBinding
 import com.hmju.memo.define.ExtraCode
 import com.hmju.memo.define.NetworkState
 import com.hmju.memo.viewmodels.ImageEditViewModel
-import kotlinx.android.synthetic.main.activity_image_edit.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -47,8 +46,8 @@ class ImageEditActivity : BaseActivity<ActivityImageEditBinding, ImageEditViewMo
             })
 
             startResetImage.observe(this@ImageEditActivity, Observer {
-                imgLeft.resetView()
-                imgRight.resetView()
+                binding.imgLeft.resetView()
+                binding.imgRight.resetView()
             })
 
             startContentAni.observe(this@ImageEditActivity, Observer { isVisible ->
@@ -65,7 +64,7 @@ class ImageEditActivity : BaseActivity<ActivityImageEditBinding, ImageEditViewMo
                 }
 
                 // Animation 처리.
-                ObjectAnimator.ofFloat(llContents, View.ALPHA, fromAlpha, toAlpha).apply {
+                ObjectAnimator.ofFloat(binding.llContents, View.ALPHA, fromAlpha, toAlpha).apply {
                     duration = 500
                     interpolator = AccelerateDecelerateInterpolator()
                     start()
@@ -74,15 +73,15 @@ class ImageEditActivity : BaseActivity<ActivityImageEditBinding, ImageEditViewMo
 
             startSwitchImage.observe(this@ImageEditActivity, Observer {
                 val leftPath = leftPhotoPath.value
-                val leftState = imgLeft.stateItem
+                val leftState = binding.imgLeft.stateItem
                 val rightPath = rightPhotoPath.value
-                val rightState = imgRight.stateItem
+                val rightState = binding.imgRight.stateItem
 
                 leftPhotoPath.postValue(rightPath)
                 rightPhotoPath.postValue(leftPath)
 
-                imgLeft.switchingState(rightState)
-                imgRight.switchingState(leftState)
+                binding.imgLeft.switchingState(rightState)
+                binding.imgRight.switchingState(leftState)
             })
         }
     }
