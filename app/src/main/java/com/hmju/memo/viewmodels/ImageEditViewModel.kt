@@ -46,11 +46,11 @@ class ImageEditViewModel(
                             Bitmap.Config.ARGB_8888
                         )
                     )
-                }.to()
+                }.io()
                 .flatMap {
                     view.draw(Canvas(it))
                     Observable.just(provider.bitmapToFile(it))
-                }.to()
+                }.io()
                 .doOnComplete { onSuccess() }
                 .subscribe({
                     it?.let { file ->

@@ -122,6 +122,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(),
             refresh.setOnRefreshListener(this@MainActivity)
 
             // API 호출.
+            bottomToolBar
             start()
 
 //            pushDeepLink(intent)

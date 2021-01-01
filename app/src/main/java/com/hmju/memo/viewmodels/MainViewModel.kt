@@ -86,7 +86,7 @@ class MainViewModel(
         addJob(
             fcmProvider
                 .createToken()
-                .netIo()
+                .withIo()
                 .subscribe({ token ->
                     if (!token.isNullOrEmpty()) {
                         JLogger.d("FCM Token $token")

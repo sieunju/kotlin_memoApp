@@ -55,26 +55,25 @@ fun getHtmlTextString(view: TextView): String {
     return view.text.toString()
 }
 
-@BindingAdapter("android:textAttrChanged", requireAll = false)
-fun setEditTextChanged(
-    view: TextView,
-    textChanged: InverseBindingListener
-) {
-    val listener = object : TextWatcher {
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-        }
-
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            textChanged.onChange()
-        }
-
-        override fun afterTextChanged(s: Editable?) {
-        }
-    }
-    view.removeTextChangedListener(listener)
-    view.addTextChangedListener(listener)
-
-}
+//@BindingAdapter("android:textAttrChanged", requireAll = false)
+//fun setEditTextChanged(
+//    view: TextView,
+//    textChanged: InverseBindingListener
+//) {
+//    val listener = object : TextWatcher {
+//        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+//        }
+//
+//        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+//            textChanged.onChange()
+//        }
+//
+//        override fun afterTextChanged(s: Editable?) {
+//        }
+//    }
+//    view.removeTextChangedListener(listener)
+//    view.addTextChangedListener(listener)
+//}
 
 @SuppressLint("ClickableViewAccessibility")
 @BindingAdapter("editTextListener")
