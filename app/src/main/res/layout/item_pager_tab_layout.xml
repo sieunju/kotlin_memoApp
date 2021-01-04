@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.ViewGroup.LayoutParams" />
+
+        <variable
+            name="item"
+            type="com.hmju.memo.widget.pagertablayout.PagerTabLayoutDataModel" />
+
+        <variable
+            name="listener"
+            type="com.hmju.memo.widget.pagertablayout.PagerTabLayout.Listener" />
+
+    </data>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:turtleClick="@{()->listener.onTabClick(item.pos)}">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@{item.icon}"
+            android:visibility="@{item.icon != null}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_height='@{LayoutParams.WRAP_CONTENT}'
+            app:layout_width='@{item.iconWidth}'
+            tools:visibility="visible" />
+
+        <!-- 아이콘 이미지가 있는 경우 VISIBLE -->
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/size_4"
+            android:visibility="@{item.icon != null}" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/padding_size_10"
+            android:paddingRight="@dimen/padding_size_10"
+            android:text="@{item.title}"
+            android:textSize="@dimen/text_size_15"
+            android:textStyle='@{item.isSelected == true ? "bold" : "normal"}'
+            app:isSelected="@{item.isSelected}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imgIcon"
+            app:textColorStyle="@{item.textColorStyle}"
+            tools:text="제목텝" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

@@ -7,23 +7,26 @@ import org.json.JSONException
 import org.json.JSONObject
 
 /**
- * Description : Gson Util
+ * Description : Gson Util Provider
  *
  * Created by juhongmin on 2020/12/06
  */
-
 interface GsonProvider {
-    val gson: Gson
     fun <T : Any> getValue(jsonObject: JsonElement, key: String, type: Class<T>): T?
-    fun <T : Any> getList(jsonObject: JsonObject, key: String, type: Class<T>): ArrayList<T>?
-    fun <T : Any> getObject(jsonObject: JsonObject, type: Class<T>): T?
-    fun <T : Any> getObject(jsonElement: JsonElement, type: Class<T>): T?
+    fun <T : Any> getValue(json: JsonObject, key: String, type: Class<T>): T?
+    fun <T : Any> getValue(json: JsonObject, key: String, defaultValue: T, type: Class<T>): T
+    fun <T : Any> getList(json: JsonObject, key: String, type: Class<T>): ArrayList<T>?
+    fun <T : Any> getObject(json: JsonObject, type: Class<T>): T?
+    fun <T : Any> getObject(json: JsonElement, type: Class<T>): T?
 }
 
-class GsonProviderImpl(private val ctx: Context) : GsonProvider {
-    override val gson: Gson = GsonBuilder().create()
+@Suppress("UNCHECKED_CAST")
+class GsonProviderImpl : GsonProvider {
 
-    @Suppress("UNCHECKED_CAST")
+    private val gson: Gson by lazy {
+        GsonBuilder().create()
+    }
+
     override fun <T : Any> getValue(jsonObject: JsonElement, key: String, type: Class<T>): T? {
         try {
             when (type) {
@@ -49,16 +52,69 @@ class GsonProviderImpl(private val ctx: Context) : GsonProvider {
         }
     }
 
+    override fun <T : Any> getValue(json: JsonObject, key: String, type: Class<T>): T? {
+        try {
+            if (!json.has(key)) return null
+
+            when (type) {
+                String::class.java -> {
+                    return json.get(key).asString as T
+                }
+                Int::class.java -> {
+                    return json.get(key).asInt as T
+                }
+                Double::class.java -> {
+                    return json.get(key).asDouble as T
+                }
+                Boolean::class.java -> {
+                    return json.get(key).asBoolean as T
+                }
+                else -> {
+                    return null
+                }
+            }
+        } catch (ex: Exception) {
+            return null
+        }
+    }
+
+    override fun <T : Any> getValue(json: JsonObject, key: String, defaultValue: T, type: Class<T>): T {
+        try {
+            if (!json.has(key)) return defaultValue
+
+            when (type) {
+                String::class.java -> {
+                    return json.get(key).asString as T
+                }
+                Int::class.java -> {
+                    return json.get(key).asInt as T
+                }
+                Double::class.java -> {
+                    return json.get(key).asDouble as T
+                }
+                Boolean::class.java -> {
+                    return json.get(key).asBoolean as T
+                }
+                else -> {
+                    return defaultValue
+                }
+            }
+
+        } catch (ex: Exception) {
+            return defaultValue
+        }
+    }
+
     override fun <T : Any> getList(
-        jsonObject: JsonObject,
-        key: String,
-        type: Class<T>
+            json: JsonObject,
+            key: String,
+            type: Class<T>
     ): ArrayList<T>? {
         return try {
-            val result: JsonArray = jsonObject.getAsJsonArray(key)
+            val result: JsonArray = json.getAsJsonArray(key)
             gson.fromJson(
-                result.toString(),
-                TypeToken.getParameterized(ArrayList::class.java, type).type
+                    result.toString(),
+                    TypeToken.getParameterized(ArrayList::class.java, type).type
             )
         } catch (ex: Exception) {
             JLogger.d("Error?? ${ex.message}")
@@ -66,21 +122,21 @@ class GsonProviderImpl(private val ctx: Context) : GsonProvider {
         }
     }
 
-    override fun <T : Any> getObject(jsonObject: JsonObject, type: Class<T>): T? {
-        try {
-            return gson.fromJson(jsonObject.toString(), type)
+    override fun <T : Any> getObject(json: JsonObject, type: Class<T>): T? {
+        return try {
+            gson.fromJson(json.toString(), type)
         } catch (ex: Exception) {
             JLogger.d("Error ? ${ex.message}")
-            return null
+            null
         }
     }
 
-    override fun <T : Any> getObject(jsonElement: JsonElement, type: Class<T>): T? {
-        try {
-            return gson.fromJson(jsonElement, type)
+    override fun <T : Any> getObject(json: JsonElement, type: Class<T>): T? {
+        return try {
+            gson.fromJson(json, type)
         } catch (ex: Exception) {
             JLogger.d("Error? ${ex.message}")
-            return null
+            null
         }
     }
 }

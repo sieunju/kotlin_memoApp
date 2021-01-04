@@ -67,7 +67,7 @@ class MemoListAdapter(
             }
         }
 
-        setAnimation(holder.itemView, pos)
+//        setAnimation(holder.itemView, pos)
     }
 
     /**

@@ -39,6 +39,6 @@ val appModule = module {
     }
 
     factory<GsonProvider> {
-        GsonProviderImpl(androidContext())
+        GsonProviderImpl()
     }
 }

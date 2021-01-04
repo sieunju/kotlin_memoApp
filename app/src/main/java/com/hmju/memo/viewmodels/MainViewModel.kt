@@ -6,9 +6,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations.switchMap
 import androidx.paging.PagedList
-import com.google.gson.JsonObject
+import com.hmju.memo.base.BaseResponse
 import com.hmju.memo.base.BaseViewModel
-import com.hmju.memo.extension.*
+import com.hmju.memo.convenience.*
 import com.hmju.memo.define.NetworkState
 import com.hmju.memo.fcm.FCMProvider
 import com.hmju.memo.model.form.MemoListParam
@@ -34,11 +34,11 @@ import io.reactivex.subjects.Subject
  * Created by juhongmin on 2020/06/07
  */
 class MainViewModel(
-    private val actPref: AccountPref,
-    private val networkDataSource: NetworkDataSource,
-    private val apiService: ApiService,
-    private val fcmProvider: FCMProvider,
-    private val loginManager: LoginManager
+        private val actPref: AccountPref,
+        private val networkDataSource: NetworkDataSource,
+        private val apiService: ApiService,
+        private val fcmProvider: FCMProvider,
+        private val loginManager: LoginManager
 ) : BaseViewModel() {
 
     val startLogin = SingleLiveEvent<Unit>()
@@ -47,7 +47,7 @@ class MainViewModel(
     val finish = SingleLiveEvent<Boolean>()
 
     private val backButtonSubject: Subject<Long> =
-        BehaviorSubject.createDefault(0L).toSerialized()
+            BehaviorSubject.createDefault(0L).toSerialized()
 
     fun onBackPressed() {
         backButtonSubject.onNext(System.currentTimeMillis())
@@ -55,51 +55,55 @@ class MainViewModel(
 
     private val pagingModel = MutableLiveData<PagingModel<MemoItem>>()
     val memoList: LiveData<PagedList<MemoItem>> =
-        switchMap(pagingModel) { it.pagedList }
+            switchMap(pagingModel) { it.pagedList }
     val networkState: LiveData<NetworkState> =
-        switchMap(pagingModel) { it.networkState }
+            switchMap(pagingModel) { it.networkState }
     val memoSize: LiveData<Int> =
-        switchMap(pagingModel) { it.pagedSize }
+            switchMap(pagingModel) { it.pagedSize }
 
-    val user: MutableLiveData<LoginManager.UserInfo>
+    val user: LiveData<LoginManager.UserInfo>
         get() = loginManager.user()
-    val isLogin: MutableLiveData<Boolean>
+    val isLogin: LiveData<Boolean>
         get() = loginManager.isLogin()
 
     private val params by lazy {
         MemoListParam(
-            pageNo = 1
+                pageNo = 1
         )
     }
 
     init {
-        addJob(backButtonSubject.toFlowable(BackpressureStrategy.BUFFER)
-            .observeOn(AndroidSchedulers.mainThread())
-            .buffer(2, 1)
-            .map { it[0] to it[1] }
-            .subscribeWith(object : SimpleDisposableSubscriber<Pair<Long, Long>>() {
-                override fun onNext(t: Pair<Long, Long>) {
-                    finish.value = t.second - t.first < 2000
-                }
-            })
-        )
-        addJob(
-            fcmProvider
-                .createToken()
-                .withIo()
-                .subscribe({ token ->
-                    if (!token.isNullOrEmpty()) {
-                        JLogger.d("FCM Token $token")
-                        actPref.setFcmToken(token)
-                    }
-                }, {
-                    JLogger.e("Error " + it.message)
 
-                })
-        )
-        addJob(
-            loginManager.loginCheck().subscribe()
-        )
+        launch {
+            backButtonSubject.toFlowable(BackpressureStrategy.BUFFER)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .buffer(2, 1)
+                    .map { it[0] to it[1] }
+                    .subscribeWith(object : SimpleDisposableSubscriber<Pair<Long, Long>>() {
+                        override fun onNext(t: Pair<Long, Long>) {
+                            finish.value = t.second - t.first < 2000
+                        }
+                    })
+        }
+
+        launch {
+            Single.merge(Flowable.fromArray(
+                    fcmProvider.createToken().onErrorReturnItem(""),
+                    loginManager.loginCheck()
+            )).withIo()
+                    .subscribe({
+                        when(it) {
+                            is String -> {
+                                JLogger.d("Tokken을 받았습니다. $it")
+                            }
+                            is BaseResponse -> {
+                                JLogger.d("Response $it")
+                            }
+                        }
+                    },{
+                        JLogger.d("Error ${it.message}")
+                    })
+        }
     }
 
     /**
@@ -114,7 +118,7 @@ class MainViewModel(
 
     fun start() {
         // 로그인 상태인경우 메모장 API 콜한다.
-        if (isLogin.value == true) {
+        if (loginManager.isLogin().value == true) {
             pagingModel.postValue(networkDataSource.fetchMemoList(params))
         }
     }
@@ -140,20 +144,20 @@ class MainViewModel(
 
     }
 
-    fun testStart() {
-        launch {
-            Single.merge(
-                Flowable.fromArray(
-                    apiService.fetchMainTest().io().onErrorReturnItem(JsonObject()),
-                    apiService.fetchMainTest()
-                )
-            ).subscribe({
-
-            }, {
-
-            })
-        }
-    }
+//    fun testStart() {
+//        launch {
+//            Single.merge(
+//                Flowable.fromArray(
+//                    apiService.fetchMainTest().io().onErrorReturnItem(JsonObject()),
+//                    apiService.fetchMainTest()
+//                )
+//            ).subscribe({
+//
+//            }, {
+//
+//            })
+//        }
+//    }
 
     var loading = ObservableField<Boolean>()
     var showNoDataAvailable = ObservableField<Boolean>(false)

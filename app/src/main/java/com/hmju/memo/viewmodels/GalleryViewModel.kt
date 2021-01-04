@@ -11,14 +11,13 @@ import android.view.View
 import androidx.lifecycle.MutableLiveData
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewModel
-import com.hmju.memo.extension.*
+import com.hmju.memo.convenience.*
 import com.hmju.memo.define.Etc
 import com.hmju.memo.model.gallery.GalleryFilterItem
 import com.hmju.memo.utils.CursorProvider
 import com.hmju.memo.utils.ImageFileProvider
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.utils.ResourceProvider
-import io.reactivex.Flowable
 import io.reactivex.Single
 import java.lang.ref.WeakReference
 

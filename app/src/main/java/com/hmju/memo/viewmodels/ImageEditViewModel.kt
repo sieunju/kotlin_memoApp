@@ -5,9 +5,9 @@ import android.graphics.Canvas
 import android.view.View
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewModel
-import com.hmju.memo.extension.NonNullMutableLiveData
-import com.hmju.memo.extension.SingleLiveEvent
-import com.hmju.memo.extension.io
+import com.hmju.memo.convenience.NonNullMutableLiveData
+import com.hmju.memo.convenience.SingleLiveEvent
+import com.hmju.memo.convenience.io
 import com.hmju.memo.utils.ImageFileProvider
 import com.hmju.memo.utils.JLogger
 import io.reactivex.Observable

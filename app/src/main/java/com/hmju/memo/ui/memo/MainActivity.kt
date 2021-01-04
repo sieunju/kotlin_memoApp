@@ -118,6 +118,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(),
             binding.bottomToolBar.lifeCycle = lifecycle
             binding.refresh.setOnRefreshListener(this@MainActivity)
 
+            // API 호출.
             start()
 
 //            pushDeepLink(intent)

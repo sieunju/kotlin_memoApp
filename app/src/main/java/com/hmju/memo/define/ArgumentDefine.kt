@@ -1,10 +1,11 @@
 package com.hmju.memo.define
 
 import androidx.annotation.ColorRes
+import androidx.annotation.LayoutRes
 import com.hmju.memo.R
 
 /**
- * Description :
+ * Description : Argument Class
  *
  * Created by hmju on 2020-06-12
  */
@@ -61,10 +62,18 @@ enum class TagType(val tag: Int, @ColorRes val color: Int) {
     ETC(7, R.color.color_tag7)
 }
 
+enum class FragmentType {
+    MAIN, TEST
+}
+
+enum class ListItemType(@LayoutRes val layoutId: Int) {
+    A(11)
+}
+
 object Etc {
     const val IMG_MIME_TYPE_FILE_EXTENSION = "image/jpg"
     const val IMG_FILE_EXTENSION = ".jpg"
-    const val IMG_FILE_LIMIT : Int = 5
+    const val IMG_FILE_LIMIT: Int = 5
     const val DEFAULT_GALLERY_FILTER_ID = "ALL"
     const val DEFAULT_GALLERY_FILTER_NAME = "최근 항목"
 }

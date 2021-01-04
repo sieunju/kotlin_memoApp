@@ -1,4 +1,4 @@
-package com.hmju.memo.extension
+package com.hmju.memo.convenience
 
 import androidx.lifecycle.MutableLiveData
 

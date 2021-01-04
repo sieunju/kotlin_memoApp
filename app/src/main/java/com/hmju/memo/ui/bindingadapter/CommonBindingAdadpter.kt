@@ -1,45 +1,59 @@
 package com.hmju.memo.ui.bindingadapter
 
+import android.content.res.ColorStateList
 import android.graphics.PorterDuff
+import android.graphics.Typeface
 import android.os.Build
 import android.text.Html
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.ColorInt
+import androidx.annotation.Dimension
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.hmju.memo.base.BaseFragmentPagerAdapter
 import com.hmju.memo.base.BaseViewModel
+import com.hmju.memo.convenience.let
+import com.hmju.memo.define.FragmentType
+import com.hmju.memo.define.ListItemType
 import com.hmju.memo.ui.adapter.BottomSheetCheckableAdapter
+import com.hmju.memo.ui.adapter.ItemListAdapter
 import com.hmju.memo.ui.bottomsheet.CheckableBottomSheet
 import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewmodels.MainViewModel
 import com.hmju.memo.widget.bottomToolbar.BottomToolbar
+import com.hmju.memo.widget.pagertablayout.PagerTabLayout
+import com.hmju.memo.widget.pagertablayout.PagerTabLayoutDataModel
 import java.text.DecimalFormat
 
 /**
- * Description : 공통 Binding Adapter
- *
- * Created by hmju on 2020-06-12
+ * set TextView
+ * default Type
  */
-
-@BindingAdapter("text")
-fun bindingText(
-    textView: AppCompatTextView,
-    text: String?
+@BindingAdapter("android:text")
+fun setText(
+        textView: AppCompatTextView,
+        text: String?
 ) {
     text?.let {
-        textView.text = text
+        textView.text = it
     }
 }
 
+/**
+ * set TextView
+ * htmlText Type
+ */
 @Suppress("DEPRECATION")
 @BindingAdapter("htmlText")
-fun bindingHtmlText(
-    textView: AppCompatTextView,
-    text: String?
+fun setHtmlText(
+        textView: AppCompatTextView,
+        text: String?
 ) {
     text?.let {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
@@ -50,15 +64,97 @@ fun bindingHtmlText(
     }
 }
 
+/**
+ * set TextView
+ * String Format Type
+ */
+@BindingAdapter(value = ["fmtText", "data"], requireAll = true)
+fun setFmtTextData(
+        textView: AppCompatTextView,
+        fmtText: String,
+        data: String?
+) {
+    data?.let {
+        textView.text = fmtText
+        textView.visibility = View.VISIBLE
+    } ?: run {
+        textView.visibility = View.GONE
+    }
+}
+
+/**
+ * set TextView
+ * Number Comma Type
+ */
 @BindingAdapter("commaText")
-fun bindingCommaText(
-    textView: AppCompatTextView,
-    number: Int
+fun setCommaText(
+        textView: AppCompatTextView,
+        number: Int
 ) {
     val formatter = DecimalFormat("###,###")
     textView.text = formatter.format(number)
 }
 
+/**
+ * set selector TextView
+ */
+@BindingAdapter("textColorStyle")
+fun setTextColorList(
+        textView: AppCompatTextView,
+        colorStyle: ColorStateList?
+) {
+    colorStyle?.let { textView.setTextColor(it) }
+}
+
+/**
+ * set Typeface TextView
+ */
+@BindingAdapter("android:textStyle")
+fun setTextViewTypeFace(
+        textView: AppCompatTextView,
+        style: String
+) {
+    when (style) {
+        "bold" -> {
+            textView.setTypeface(null, Typeface.BOLD)
+        }
+        "normal" -> {
+            textView.setTypeface(null, Typeface.NORMAL)
+        }
+        "italic" -> {
+            textView.setTypeface(null, Typeface.ITALIC)
+        }
+        else -> {
+        }
+    }
+}
+
+/**
+ * set Filter ImageView
+ */
+@BindingAdapter("filterColorId")
+fun setImageColorFilter(
+        imgView: AppCompatImageView,
+        @ColorInt colorResId: Int
+) {
+    imgView.setColorFilter(colorResId, PorterDuff.Mode.SRC_IN)
+}
+
+/**
+ * set Resource ImageView
+ * @param resourceId Nullable Id
+ */
+@BindingAdapter("android:src")
+fun setImageViewDrawable(
+        imgView: AppCompatImageView,
+        @DrawableRes resourceId: Int?
+) {
+    resourceId?.let {
+        imgView.setImageResource(it)
+    }
+}
+
+// [s] 중복 클릭 방지 리스너
 class OnSingleClickListener(private val onSingleCLick: (View) -> Unit) : View.OnClickListener {
     companion object {
         const val CLICK_INTERVAL = 500
@@ -85,31 +181,30 @@ fun View.setOnSingleClickListener(onSingleCLick: (View) -> Unit) {
     setOnClickListener(singleClickListener)
 }
 
-
-/**
- * 뷰 중복 클릭 방지 리스너.
- */
 @BindingAdapter("turtleClick")
 fun setTurtleClick(
-    view: View,
-    listener: View.OnClickListener
+        view: View,
+        listener: View.OnClickListener
 ) {
     view.setOnClickListener(OnSingleClickListener {
         listener.onClick(it)
     })
 
 //    view.setOnSingleClickListener { listener.onClick(view) }
-
 }
+// [e] 중복 클릭 방지 리스너
 
+/**
+ * Common BottomToolbar Click Listener
+ * BottomToolbar 에서 충분히 할수 있을것으로 보임.
+ */
 @BindingAdapter("viewModel")
 fun setBottomToolBarClick(
-    toolbar: BottomToolbar,
-    viewModel: BaseViewModel
+        toolbar: BottomToolbar,
+        viewModel: BaseViewModel
 ) {
     if (viewModel is MainViewModel) {
         toolbar.setOnItemReselectedListener { pos ->
-            JLogger.d("ToolBar Click!!! $pos")
             viewModel.startToolBarAction.value = pos
         }
         toolbar.setOnItemSelectedListener { pos ->
@@ -118,19 +213,16 @@ fun setBottomToolBarClick(
     }
 }
 
-@BindingAdapter("filterColorId")
-fun setImageColorFilter(
-    imgView: AppCompatImageView,
-    @ColorInt colorResId: Int
-) {
-    imgView.setColorFilter(colorResId, PorterDuff.Mode.SRC_IN)
-}
-
+/**
+ * set CheckableBottomSheet DataList
+ * @param dataList Check, Id, Name
+ * @param listener Click Listener
+ */
 @BindingAdapter(value = ["checkableDialogDataList", "listener"])
 fun setSelectBottomSheetAdapter(
-    recyclerView: RecyclerView,
-    dataList: List<CheckableBottomSheet.CheckableBottomSheetItem>,
-    listener: CheckableBottomSheet.Listener
+        recyclerView: RecyclerView,
+        dataList: List<CheckableBottomSheet.CheckableBottomSheetItem>,
+        listener: CheckableBottomSheet.Listener
 ) {
     recyclerView.adapter?.notifyDataSetChanged() ?: run {
         BottomSheetCheckableAdapter(dataList, listener).apply {
@@ -139,18 +231,13 @@ fun setSelectBottomSheetAdapter(
     }
 }
 
-@BindingAdapter("visibility")
-fun setVisibility(
-    view: View,
-    visible: Boolean
-) {
-    view.visibility = if (visible) View.VISIBLE else View.GONE
-}
-
+/**
+ * set Floating Button Visible Listener
+ */
 @BindingAdapter("recyclerView")
 fun setFloatingButtonListener(
-    view: FloatingActionButton,
-    recyclerView: RecyclerView
+        view: FloatingActionButton,
+        recyclerView: RecyclerView
 ) {
     view.hide()
     recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -171,10 +258,25 @@ fun setFloatingButtonListener(
     }
 }
 
+/**
+ * set View Visible
+ */
+@BindingAdapter("android:visibility")
+fun setVisibility(
+        view: View,
+        visible: Boolean
+) {
+    view.visibility = if (visible) View.VISIBLE else View.GONE
+}
+
+/**
+ * set View Visible
+ * ArrayList Type
+ */
 @BindingAdapter("visibilityDataList")
 fun setDataListVisibility(
-    view: View,
-    dataList: ArrayList<*>?
+        view: View,
+        dataList: ArrayList<*>?
 ) {
     dataList?.let {
         if (it.size > 0) {
@@ -187,10 +289,127 @@ fun setDataListVisibility(
     }()
 }
 
-@BindingAdapter("drawableId")
-fun bindingResourceDrawable(
-    view: AppCompatImageView,
-    @DrawableRes drawableId: Int
+/**
+ * set View Selected
+ */
+@BindingAdapter("isSelected")
+fun setSelected(
+        view: View,
+        isSelect: Boolean
 ) {
-    view.setImageResource(drawableId)
+    view.isSelected = isSelect
 }
+
+/**
+ * set Layout Width or Height
+ */
+@BindingAdapter(value = ["layout_width", "layout_height"], requireAll = false)
+fun setLayoutWidthAndHeight(
+        view: View,
+        @Dimension width: Int?,
+        @Dimension height: Int?
+) {
+    val layoutParams = view.layoutParams
+    width?.let {
+        layoutParams.width = when (it) {
+            -1 -> ViewGroup.LayoutParams.MATCH_PARENT
+            -2 -> ViewGroup.LayoutParams.WRAP_CONTENT
+            else -> it
+        }
+    }
+
+    height?.let {
+        layoutParams.height = when (it) {
+            -1 -> ViewGroup.LayoutParams.MATCH_PARENT
+            -2 -> ViewGroup.LayoutParams.WRAP_CONTENT
+            else -> it
+        }
+    }
+
+    view.layoutParams = layoutParams
+}
+
+/**
+ * set Pager Tab Layout
+ */
+@BindingAdapter(value = ["viewPager", "menuList"], requireAll = true)
+fun setPagerTabDataList(
+        view: PagerTabLayout,
+        viewPager: ViewPager2,
+        dataList: ArrayList<PagerTabLayoutDataModel>?
+) {
+    view.viewPager = viewPager
+    dataList?.let { list ->
+        view.dataList = list
+    } ?: run {
+        JLogger.d("DataList Null")
+    }
+}
+
+/**
+ * Common ViewPager2 Adapter
+ * @param limitSize ViewPager 수 제한.
+ * @param type Unique Fragment Type
+ * @param dataList DataList
+ */
+@Suppress("unchecked")
+@BindingAdapter(value = ["limitSize", "itemType", "dataList"], requireAll = false)
+fun <T : Any> setViewPagerAdapter(
+        viewPager: ViewPager2,
+        limitSize: Int = 0,
+        type: FragmentType,
+        dataList: ArrayList<T>
+) {
+
+    if (limitSize > 0) {
+        viewPager.offscreenPageLimit = limitSize
+    }
+
+    viewPager.adapter?.also { adapter ->
+        // DataList Changed
+        (adapter as BaseFragmentPagerAdapter<T>).dataList = dataList
+    } ?: run {
+
+        var adapter: BaseFragmentPagerAdapter<T>? = null
+        // 각 타입에 맞게 분기 처리한다.
+        when (type) {
+            FragmentType.TEST -> {
+                // Disable Swipe
+//                viewPager.isUserInputEnabled = false
+            }
+            FragmentType.MAIN -> {
+
+            }
+            else -> {
+            }
+        }
+
+        adapter?.let { viewPager.adapter = it }
+    }
+}
+
+/**
+ * Common RecyclerView ItemList Adapter
+ * 단순 ItemListAdapter 인 경우 사용한다.
+ * @param itemType Unique Item Type
+ * @param dataList DataList
+ */
+@BindingAdapter(value = ["itemType", "dataList"], requireAll = true)
+fun <T : Any> setItemListAdapter(
+        recyclerView: RecyclerView,
+        itemType: ListItemType,
+        dataList: ArrayList<T>
+) {
+    recyclerView.adapter?.also { adapter ->
+        (adapter as ItemListAdapter<T>).dataList = dataList
+        adapter.notifyDataSetChanged()
+    } ?: run {
+        ItemListAdapter<T>().apply {
+            type = itemType
+            recyclerView.adapter = this
+            this.dataList = dataList
+        }
+    }
+}
+
+

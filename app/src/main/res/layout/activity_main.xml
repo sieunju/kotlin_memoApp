@@ -94,9 +94,10 @@
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.isLogin == false ? @string/str_login_request : @string/fmt_hello_user(viewModel.user.userName)}"
             android:textColor="@color/colorTextPrimary"
             android:textSize="@dimen/text_size_20"
+            app:data="@{viewModel.isLogin == false ? @string/str_login_request : viewModel.user.userName}"
+            app:fmtText="@{viewModel.isLogin == false ? @string/str_login_request : @string/fmt_hello_user(viewModel.user.userName)}"
             app:turtleClick="@{()->viewModel.moveLogin()}" />
 
         <!-- 프로필 이미지 뷰 -->

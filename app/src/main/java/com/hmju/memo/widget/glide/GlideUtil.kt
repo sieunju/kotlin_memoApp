@@ -37,7 +37,7 @@ import java.util.*
  *
  * Created by hmju on 2020-12-22
  */
-class GlideUtil() {
+class GlideUtil {
     interface Listener {
         fun onFailed(msg: String?)
 

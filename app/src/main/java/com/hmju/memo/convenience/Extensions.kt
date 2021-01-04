@@ -1,13 +1,11 @@
-package com.hmju.memo.extension
+package com.hmju.memo.convenience
 
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subscribers.DisposableSubscriber
-import java.util.concurrent.TimeUnit
 
 /**
  * Description : Reactive X 확장 함수
@@ -31,27 +29,26 @@ import java.util.concurrent.TimeUnit
 
 // NetWork
 fun <T> Single<T>.withIo(): Single<T> =
-    subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+        subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
 
 fun <T> Single<T>.io(): Single<T> = subscribeOn(Schedulers.io())
 fun <T> Single<T>.ui(): Single<T> = observeOn(AndroidSchedulers.mainThread())
+fun <T> Single<T>.compute(): Single<T> = observeOn(Schedulers.computation())
 
 fun <T> Flowable<T>.withCompute(): Flowable<T> =
-    subscribeOn(Schedulers.computation())
+        subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+
+fun <T> Flowable<T>.withIo(): Flowable<T> = subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
 fun <T> Flowable<T>.compute() = subscribeOn(Schedulers.computation())
 fun <T> Flowable<T>.ui(): Flowable<T> =
-    observeOn(AndroidSchedulers.mainThread())
+        observeOn(AndroidSchedulers.mainThread())
 
 fun <T> Observable<T>.io() = subscribeOn(Schedulers.io())
-fun <T> Observable<T>.ui() : Observable<T> = observeOn(AndroidSchedulers.mainThread())
-
-//fun <T> Observable<T>.toDelay(_delay: Int) =
-//    subscribeOn(Schedulers.io()).delay(_delay.toLong(), TimeUnit.SECONDS)
-//fun <T> Flowable<T>.multiDelay(_delay: Int) =
-//    subscribeOn(Schedulers.io()).delay(_delay.toLong(), TimeUnit.SECONDS)
+fun <T> Observable<T>.ui(): Observable<T> = observeOn(AndroidSchedulers.mainThread())
 
 open class SimpleDisposableSubscriber<T> : DisposableSubscriber<T>() {
     override fun onNext(t: T) {
@@ -61,5 +58,19 @@ open class SimpleDisposableSubscriber<T> : DisposableSubscriber<T>() {
     }
 
     override fun onComplete() {
+    }
+}
+
+// MultiPle Null Check.
+inline fun <A, B, R> let(a: A?, b: B?, function: (A, B) -> R) {
+    if (a != null && b != null) {
+        function(a, b)
+    }
+}
+
+// MultiPle Null Check.
+inline fun <A, B, C, R> let(a: A?, b: B?, c: C?, function: (A, B, C) -> R) {
+    if (a != null && b != null && c != null) {
+        function(a, b, c)
     }
 }

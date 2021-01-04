@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import com.hmju.memo.base.BaseResponse
-import com.hmju.memo.extension.withIo
+import com.hmju.memo.convenience.withIo
 import com.hmju.memo.model.form.LoginForm
 import com.hmju.memo.repository.network.ApiService
 import com.hmju.memo.repository.preferences.AccountPref
@@ -13,9 +13,9 @@ import com.hmju.memo.utils.moveMain
 import io.reactivex.Single
 
 class LoginManagerImpl(
-    private val context: Context,
-    private val apiService: ApiService,
-    private val actPref: AccountPref
+        private val context: Context,
+        private val apiService: ApiService,
+        private val actPref: AccountPref
 ) : LoginManager {
 
     private val _user = MutableLiveData<LoginManager.UserInfo>()
@@ -36,35 +36,36 @@ class LoginManagerImpl(
             apiService.loginCheck()
         else {
             apiService.loginIn(body)
-        }.withIo()
-            .doOnError {
-                JLogger.d("LoginIn Error $it")
-                _user.value = null
-                _isLogin.value = false
-            }
-            .flatMap { response ->
-
-                _user.value?.let {
-                    it.userName = response.userName
-                    it.profPath = response.resPath
-                } ?: run {
-                    _user.value = LoginManager.UserInfo(
-                        userName = response.userName,
-                        profPath = response.resPath
-                    )
+        }
+                .withIo()
+                .doOnError {
+                    JLogger.d("LoginIn Error $it")
+                    _user.value = null
+                    _isLogin.value = false
                 }
+                .flatMap { response ->
 
-                response.loginKey?.let {
-                    if (it.isNotEmpty()) {
-                        actPref.setLoginKey(it)
-                        _isLogin.value = true
+                    _user.value?.let {
+                        it.userName = response.userName
+                        it.profPath = response.resPath
+                    } ?: run {
+                        _user.value = LoginManager.UserInfo(
+                                userName = response.userName,
+                                profPath = response.resPath
+                        )
+                    }
+
+                    response.loginKey?.let {
+                        if (it.isNotEmpty()) {
+                            actPref.setLoginKey(it)
+                            _isLogin.value = true
+                        }
+                    }
+
+                    return@flatMap Single.create<BaseResponse> {
+                        it.onSuccess(response)
                     }
                 }
-
-                return@flatMap Single.create<BaseResponse> {
-                    it.onSuccess(response)
-                }
-            }
     }
 
     override fun loginCheck(): Single<BaseResponse> {

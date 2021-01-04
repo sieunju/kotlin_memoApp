@@ -1,4 +1,4 @@
-package com.hmju.memo.extension
+package com.hmju.memo.convenience
 
 import androidx.annotation.MainThread
 import androidx.lifecycle.LifecycleOwner

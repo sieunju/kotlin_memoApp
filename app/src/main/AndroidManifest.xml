@@ -74,6 +74,8 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme"/> <!-- [s] 카메라 캡처 관련 -->
+
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.hmju.memo"
@@ -82,7 +84,9 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
-        </provider> <!-- Firebase Service -->
+        </provider>
+
+        <!-- Firebase Service -->
         <service
             android:name=".fcm.MyFirebaseService"
             android:exported="false">

@@ -1,9 +1,9 @@
 package com.hmju.memo.repository
 
 import com.hmju.memo.base.BaseResponse
-import com.hmju.memo.extension.io
-import com.hmju.memo.extension.ui
-import com.hmju.memo.extension.withIo
+import com.hmju.memo.convenience.io
+import com.hmju.memo.convenience.ui
+import com.hmju.memo.convenience.withIo
 import com.hmju.memo.model.form.MemoItemForm
 import com.hmju.memo.model.form.MemoListParam
 import com.hmju.memo.model.memo.FileItem

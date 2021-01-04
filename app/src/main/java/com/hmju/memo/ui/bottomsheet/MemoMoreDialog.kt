@@ -8,7 +8,7 @@ import androidx.annotation.DrawableRes
 import androidx.databinding.DataBindingUtil
 import com.hmju.memo.R
 import com.hmju.memo.base.BaseViewModel
-import com.hmju.memo.extension.ListMutableLiveData
+import com.hmju.memo.convenience.ListMutableLiveData
 import com.hmju.memo.databinding.DialogMemoDetailMoreBinding
 import com.hmju.memo.utils.ResourceProvider
 import org.koin.android.ext.android.inject
