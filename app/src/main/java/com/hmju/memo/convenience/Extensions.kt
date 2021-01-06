@@ -1,5 +1,11 @@
 package com.hmju.memo.convenience
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.annotation.LayoutRes
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.LifecycleOwner
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -62,15 +68,64 @@ open class SimpleDisposableSubscriber<T> : DisposableSubscriber<T>() {
 }
 
 // MultiPle Null Check.
-inline fun <A, B, R> let(a: A?, b: B?, function: (A, B) -> R) {
+inline fun <A, B, R> multiNullCheck(a: A?, b: B?, function: (A, B) -> R) {
     if (a != null && b != null) {
         function(a, b)
     }
 }
 
 // MultiPle Null Check.
-inline fun <A, B, C, R> let(a: A?, b: B?, c: C?, function: (A, B, C) -> R) {
+inline fun <A, B, C, R> multiNullCheck(a: A?, b: B?, c: C?, function: (A, B, C) -> R) {
     if (a != null && b != null && c != null) {
         function(a, b, c)
     }
+}
+
+/**
+ * Custom View initBinding Func.
+ * Invalid LayoutId or Not LifecycleOwner Extension
+ * throw NPE
+ * @param layoutId View Layout Id.
+ * @param lifecycleOwner View Lifecycle.
+ * @param isAdd 이 함수내에서 addView 할건지 Flag. Default true
+ *
+ */
+fun ViewGroup.initBinding(@LayoutRes layoutId: Int, lifecycleOwner: LifecycleOwner, isAdd: Boolean = true): ViewDataBinding {
+    val viewRoot = LayoutInflater.from(context).inflate(layoutId, this, false)
+    val binding: ViewDataBinding = DataBindingUtil.bind(viewRoot)
+            ?: throw NullPointerException("Invalid LayoutId or LifecycleOwner..")
+
+    binding.lifecycleOwner = lifecycleOwner
+    if (isAdd) {
+        addView(binding.root)
+    }
+    return binding
+}
+
+/**
+ * Custom View initBinding Func.
+ * Invalid LayoutId or Not LifecycleOwner Extension,
+ * T -> Not Support Class
+ * throw NPE, ClassCastException
+ * @param layoutId View Layout Id
+ * @param lifecycleOwner View Lifecycle
+ * @param type Cast ViewDataBinding Class
+ * @param isAdd 이 함수내에서 addView 할건지 Flag. Default true
+ */
+@Suppress("UNCHECKED_CAST")
+fun <T : ViewDataBinding> ViewGroup.initBinding(@LayoutRes layoutId: Int, lifecycleOwner: LifecycleOwner, type: Class<T>, isAdd: Boolean = true): T {
+    val viewRoot = LayoutInflater.from(context).inflate(layoutId, this, false)
+    val binding: ViewDataBinding = DataBindingUtil.bind(viewRoot)
+            ?: throw NullPointerException("Invalid LayoutId Or LifecycleOwner..")
+
+    if (!type.isInstance(binding)) {
+        throw ClassCastException("This class is not supported...")
+    }
+
+    binding.lifecycleOwner = lifecycleOwner
+
+    if (isAdd) {
+        addView(binding.root)
+    }
+    return binding as T
 }

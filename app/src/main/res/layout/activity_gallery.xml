@@ -130,7 +130,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:pressedTranslationZ="0dp"
             app:recyclerView="@{rvContents}"
-            app:srcCompat="@drawable/ic_arrow_top" />
+            android:src="@drawable/ic_arrow_top" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

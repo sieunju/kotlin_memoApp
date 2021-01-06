@@ -43,7 +43,7 @@
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="@+id/refresh"
             app:layout_constraintTop_toTopOf="@+id/refresh"
-            app:visibility="@{viewModel.memoSize == 0}">
+            android:visibility="@{viewModel.memoSize == 0}">
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
@@ -52,7 +52,7 @@
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:visibility="@{viewModel.memoSize == 0}">
+                android:visibility="@{viewModel.memoSize == 0}">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imgEmpty"
@@ -107,7 +107,7 @@
             android:layout_height="@dimen/size_50"
             app:cardCornerRadius="@dimen/size_25"
             app:cardElevation="0dp"
-            app:visibility="@{viewModel.isLogin}">
+            android:visibility="@{viewModel.isLogin}">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="match_parent"
@@ -115,7 +115,7 @@
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
                 app:bindImg="@{viewModel.user.profPath}"
-                app:visibility="@{viewModel.isLogin}" />
+                android:visibility="@{viewModel.isLogin}" />
 
         </com.google.android.material.card.MaterialCardView>
 

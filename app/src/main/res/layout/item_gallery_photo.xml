@@ -48,10 +48,9 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@drawable/bg_selected_album"
-            android:visibility="gone"
+            android:visibility="@{viewModel.isSelected(imgUrl)}"
             app:layout_constraintBottom_toBottomOf="@+id/img_thumb"
             app:layout_constraintTop_toTopOf="@+id/img_thumb"
-            app:visibility="@{viewModel.isSelected(imgUrl)}"
             tools:visibility="visible">
 
             <androidx.appcompat.widget.AppCompatImageView

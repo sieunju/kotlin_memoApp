@@ -14,7 +14,6 @@ import com.hmju.memo.model.memo.FileItem
 import com.hmju.memo.ui.adapter.MemoDetailMoreAdapter
 import com.hmju.memo.ui.adapter.MemoImagePagerAdapter
 import com.hmju.memo.ui.bottomsheet.MemoMoreDialog
-import com.hmju.memo.utils.JLogger
 import com.hmju.memo.viewmodels.MemoDetailViewModel
 import com.hmju.memo.widget.viewpagerIndicator.IndicatorView
 
@@ -26,43 +25,37 @@ import com.hmju.memo.widget.viewpagerIndicator.IndicatorView
 
 @BindingAdapter(value = ["viewModel", "indicatorView", "fileList"], requireAll = false)
 fun setMemoDetailImgAdapter(
-    viewPager: ViewPager2,
-    viewModel: MemoDetailViewModel,
-    indicator: IndicatorView,
-    dataList: ArrayList<FileItem>?
+        viewPager: ViewPager2,
+        viewModel: MemoDetailViewModel,
+        indicator: IndicatorView,
+        dataList: ArrayList<FileItem>?
 ) {
-    dataList?.let {
+    if (dataList != null && dataList.size > 0) {
         viewPager.visibility = View.VISIBLE
         indicator.visibility = View.VISIBLE
 
-        viewPager.adapter?.let {
-            JLogger.d("갱신 처리 합니다.!! ${dataList.size}")
-            it.notifyDataSetChanged()
-            indicator.pageSize = dataList.size
-        } ?: run {
-
-            // init View..
+        if (viewPager.adapter == null) {
             MemoImagePagerAdapter(viewModel, dataList).apply {
                 viewPager.adapter = this
             }
 
-            indicator.apply {
-                setViewPager(viewPager)
-                pageSize = dataList.size
-            }
+            indicator.setViewPager(viewPager)
+            indicator.pageSize = dataList.size
+        } else {
+            viewPager.adapter!!.notifyDataSetChanged()
+            indicator.pageSize = dataList.size
         }
-    } ?: {
-        JLogger.d("여길 지나나!!!!??")
+    } else {
         viewPager.visibility = View.GONE
         indicator.visibility = View.GONE
-    }()
+    }
 }
 
 @BindingAdapter(value = ["memoDetailMoreDataList", "listener"])
 fun setMemoDetailMoreAdapter(
-    recyclerView: RecyclerView,
-    dataList: ArrayList<MemoMoreDialog.MemoDetailMoreDialogItem>,
-    listener: MemoMoreDialog.Listener
+        recyclerView: RecyclerView,
+        dataList: ArrayList<MemoMoreDialog.MemoDetailMoreDialogItem>,
+        listener: MemoMoreDialog.Listener
 ) {
     recyclerView.adapter?.notifyDataSetChanged() ?: run {
         MemoDetailMoreAdapter(dataList, listener).apply {
@@ -73,8 +66,8 @@ fun setMemoDetailMoreAdapter(
 
 @BindingAdapter("viewModel")
 fun setMemoDetailTagAdapter(
-    radioGroup: RadioGroup,
-    viewModel: BaseViewModel
+        radioGroup: RadioGroup,
+        viewModel: BaseViewModel
 ) {
     radioGroup.setOnCheckedChangeListener { _, checkedId ->
         val tagType: TagType
@@ -102,12 +95,12 @@ fun setMemoDetailTagAdapter(
             }
         }
 
-        if(viewModel is MemoDetailViewModel) {
+        if (viewModel is MemoDetailViewModel) {
             viewModel.setSelectedTag(tagType)
         }
     }
 
-    if(viewModel is MemoDetailViewModel) {
+    if (viewModel is MemoDetailViewModel) {
         // Binding RadioButton
         when (viewModel.selectTag.value) {
             TagType.RED.tag -> {
@@ -137,23 +130,23 @@ fun setMemoDetailTagAdapter(
 
 @BindingAdapter(value = ["viewModel", "fileItem"], requireAll = false)
 fun setMemoDetailImgLongClickListener(
-    view: AppCompatImageView,
-    viewModel: MemoDetailViewModel,
-    item: FileItem
+        view: AppCompatImageView,
+        viewModel: MemoDetailViewModel,
+        item: FileItem
 ) {
     view.setOnLongClickListener {
         CommonDialog(view.context)
-            .setContents(R.string.str_memo_img_delete)
-            .setPositiveButton(R.string.str_confirm)
-            .setNegativeButton(R.string.str_cancel)
-            .setListener(object : CommonDialog.Listener {
-                override fun onClick(which: Int) {
-                    if(which == CommonDialog.POSITIVE) {
-                        viewModel.deleteImage(item)
+                .setContents(R.string.str_memo_img_delete)
+                .setPositiveButton(R.string.str_confirm)
+                .setNegativeButton(R.string.str_cancel)
+                .setListener(object : CommonDialog.Listener {
+                    override fun onClick(which: Int) {
+                        if (which == CommonDialog.POSITIVE) {
+                            viewModel.deleteImage(item)
+                        }
                     }
-                }
-            })
-            .show()
+                })
+                .show()
         return@setOnLongClickListener true
     }
 }

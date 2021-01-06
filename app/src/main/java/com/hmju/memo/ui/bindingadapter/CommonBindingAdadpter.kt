@@ -18,7 +18,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.hmju.memo.base.BaseFragmentPagerAdapter
 import com.hmju.memo.base.BaseViewModel
-import com.hmju.memo.convenience.let
 import com.hmju.memo.define.FragmentType
 import com.hmju.memo.define.ListItemType
 import com.hmju.memo.ui.adapter.BottomSheetCheckableAdapter
