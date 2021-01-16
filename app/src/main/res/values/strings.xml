@@ -85,8 +85,10 @@
     <string name="notification_channel_id">memo_channel_id</string>
     <string name="notification_channel_name">푸시 알림</string>
     <string name="notification_channel_description">푸시 알림 입니다.</string>
-    
+
     <string name="str_memo_empty_info">추가된 메모가 없습니다.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

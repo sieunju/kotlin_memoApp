@@ -23,11 +23,11 @@ import com.hmju.memo.utils.ResourceProvider
  * Created by juhongmin on 2020/10/25
  */
 class MemoDetailViewModel(
-        private var originData: MemoItem? = null,
-        private val apiService: ApiService,
-        private val provider: ImageFileProvider,
-        private val resProvider: ResourceProvider,
-        private val dataSource: DataSource
+    private var originData: MemoItem? = null,
+    private val apiService: ApiService,
+    private val provider: ImageFileProvider,
+    private val resProvider: ResourceProvider,
+    private val dataSource: DataSource
 ) : BaseViewModel() {
 
     private val _manageNo = NonNullMutableLiveData(originData?.manageNo ?: -1)
@@ -100,11 +100,14 @@ class MemoDetailViewModel(
         setSelectedTag(tagType)
     }
 
-    // 제목 OR 내용 글자 복사 함수.
-    fun onCopyText(@IdRes id: Int) {
-        if (id == R.id.etTitle) {
+    /**
+     * 제목 or 내용 복사 함수.
+     * @param pos 0 -> 제목, 1 -> 내용
+     */
+    fun onCopyText(pos: Int) {
+        if (pos == 0) {
             startCopyText.value = title.value
-        } else if (id == R.id.etContents) {
+        } else {
             startCopyText.value = contents.value
         }
     }
@@ -202,27 +205,27 @@ class MemoDetailViewModel(
 
         launch {
             dataSource.postMemo(
-                    MemoItemForm(
-                            manageNo = if (manageNo.value == -1) null else manageNo.value,
-                            tag = selectTag.value,
-                            title = title.value,
-                            contents = contents.value
-                    )
+                MemoItemForm(
+                    manageNo = if (manageNo.value == -1) null else manageNo.value,
+                    tag = selectTag.value,
+                    title = title.value,
+                    contents = contents.value
+                )
             )
-                    .withIo()
-                    .doOnSubscribe { onLoading() }
-                    .subscribe({
-                        saveData()
-                        if (manageNo.value == -1 && it.manageNo != 0) {
-                            _manageNo.value = it.manageNo
-                        }
+                .withIo()
+                .doOnSubscribe { onLoading() }
+                .subscribe({
+                    saveData()
+                    if (manageNo.value == -1 && it.manageNo != 0) {
+                        _manageNo.value = it.manageNo
+                    }
 
-                        JLogger.d("onSuccess $it")
-                        callBack.invoke(true)
-                    }, {
-                        JLogger.d("Error ${it.message}")
-                        callBack.invoke(false)
-                    })
+                    JLogger.d("onSuccess $it")
+                    callBack.invoke(true)
+                }, {
+                    JLogger.d("Error ${it.message}")
+                    callBack.invoke(false)
+                })
         }
     }
 
@@ -232,10 +235,10 @@ class MemoDetailViewModel(
     private fun saveData() {
         if (originData == null) {
             originData = MemoItem(
-                    manageNo = manageNo.value,
-                    tag = selectTag.value,
-                    title = title.value,
-                    contents = contents.value
+                manageNo = manageNo.value,
+                tag = selectTag.value,
+                title = title.value,
+                contents = contents.value
             )
         } else {
             originData?.tag = selectTag.value
@@ -261,22 +264,22 @@ class MemoDetailViewModel(
 
         launch {
             dataSource.postMemoImages(
-                    manageNo = manageNo.value,
-                    pathList = pathList
+                manageNo = manageNo.value,
+                pathList = pathList
             )
-                    .doOnSubscribe { onLoading() }
-                    .subscribe({ response ->
-                        JLogger.d("Success Thread ${Thread.currentThread()}")
+                .doOnSubscribe { onLoading() }
+                .subscribe({ response ->
+                    JLogger.d("Success Thread ${Thread.currentThread()}")
 //                        addImageFileList(response.pathList)
-                        // 업로드된 파일 갱신 처리 함수.
-                        response.pathList?.let {
-                            _fileList.postAddAll(it)
-                        }
-                        onSuccess()
-                    }, { error ->
-                        JLogger.d("Error ${error.message} Thread ${Thread.currentThread()}")
-                        onError()
-                    })
+                    // 업로드된 파일 갱신 처리 함수.
+                    response.pathList?.let {
+                        _fileList.postAddAll(it)
+                    }
+                    onSuccess()
+                }, { error ->
+                    JLogger.d("Error ${error.message} Thread ${Thread.currentThread()}")
+                    onError()
+                })
         }
     }
 
@@ -299,18 +302,18 @@ class MemoDetailViewModel(
     fun deleteImage(fileItem: FileItem) {
         launch {
             apiService.deleteFile(
-                    manageNo = fileItem.manageNo,
-                    path = fileItem.filePath
+                manageNo = fileItem.manageNo,
+                path = fileItem.filePath
             ).withIo()
-                    .doOnSubscribe { onLoading() }
-                    .subscribe({
-                        JLogger.d("Delete Image Success $it")
-                        _fileList.postRemove(fileItem)
-                        onSuccess()
-                    }, {
-                        JLogger.e("Delete Image Error ${it.message}")
-                        onError()
-                    })
+                .doOnSubscribe { onLoading() }
+                .subscribe({
+                    JLogger.d("Delete Image Success $it")
+                    _fileList.postRemove(fileItem)
+                    onSuccess()
+                }, {
+                    JLogger.e("Delete Image Error ${it.message}")
+                    onError()
+                })
         }
     }
 
@@ -335,15 +338,15 @@ class MemoDetailViewModel(
     private fun deleteAllImages(callBack: () -> Unit) {
         launch {
             dataSource.deleteMemoImages(fileList.value)
-                    .withIo()
-                    .doOnSubscribe { onLoading() }
-                    .subscribe({
-                        JLogger.d("Delete All Images Success $it")
-                        callBack.invoke()
-                    }, {
-                        JLogger.d("Delete All Images Error ${it.message}")
-                        callBack.invoke()
-                    })
+                .withIo()
+                .doOnSubscribe { onLoading() }
+                .subscribe({
+                    JLogger.d("Delete All Images Success $it")
+                    callBack.invoke()
+                }, {
+                    JLogger.d("Delete All Images Error ${it.message}")
+                    callBack.invoke()
+                })
         }
     }
 
@@ -370,20 +373,20 @@ class MemoDetailViewModel(
 
         launch {
             dataSource.deleteMemo(manageNo = manageNo.value)
-                    .withIo()
-                    .doOnSubscribe {
-                        onLoading()
-                    }
-                    .subscribe({
-                        JLogger.d("Delete Memo Success $it")
-                        onSuccess()
-                        isDelete = true
-                        startFinish.value = true
-                    }, {
-                        JLogger.d("Delete Memo Error ${it.message}")
-                        onError()
-                        startFinish.value = true
-                    })
+                .withIo()
+                .doOnSubscribe {
+                    onLoading()
+                }
+                .subscribe({
+                    JLogger.d("Delete Memo Success $it")
+                    onSuccess()
+                    isDelete = true
+                    startFinish.value = true
+                }, {
+                    JLogger.d("Delete Memo Error ${it.message}")
+                    onError()
+                    startFinish.value = true
+                })
         }
     }
 

@@ -21,6 +21,7 @@ import com.hmju.memo.repository.preferences.AccountPref
 import com.hmju.memo.utils.JLogger
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -73,7 +74,7 @@ class MainViewModel(
     }
 
     init {
-
+        JLogger.d("메인 다시 재 생성")
         launch {
             backButtonSubject.toFlowable(BackpressureStrategy.BUFFER)
                     .observeOn(AndroidSchedulers.mainThread())
@@ -144,63 +145,13 @@ class MainViewModel(
 
     }
 
-//    fun testStart() {
-//        launch {
-//            Single.merge(
-//                Flowable.fromArray(
-//                    apiService.fetchMainTest().io().onErrorReturnItem(JsonObject()),
-//                    apiService.fetchMainTest()
-//                )
-//            ).subscribe({
-//
-//            }, {
-//
-//            })
-//        }
-//    }
-
-    var loading = ObservableField<Boolean>()
-    var showNoDataAvailable = ObservableField<Boolean>(false)
-    var elements = ObservableField<List<MemoItem>>(emptyList())
-
-    val disposable_: CompositeDisposable = CompositeDisposable()
-    var notifyError: (Throwable) -> Unit = {}
-    var isCleared = ObservableField<Boolean>(false)
-
-    fun test() {
-        disposable_.add(
-            apiService.fetchItems()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe {
-                    loading.set(true)
-                }
-                .subscribe({ list ->
-                    // 성공.
-                    if (list.isEmpty()) {
-                        showNoDataAvailable.set(true)
-                    } else {
-                        elements.set(list)
-                    }
-                    loading.set(false)
-                }, {
-                    // 에러 리턴.
-                    if(isCleared.get() == false) {
-                        notifyError.invoke(it)
-                        showNoDataAvailable.set(true)
-                        loading.set(false)
-                    }
-                })
-        )
-    }
-
     fun error(error: Throwable?) {
 
     }
 
     override fun onCleared() {
         super.onCleared()
-        isCleared.set(true)
+        JLogger.d("메인 죽음!!")
     }
 }
 

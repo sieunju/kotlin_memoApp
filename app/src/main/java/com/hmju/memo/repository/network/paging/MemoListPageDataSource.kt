@@ -39,7 +39,6 @@ class MemoListPageDataSource(
         if (actPref.getLoginKey().isEmpty()) {
             return
         }
-        JLogger.d("loadInitial " + params.requestedLoadSize)
         networkState.postValue(NetworkState.LOADING)
         apiService.fetchMemoList(
             pageNo = memoParams.pageNo

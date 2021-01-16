@@ -112,8 +112,10 @@ class ExampleUnitTest {
         val resultFirst = temp?.let {
             it.id = "Hello"
             it.age = 10
-            it
+//            it
+            "qweqweqw"
         }
+        println(resultFirst)
 
         val resultStr = temp?.let {
             it.id = "Result Str"
@@ -168,9 +170,9 @@ class ExampleUnitTest {
         val result1 = run {
             val id = "aaa"
             val age = 10
-            Struct(id,age)
+//            Struct(id,age)
+            "eeee"
         }
-
 
         println(result)
         println(result1)
@@ -217,5 +219,29 @@ class ExampleUnitTest {
         val num = 13232
         val format = DecimalFormat("###,###")
         println("Comma ${format.format(num)}")
+    }
+
+    data class Person(var name: String, var age: Int)
+
+    @Test
+    fun testList(){
+        val people = listOf<Person>(Person("Alice",31),Person("Bob",33),Person("Bobbb",33))
+
+        people.flatMap {
+            it.name.toList()
+        }.map {
+            println("TTT $it")
+        }
+    }
+
+    @Test
+    fun testFF(){
+        val test = Person("1",10)
+        var test1 = test
+        if(test == test1) {
+            println("TTT")
+        } else {
+            println("EEEE")
+        }
     }
 }

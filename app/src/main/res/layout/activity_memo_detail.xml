@@ -89,6 +89,7 @@
                         android:textSize="@dimen/text_size_20"
                         app:editTextListener="@{viewModel}"
                         app:htmlEdit="@={viewModel.title}"
+                        app:longClick="@{()->viewModel.onCopyText(0)}"
                         tools:text="안녕하세요" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -114,8 +115,8 @@
                         android:maxLength="400"
                         android:scrollbars="vertical"
                         android:textSize="@dimen/text_size_20"
-                        app:editTextListener="@{viewModel}"
                         app:htmlEdit="@={viewModel.contents}"
+                        app:longClick="@{()->viewModel.onCopyText(1)}"
                         tools:text="@string/large_text" />
 
                 </com.google.android.material.textfield.TextInputLayout>

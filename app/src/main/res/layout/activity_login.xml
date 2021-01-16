@@ -60,7 +60,8 @@
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:text="@={viewModel.strPw}"
-                    app:editTextListener="@{viewModel}" />
+                    app:editTextConfirm="@{()->viewModel.startLogin()}"
+                    />
 
             </com.google.android.material.textfield.TextInputLayout>
 

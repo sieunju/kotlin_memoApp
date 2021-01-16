@@ -53,7 +53,6 @@ class MemoDetailActivity : BaseActivity<ActivityMemoDetailBinding, MemoDetailVie
     private lateinit var moreDialog: MemoMoreDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        intent.action
         // 메모 상세 보기로 들어온 경우.
         if (!isMemoAddEnter) {
             onTransFormationEndContainer()

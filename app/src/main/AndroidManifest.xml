@@ -24,6 +24,7 @@
             android:name=".ui.memo.MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.Memo"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

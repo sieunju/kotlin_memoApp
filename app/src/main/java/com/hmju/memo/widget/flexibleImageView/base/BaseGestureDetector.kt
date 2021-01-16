@@ -18,22 +18,7 @@ abstract class BaseGestureDetector {
 
     protected var currentPressure = 0f
     protected var prevPressure = 0f
-    /**
-     * Return the time difference in milliseconds between the previous accepted
-     * GestureDetector event and the current GestureDetector event.
-     *
-     * @return Time difference since the last move event in milliseconds.
-     */
     protected var timeDelta: Long = 0
-
-
-    /**
-     * This value is the threshold ratio between the previous combined pressure
-     * and the current combined pressure. When pressure decreases rapidly
-     * between events the position values can often be imprecise, as it usually
-     * indicates that the user is in the process of lifting a pointer off of the
-     * device. This value was tuned experimentally.
-     */
     protected val PRESSURE_THRESHOLD = 0.67F
 
     /**

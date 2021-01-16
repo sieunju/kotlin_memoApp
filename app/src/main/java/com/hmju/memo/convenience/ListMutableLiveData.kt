@@ -11,7 +11,7 @@ import androidx.lifecycle.MutableLiveData
 class ListMutableLiveData<T> : MutableLiveData<ArrayList<T>>() {
     init {
         // new ArrayList
-        value = arrayListOf()
+        value = arrayListOf<T>()
     }
 
     // NonNull 형
@@ -29,7 +29,7 @@ class ListMutableLiveData<T> : MutableLiveData<ArrayList<T>>() {
         value.addAll(itemList)
     }
 
-    fun remove(item: T) {
+    fun remove(item: T?) {
         value.remove(item)
     }
 
@@ -45,7 +45,7 @@ class ListMutableLiveData<T> : MutableLiveData<ArrayList<T>>() {
 
     fun postAdd(pos: Int, item: T) {
         val items = value
-        items.add(pos,item)
+        items.add(pos, item)
         postValue(items)
     }
 
@@ -75,6 +75,10 @@ class ListMutableLiveData<T> : MutableLiveData<ArrayList<T>>() {
         return value[pos]
     }
 
+    fun get(item: T): T? {
+        return value.find { it == item }
+    }
+
     fun contains(item: T): Boolean {
         return value.contains(item)
     }
@@ -83,7 +87,7 @@ class ListMutableLiveData<T> : MutableLiveData<ArrayList<T>>() {
         value.clear()
     }
 
-    fun postClear(){
+    fun postClear() {
         val items = value
         items.clear()
         value = items
