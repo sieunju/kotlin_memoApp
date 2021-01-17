@@ -1,11 +1,17 @@
 package com.hmju.memo.utils
 
+import com.google.gson.*
+import com.google.gson.internal.`$Gson$Types`
+import com.google.gson.stream.JsonReader
+import com.google.gson.stream.JsonToken
+import com.google.gson.stream.JsonWriter
 import com.hmju.memo.define.NetInfo
 import com.hmju.memo.repository.preferences.AccountPref
 import okhttp3.*
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.reflect.Type
 import java.util.concurrent.TimeUnit
 
 /**
@@ -75,12 +81,12 @@ fun headerInterceptor(pref: AccountPref): Interceptor {
         val origin: Request = chain.request()
 
         val request: Request = origin.newBuilder()
-            .header("accept", "application/json")
-            .header("Content-Type", "application/json")
-            .header(NetInfo.KEY_TYPE, NetInfo.VALUE_TYPE)
-            .header(NetInfo.KEY_LOGIN, pref.getLoginKey())
-            .method(origin.method, origin.body)
-            .build()
+                .header("accept", "application/json")
+                .header("Content-Type", "application/json")
+                .header(NetInfo.KEY_TYPE, NetInfo.VALUE_TYPE)
+                .header(NetInfo.KEY_LOGIN, pref.getLoginKey())
+                .method(origin.method, origin.body)
+                .build()
         chain.proceed(request)
     }
 }
@@ -109,9 +115,56 @@ inline fun <reified T> createRetrofit(client: OkHttpClient): T {
     return Retrofit.Builder().apply {
         baseUrl(NetInfo.BASE_URL)
         client(client)
-        addConverterFactory(GsonConverterFactory.create())
+        addConverterFactory(GsonConverterFactory.create(
+                GsonBuilder().registerTypeAdapter(ArrayList::class.java, NonNullListDeserializer<Any>())
+                        .registerTypeAdapter(String::class.java, StringTypeAdapter())
+                        .disableHtmlEscaping()
+                        .create()
+        ))
         addCallAdapterFactory(RxJava2CallAdapterFactory.create())
     }.build().create(T::class.java)
+}
+
+/**
+ * Gson ArrayList Null 인경우 NonNull 처리.
+ */
+class NonNullListDeserializer<T> : JsonDeserializer<ArrayList<T>> {
+    @Throws(JsonParseException::class)
+    override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): ArrayList<T> {
+        if (json is JsonArray) {
+            val size = json.size()
+            if (size == 0) {
+                return arrayListOf()
+            }
+            val list: ArrayList<T> = ArrayList(size)
+            for (i in 0 until size) {
+                val elementType: Type = `$Gson$Types`.getCollectionElementType(typeOfT, ArrayList::class.java)
+                val value: T = context.deserialize(json[i], elementType)
+                if (value != null) {
+                    list.add(value)
+                }
+            }
+            return list
+        }
+        return arrayListOf()
+    }
+}
+
+/**
+ * Gson String Variable Null 값 인경우 빈값으로 처리.
+ */
+class StringTypeAdapter : TypeAdapter<String>() {
+
+    override fun write(out: JsonWriter, value: String?) {
+    }
+
+    override fun read(reader: JsonReader): String {
+        if (reader.peek() === JsonToken.NULL) {
+            reader.nextNull()
+            return ""
+        }
+        return reader.nextString()
+    }
 }
 
 
